@@ -11,9 +11,9 @@ var jsonParser = bodyParser.json();
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 const port = process.env.PORT || 5000;
-const messagebus = 'amqp://fullcycle:mining@127.0.0.1'
+const messagebus = 'amqp://fullcycle:mining@localhost'
 const redis_port = 6379
-const redis_host = '127.0.0.1'
+const redis_host = 'localhost'
 
 //Message envelope for putting messages on the bus
 function makeMessage(ptype, pbody){
