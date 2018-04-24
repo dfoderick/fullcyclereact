@@ -10,10 +10,11 @@ var jsonParser = bodyParser.json();
 // create application/x-www-form-urlencoded parser
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
+const serverhost = 'localhost'
 const port = process.env.PORT || 5000;
-const messagebus = 'amqp://fullcycle:mining@localhost'
+const messagebus = 'amqp://fullcycle:mining@'+serverhost
 const redis_port = 6379
-const redis_host = 'localhost'
+const redis_host = serverhost
 
 //Message envelope for putting messages on the bus
 function makeMessage(ptype, pbody){

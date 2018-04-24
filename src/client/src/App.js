@@ -16,7 +16,8 @@ class App extends Component {
 		openMiner: false,
 	    openSwitch: false,
 	    openReset: false,
-		selectedPool: ''
+		selectedPool: '',
+		radReset: ''
   };
 
   componentDidMount() {
@@ -63,15 +64,15 @@ class App extends Component {
     });
   };
   
-  handleDoReset = (miner) => {
+  handleDoReset = (miner, pparameter) => {
 	if (miner === null) return;
     this.handleCloseReset();
-	this.callApiReset(miner)
+	this.callApiReset(miner, pparameter)
       .then(res => this.setState({ }))
       .catch(err => console.log(err));
   };
   
-  callApiReset = async (pminer) => {
+  callApiReset = async (pminer, pparameter) => {
 	const response = await fetch('/api/minerrestart', {
 	  method: 'POST',
 	  headers: {
@@ -81,7 +82,7 @@ class App extends Component {
 	  body: JSON.stringify({
 		miner: pminer,
 		command: 'restart',
-		parameter: null
+		parameter: pparameter
 	  }),
 	});
     const body = await response.json();
@@ -181,11 +182,12 @@ class App extends Component {
   }
 
   findcurrentpool(pools) {
-  return pools.find((pool) => {
-	  //todo; it should really be lowest priority, not priority 0
-	  //also could get selected pool from miner.minerpool?
-    return pool.Status === 'Alive' && pool.Priority === 0;
-  })
+	  if (!pools) return;
+	  return pools.find((pool) => {
+		  //todo; it should really be lowest priority, not priority 0
+		  //also could get selected pool from miner.minerpool?
+		return pool.Status === 'Alive' && pool.Priority === 0;
+	  });
   }
 
   renderPool(pool) {
@@ -200,6 +202,11 @@ class App extends Component {
   handleSwitchChange = event => {
     this.setState({ selectedPool: event.target.value });
   };
+
+  handleResetChange = event => {
+    this.setState({ radReset: event.target.value });
+  };
+  
   renderPools(miner) {
 	var pools = miner.minerpool.allpools.POOLS.map((p) => this.renderPool(p));
     return (
@@ -225,7 +232,7 @@ class App extends Component {
 	var renderedMiners = arrMiners.map((m) => this.renderMiner(m));
 	// find the data for this active row `id`
     const selectedMiner = this.find(arrMiners, this.state.activeRowId );
-	 if (selectedMiner)
+	 if (selectedMiner && selectedMiner.minerpool && selectedMiner.minerpool.allpools)
 	 {
 		var selectedpool = this.findcurrentpool(selectedMiner.minerpool.allpools.POOLS);
 		//can't do this otherwise it messes up the radio button and won't select
@@ -310,14 +317,25 @@ class App extends Component {
 			<DialogContent>
 			<DialogTitle >This will make {selectedMiner.name} go offline for a short period!</DialogTitle>
 			<DialogContentText>
-			Do you really want to reset {selectedMiner.name}?
+				<FormControl component="fieldset" >
+				<RadioGroup name="commandrestart" value={this.state.radReset} onChange={this.handleResetChange}>
+					<FormControlLabel key='reset' 
+					value='reset'
+					control={<Radio/>} 
+					label='Restart using miner api (requires privileged access)' />
+					<FormControlLabel key='reboot' 
+					value='reboot'
+					control={<Radio/>} 
+					label='Reboot using ssh (requires ssh access)' />
+				</RadioGroup>
+				</FormControl>
 			</DialogContentText>
 			</DialogContent>
               <DialogActions>
                 <Button onClick={() => {this.handleCloseReset()}} color="primary">
                   Cancel
                 </Button>
-                <Button onClick={() => {this.handleDoReset(selectedMiner)}} color="primary" autoFocus>
+                <Button onClick={() => {this.handleDoReset(selectedMiner , this.state.radReset)}} color="primary" autoFocus>
                   Continue reset
                 </Button>
               </DialogActions>
