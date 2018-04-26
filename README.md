@@ -35,7 +35,10 @@ yarn dev
 ```
 The default port is 3000.  
 
-
 !Important! The web page will be blank or show an error if the back end Full Cycle Mining Controller is not running.
+
+![Full Cycle React](/src/client/src/images/FullCycleReact.png?raw=true "Full Cycle React")
+![Full Cycle Switch Pool](/src/client/src/images/fullcycle_switch.png?raw=true "Full Cycle Switch Pool")
+![Full Cycle Reset Miner](/src/client/src/images/fullcycle_reset.png?raw=true "Full Cycle Reset Miner")
 
 dfoderick@gmail.com
