@@ -1,12 +1,12 @@
 # Full Cycle React
-Front end React web site for the Full Cycle Mining Controller 
+Front end React web site for the Full Cycle Mining Controller
 (https://github.com/dfoderick/fullcycle)
 
 Check which versions of node and npm are installed in your system.
 ```
-pi@raspberrypi:~ $ node -v
+node -v
 v9.11.1
-pi@raspberrypi:~ $ npm -v
+npm -v
 5.6.0
 ```
 If older than 9.11 and 5.6 then install the update directly from debian.
