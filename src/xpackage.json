@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "client": "cd client && yarn start",
+    "client": "cd client && npm run start",
     "server": "nodemon server.js",
-    "prod": "concurrently \"yarn server\" \"yarn client\"",
-    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+    "prod": "concurrently \"npm run server\" \"npm run client\"",
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },
   "dependencies": {
     "amqp": "^0.2.6",
