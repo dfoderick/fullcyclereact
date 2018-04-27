@@ -7,12 +7,8 @@ RUN sudo apt-get update && \
     sudo apt-get -y install python build-essential nodejs
 RUN sudo npm install -g nodemon
 
-#WORKDIR /usr/src/fullcyclereact/src/
-#COPY src/package*.json ./
-#RUN npm install
-
 #first copy just the package and install dependencies
-WORKDIR /usr/src/fullcyclereact/src/client/
+WORKDIR /usr/src/fullcyclereact/src/web/
 COPY package*.json ./
 RUN npm install
 

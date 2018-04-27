@@ -1,5 +1,6 @@
 {
-  "name": "fullcycle-react",
+  "name": "fullcycle-web",
+  "description": "web site for full cycle mining controller",
   "version": "0.1.0",
   "license": "MIT",
   "private": true,

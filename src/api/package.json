@@ -1,11 +1,13 @@
-
+{
   "name": "fullcycle-api",
+  "description": "api methods to communicate with full cycle controller",
   "version": "0.1.0",
   "license": "MIT",
+  "repository": "none",
   "scripts": {
-    "server": "nodemon src/server.js",
-    "prod": "npm run server",
-    "dev": "npm run server"
+    "start": "nodemon src/server.js",
+    "prod": "npm run start",
+    "dev": "npm run start"
   },
   "dependencies": {
     "amqp": "^0.2.6",
