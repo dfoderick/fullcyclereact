@@ -1,9 +1,11 @@
 {
-  "name": "example-create-react-app-express",
+  "name": "fullcycle-react-express",
   "version": "1.0.0",
+  "license": "MIT",
   "scripts": {
     "client": "cd client && yarn start",
     "server": "nodemon server.js",
+    "prod": "concurrently \"yarn server\" \"yarn client\"",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },
   "dependencies": {
