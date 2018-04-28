@@ -11,6 +11,7 @@ RUN sudo npm install -g nodemon
 WORKDIR /usr/src/fullcyclereact/src/web/
 COPY package*.json ./
 RUN npm install
+RUN npm install material-ui@next
 
 #then copy source
 COPY . .
