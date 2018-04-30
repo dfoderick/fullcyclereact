@@ -8,6 +8,22 @@ or they can be installed on a separate computer.
 By far the easiest option is to install Docker on the Raspberry Pi
 and run the sites inside Docker containers.  
 
+# Docker install on Raspberry Pi
+If you do not have Docker installed on your Raspberry Pi then follow these
+instructions.
+```
+sudo apt-get install -y apt-transport-https
+sudo curl -sSL https://get.docker.com | sudo sh
+sudo systemctl enable docker
+sudo usermod -aG docker pi
+```
+You will need to logout and log back in for permission to take effect. When you
+log back in then check your Docker installation.
+
+```
+docker info
+```
+If you get information about your Docker program then you are ready to go.
 # Install as Docker containers
 
 The Full Cycle web sites are hosted on Docker Hub (https://hub.docker.com/r/fullcycle/web/) and can be installed using
@@ -38,23 +54,6 @@ add an issue to this project.
 
 Dave Foderick  
 dfoderick@gmail.com  
-
-# Docker install on Raspberry Pi
-If you do not have Docker installed on your Raspberry Pi then follow these
-instructions.
-```
-sudo apt-get install -y apt-transport-https
-sudo curl -sSL https://get.docker.com | sudo sh
-sudo systemctl enable docker
-sudo usermod -aG docker pi
-```
-You will need to logout and log back in for permission to take effect. When you
-log back in then check your Docker installation.
-
-```
-docker info
-```
-If you get information about your Docker program then you are ready to go.
 
 # Install directly on the Operating system
 If you cannot install using Docker then follow these steps.
