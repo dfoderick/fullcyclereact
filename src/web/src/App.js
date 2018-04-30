@@ -32,7 +32,7 @@ class App extends Component {
     if (response.status !== 200) throw Error(body.message);
     return body;
   };
-  
+
   handleOpenMiner = (rowId) => () => {
     this.setState({
       activeRowId: rowId
@@ -48,7 +48,7 @@ class App extends Component {
     });
   };
 
-  
+
   handleOpenReset = (rowId) => () => {
     this.setState({
       activeRowId: rowId
@@ -63,7 +63,7 @@ class App extends Component {
       openReset: false
     });
   };
-  
+
   handleDoReset = (miner, pparameter) => {
 	if (miner === null) return;
     this.handleCloseReset();
@@ -71,7 +71,7 @@ class App extends Component {
       .then(res => this.setState({ }))
       .catch(err => console.log(err));
   };
-  
+
   callApiReset = async (pminer, pparameter) => {
 	const response = await fetch('/api/minerrestart', {
 	  method: 'POST',
@@ -112,7 +112,7 @@ class App extends Component {
       .then(res => this.setState({ }))
       .catch(err => console.log(err));
   };
-  
+
  callApiSwitch = async (pminer, ppool) => {
 	const response = await fetch('/api/minerswitchpool', {
 	  method: 'POST',
@@ -160,7 +160,7 @@ class App extends Component {
 		 {miner.status === 'online' ? this.secondsToString(miner.minerstats.elapsed) : miner.status}
          </TableCell>
          <TableCell>
-            {localDate.toLocaleString()}
+            {isNaN(localDate) ? "?" : localDate.toLocaleString()}
          </TableCell>
          <TableCell>
 		 {miner.minerpool.poolname}
@@ -174,7 +174,7 @@ class App extends Component {
 	</TableRow>
     );
   }
-  
+
    find(array, minerid) {
 	  return array.find((element) => {
 		return element.name === minerid;
@@ -192,9 +192,9 @@ class App extends Component {
 
   renderPool(pool) {
 	  return (
-		<FormControlLabel key={pool.POOL.toString()} 
+		<FormControlLabel key={pool.POOL.toString()}
 		value={pool.POOL.toString()}
-		control={<Radio/>} 
+		control={<Radio/>}
 		label={pool.Priority+'. '+pool.URL + ' ('+pool.User+')'} />
 	  );
   }
@@ -206,7 +206,7 @@ class App extends Component {
   handleResetChange = event => {
     this.setState({ radReset: event.target.value });
   };
-  
+
   renderPools(miner) {
 	var pools = miner.minerpool.allpools.POOLS.map((p) => this.renderPool(p));
     return (
@@ -241,7 +241,7 @@ class App extends Component {
 			console.log(selectedpool.POOL)
 			//this.state.selectedPool = selectedpool.POOL.toString();
 		renderedPools = this.renderPools(selectedMiner);
-	 }	
+	 }
     return (
       <div className="App">
         <header className="App-header">
@@ -267,7 +267,7 @@ class App extends Component {
 			{renderedMiners}
 		</TableBody>
 		</Table>
-		
+
 		{selectedMiner && this.state.openMiner ? (
 			<Dialog
 			  modal="false"
@@ -276,7 +276,9 @@ class App extends Component {
 			<DialogContent>
 			<DialogTitle >{selectedMiner.name} Details</DialogTitle>
 			<DialogContentText>
-			{JSON.stringify(selectedMiner)}
+			<pre>
+			{JSON.stringify(selectedMiner, null, 2)}
+			</pre>
 			</DialogContentText>
 			</DialogContent>
               <DialogActions>
@@ -308,7 +310,7 @@ class App extends Component {
               </DialogActions>
 			</Dialog>
 		): null}
-		
+
 		{selectedMiner && this.state.openReset ? (
 			<Dialog
 			  modal="false"
@@ -319,13 +321,13 @@ class App extends Component {
 			<DialogContentText>
 				<FormControl component="fieldset" >
 				<RadioGroup name="commandrestart" value={this.state.radReset} onChange={this.handleResetChange}>
-					<FormControlLabel key='reset' 
+					<FormControlLabel key='reset'
 					value='reset'
-					control={<Radio/>} 
+					control={<Radio/>}
 					label='Restart using miner api (requires privileged access)' />
-					<FormControlLabel key='reboot' 
+					<FormControlLabel key='reboot'
 					value='reboot'
-					control={<Radio/>} 
+					control={<Radio/>}
 					label='Reboot using ssh (requires ssh access)' />
 				</RadioGroup>
 				</FormControl>
