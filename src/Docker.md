@@ -7,10 +7,7 @@ docker run -it dfoderick/fullcyclereact /bin/bash
 # Build for Docker:
 git clone
 docker login
-cd fullcyclereact/src/api
-docker build -t fullcycle/api .
-docker push fullcycle/api:latest
-cd ~/fullcyclereact/src/web
+cd fullcyclereact/
 docker build -t fullcycle/web .
 docker push fullcycle/web:latest
 

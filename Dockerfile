@@ -9,18 +9,18 @@ RUN npm install serve-static
 
 #first copy package and install dependencies
 WORKDIR /usr/src/fullcyclereact/src/api/
-COPY api/package*.json ./
+COPY src/api/package*.json ./
 RUN npm install
 
 #then copy source
-COPY api/. .
+COPY src/api/. .
 
 WORKDIR /usr/src/fullcyclereact/src/web/
-COPY web/package*.json ./
+COPY src/web/package*.json ./
 RUN npm install
 RUN npm install material-ui@next
 #then copy source and build it, bundled output in build dir
-COPY web/. .
+COPY src/web/. .
 RUN npm run build
 
 WORKDIR /usr/src/fullcyclereact/src/api
