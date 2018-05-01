@@ -29,9 +29,9 @@ If you get information about your Docker program then you are ready to go.
 The Full Cycle web sites are hosted on Docker Hub (https://hub.docker.com/r/fullcycle/web/) and can be installed using
 these commands.
 ```
-docker run --name fullcycleapi -d --network=host --restart unless-stopped fullcycle/api
 docker run --name fullcycleweb -d --network=host --restart unless-stopped fullcycle/web
 ```
+(Note that API and static pages have been combined into one site in production.)  
  Once installed, test the API to make sure it responds. Browse to http://raspberrypi.local:5000/api/hello
 and it should respond with
 ```
@@ -40,7 +40,7 @@ and it should respond with
 (Replace `raspberrypi.local` with the ip address of your raspberrypi
 if your pi does not have a network name.)  
 
-Then browse to the Web site `http://raspberrypi.local:3000/`.
+Then browse to the Web site `http://raspberrypi.local:5000/`.
 
 !Important! The web page will be blank or show an error if the back end Full Cycle Mining Controller is not running. (Install from https://github.com/dfoderick/fullcycle) If everything is working then you will see the web site
 similar to the screenshots below.  
