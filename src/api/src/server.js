@@ -1,15 +1,16 @@
-const express = require('express')
-const bodyParser = require('body-parser')
+const express = require('express');
+const serveStatic = require('serve-static');
+const bodyParser = require('body-parser');
 const redis = require('redis');
 const amqp = require('amqplib/callback_api');
-//var amqp = require('amqp');
 
-var app = express();
+const app = express();
 // create application/json parser
-var jsonParser = bodyParser.json();
+const jsonParser = bodyParser.json();
 // create application/x-www-form-urlencoded parser
-var urlencodedParser = bodyParser.urlencoded({ extended: false });
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
+//todo: these should all be environment settings
 const serverhost = 'localhost'
 const port = process.env.PORT || 5000;
 const messagebus = 'amqp://fullcycle:mining@'+serverhost
@@ -65,6 +66,7 @@ function publish (q, msg){
 }
 
 app.get('/api/hello', (req, res) => {
+	console.log('called hello')
   res.send({ express: 'Welcome to Full Cycle Mining' });
 });
 
@@ -80,7 +82,7 @@ function getknownminers(callback) {
 };
 
 app.get('/api/knownminers', (req, res) => {
-	console.log('called knownminers')
+		console.log('called knownminers')
     getknownminers(function(object) {
 		res.send({ knownminers: object });;
     });
@@ -108,4 +110,6 @@ app.post('/api/minerswitchpool', jsonParser, (req, res) => {
 	publish('switch',JSON.stringify(envelope));
 });
 
+//in production this serves up the react bundle
+app.use(serveStatic('../web/build'));
 app.listen(port, () => console.log(`Listening on port ${port}`));

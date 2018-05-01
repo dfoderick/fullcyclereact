@@ -1,11 +1,12 @@
-FROM resin/rpi-raspbian:latest
+#this docker currently not used see /src/Dockerfile
+
+FROM arm32v7/node:9
 
 # Install Node.js and other dependencies
-RUN sudo apt-get update && \
-    sudo apt-get -y install curl && \
-    sudo curl -sL https://deb.nodesource.com/setup_9.x | sudo bash - && \
-    sudo apt-get -y install python build-essential nodejs
-RUN sudo npm install -g nodemon
+RUN apt-get update && \
+    apt-get -y install curl && \
+    apt-get -y install python build-essential
+RUN npm install -g nodemon
 
 #first copy package and install dependencies
 WORKDIR /usr/src/fullcyclereact/src/api/

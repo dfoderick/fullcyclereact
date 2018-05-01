@@ -1,13 +1,12 @@
-FROM resin/rpi-raspbian:latest
-#FROM resin/raspberrypi3-node
+#this docker currently not used see /src/Dockerfile
 
-# Install Node.js and other dependencies
-RUN sudo apt-get update && \
-    sudo apt-get -y install curl && \
-    sudo curl -sL https://deb.nodesource.com/setup_9.x | sudo bash - && \
-    sudo apt-get -y install python build-essential nodejs
-#RUN sudo npm install -g nodemon
-RUN sudo npm install -g serve
+FROM arm32v7/node:9
+
+RUN apt-get update && \
+    apt-get -y install curl && \
+    apt-get -y install python build-essential
+RUN npm install -g nodemon
+RUN npm install -g serve
 
 #first copy just the package and install dependencies
 WORKDIR /usr/src/fullcyclereact/src/web/

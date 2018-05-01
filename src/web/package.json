@@ -3,8 +3,8 @@
   "description": "web site for full cycle mining controller",
   "version": "0.1.0",
   "license": "MIT",
-  "private": true,
-  "proxy": "http://localhost:5000/",
+  "private": false,
+  "proxy": "http://127.0.0.1:5000/",
   "dependencies": {
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
