@@ -11,16 +11,17 @@ WORKDIR /usr/src/fullcyclereact/src/api/
 COPY src/api/package*.json ./
 RUN npm install
 
-#then copy source
+#then copy api source
 COPY src/api/. .
 
 WORKDIR /usr/src/fullcyclereact/src/web/
 COPY src/web/package*.json ./
 RUN npm install
 RUN npm install material-ui@next
-npm install @material-ui/icons
-npm install --save @fortawesome/react-fontawesome
-#then copy source and build it, bundled output in build dir
+RUN npm install @material-ui/icons
+RUN npm install --save @fortawesome/react-fontawesome
+
+#then copy web source and build it, bundled output in build dir
 COPY src/web/. .
 RUN npm run build
 
@@ -28,5 +29,5 @@ WORKDIR /usr/src/fullcyclereact/src/api
 
 EXPOSE 3000
 
-#serve up express api with static content
+#serve up express api with static build content
 CMD npm run prod
