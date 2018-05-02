@@ -45,9 +45,9 @@ Then browse to the Web site `http://raspberrypi.local:5000/`.
 !Important! The web page will be blank or show an error if the back end Full Cycle Mining Controller is not running. (Install from https://github.com/dfoderick/fullcycle) If everything is working then you will see the web site
 similar to the screenshots below.  
 
-![Full Cycle React](src/client/src/images/FullCycleReact.png?raw=true "Full Cycle React")
-![Full Cycle Switch Pool](src/client/src/images/fullcycle_switch.png?raw=true "Full Cycle Switch Pool")
-![Full Cycle Reset Miner](src/client/src/images/fullcycle_reset.png?raw=true "Full Cycle Reset Miner")
+![Full Cycle React](src/web/src/images/FullCycleReact.png?raw=true "Full Cycle React")
+![Full Cycle Switch Pool](src/web/src/images/fullcycle_switch.png?raw=true "Full Cycle Switch Pool")
+![Full Cycle Reset Miner](src/web/src/images/fullcycle_reset.png?raw=true "Full Cycle Reset Miner")
 
 If you have problems installing or want to give feed back then
 add an issue to this project.  
