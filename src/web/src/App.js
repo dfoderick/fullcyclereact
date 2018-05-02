@@ -6,27 +6,53 @@ import Button from 'material-ui/Button';
 import Dialog, {DialogTitle, DialogContent, DialogContentText, DialogActions} from 'material-ui/Dialog';
 import Radio, { RadioGroup } from 'material-ui/Radio';
 import { FormControl, FormControlLabel } from 'material-ui/Form';
+import Chip from 'material-ui/Chip';
+import Avatar from 'material-ui/Avatar';
+//import FontIcon from 'material-ui/FontIcon';
+//import FaceIcon from '@material-ui/icons/Face';
 import logo from './logo.svg';
 import './App.css';
+
+const styles = theme => ({
+  root: {
+    display: 'flex',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+  },
+  chip: {
+    margin: theme.spacing.unit,
+  },
+});
 
 class App extends Component {
 	  state = {
 		response: '',
+		sensors: '',
 		activeRowId: '',
 		openMiner: false,
-	    openSwitch: false,
-	    openReset: false,
+	  openSwitch: false,
+	  openReset: false,
 		selectedPool: '',
 		radReset: ''
   };
 
   componentDidMount() {
-    this.callApi()
+		this.callApiGetSensors()
+      .then(res => this.setState({ sensors: res.knownsensors }))
+      .catch(err => console.log(err));
+    this.callApiGetMiners()
       .then(res => this.setState({ response: res.knownminers }))
       .catch(err => console.log(err));
   }
 
-  callApi = async () => {
+	callApiGetSensors = async () => {
+    const response = await fetch('/api/knownsensors');
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    return body;
+  };
+
+  callApiGetMiners = async () => {
     const response = await fetch('/api/knownminers');
     const body = await response.json();
     if (response.status !== 200) throw Error(body.message);
@@ -216,39 +242,66 @@ class App extends Component {
     );
   }
 
-  render() {
-	const j = JSON.parse(JSON.stringify(this.state.response))
+	renderSensor(sensor) {
+		const sens = sensor[0];
+		console.log(sens.value)
+		return (
+			<Chip
+			avatar={
+					<Avatar>
+						{sens.valuetype === 'humidity' ? 'H' : 'T'}
+					</Avatar>
+				}
+			 label={sens.value} />
+		);
 
-    var arrMiners = [];
-	var renderedPools = []
-	if (j != null){
-		Object.keys(j).forEach(function(key) {
-		  arrMiners.push(JSON.parse(j[key], function (key, value) {
-				return (value == null) ? "" : value
-			}));
-		});
 	}
-	//renderedMiners are a list of miners rendered as table rows
-	var renderedMiners = arrMiners.map((m) => this.renderMiner(m));
-	// find the data for this active row `id`
+
+  render() {
+		const jsensors = JSON.parse(JSON.stringify(this.state.sensors));
+		const arrSensors = [];
+		if (jsensors != null){
+			Object.keys(jsensors).forEach(function(key) {
+			  arrSensors.push(JSON.parse(jsensors[key], function (key, value) {
+					return (value == null) ? "" : value
+				}));
+			});
+		}
+		const renderedSensors = arrSensors.map((s) => this.renderSensor(s));
+
+		const j = JSON.parse(JSON.stringify(this.state.response));
+    const arrMiners = [];
+		if (j != null){
+			Object.keys(j).forEach(function(key) {
+			  arrMiners.push(JSON.parse(j[key], function (key, value) {
+					return (value == null) ? "" : value
+				}));
+			});
+		}
+		var renderedPools = [];
+		//renderedMiners are a list of miners rendered as table rows
+		var renderedMiners = arrMiners.map((m) => this.renderMiner(m));
+		// find the data for this active row `id`
     const selectedMiner = this.find(arrMiners, this.state.activeRowId );
-	 if (selectedMiner && selectedMiner.minerpool && selectedMiner.minerpool.allpools)
-	 {
-		var selectedpool = this.findcurrentpool(selectedMiner.minerpool.allpools.POOLS);
-		//can't do this otherwise it messes up the radio button and won't select
-		if (selectedpool)
-			console.log(this.state.selectedPool)
-			console.log(selectedpool.POOL)
-			//this.state.selectedPool = selectedpool.POOL.toString();
-		renderedPools = this.renderPools(selectedMiner);
-	 }
+	 	if (selectedMiner && selectedMiner.minerpool && selectedMiner.minerpool.allpools){
+			var selectedpool = this.findcurrentpool(selectedMiner.minerpool.allpools.POOLS);
+			//can't do this otherwise it messes up the radio button and won't select
+			if (selectedpool)
+				console.log(this.state.selectedPool)
+				console.log(selectedpool.POOL)
+				//this.state.selectedPool = selectedpool.POOL.toString();
+			renderedPools = this.renderPools(selectedMiner);
+	 	}
     return (
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Full Cycle Mining Controller</h1>
         </header>
-        <div className="App-intro">
+				<div className="App-intro">
+				<div style={styles.wrapper}>
+				{renderedSensors}
+				</div>
 		<Table>
         <TableHead>
           <TableRow>
@@ -267,7 +320,6 @@ class App extends Component {
 			{renderedMiners}
 		</TableBody>
 		</Table>
-
 		{selectedMiner && this.state.openMiner ? (
 			<Dialog
 			  modal="false"
@@ -349,5 +401,6 @@ class App extends Component {
     );
   }
 }
+
 
 export default App;

@@ -70,12 +70,12 @@ app.get('/api/hello', (req, res) => {
   res.send({ express: 'Welcome to Full Cycle Mining' });
 });
 
-function getknownminers(callback) {
+function getredishashset(key, callback) {
 	var client = redis.createClient(redis_port, redis_host, {no_ready_check: true});
 	client.auth('mining', function (err) {
 		 if (err) throw err;
 	});
-	client.hgetall(['knownminers'], function(err, object) {
+	client.hgetall([key], function(err, object) {
 		callback(object);
 		client.quit();
 	});
@@ -83,7 +83,7 @@ function getknownminers(callback) {
 
 app.get('/api/knownminers', (req, res) => {
 		console.log('called knownminers')
-    getknownminers(function(object) {
+    getredishashset('knownminers', function(object) {
 		res.send({ knownminers: object });;
     });
 });
@@ -108,6 +108,13 @@ app.post('/api/minerswitchpool', jsonParser, (req, res) => {
 	//3) wrap the minermessage into an envelope
 	var envelope = makeMessage('minercommand', JSON.stringify(minermsg))
 	publish('switch',JSON.stringify(envelope));
+});
+
+app.get('/api/knownsensors', (req, res) => {
+		console.log('called knownsensors')
+    getredishashset('knownsensors', function(object) {
+		res.send({ knownsensors: object });;
+    });
 });
 
 //in production this serves up the react bundle
