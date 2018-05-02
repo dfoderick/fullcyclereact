@@ -4,6 +4,7 @@ FROM arm32v7/node:9
 RUN apt-get update && \
     apt-get -y install curl && \
     apt-get -y install python build-essential
+
 RUN npm install serve-static
 
 #first copy package and install dependencies
