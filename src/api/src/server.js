@@ -16,6 +16,7 @@ const port = process.env.PORT || 5000;
 const messagebus = 'amqp://fullcycle:mining@'+serverhost
 const redis_port = 6379
 const redis_host = serverhost
+const redis_password = 'mining'
 
 //Message envelope for putting messages on the bus
 function makeMessage(ptype, pbody){
@@ -70,11 +71,31 @@ app.get('/api/hello', (req, res) => {
   res.send({ express: 'Welcome to Full Cycle Mining' });
 });
 
-function getredishashset(key, callback) {
+app.get('/api/getcamera', (req, res) => {
+		console.log('called getcamera')
+    getredis('camera', function(object) {
+		res.send({ camera: object });;
+    });
+});
+
+function redisclient(){
 	var client = redis.createClient(redis_port, redis_host, {no_ready_check: true});
-	client.auth('mining', function (err) {
+	client.auth(redis_password, function (err) {
 		 if (err) throw err;
 	});
+  return client;
+}
+
+function getredis(key, callback) {
+	var client = redisclient();
+	client.get([key], function(err, object) {
+		callback(object);
+		client.quit();
+	});
+};
+
+function getredishashset(key, callback) {
+	var client = redisclient();
 	client.hgetall([key], function(err, object) {
 		callback(object);
 		client.quit();

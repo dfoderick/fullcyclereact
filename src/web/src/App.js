@@ -20,7 +20,18 @@ const styles = theme => ({
     flexWrap: 'wrap',
   },
   chip: {
-    margin: theme.spacing.unit,
+    margin: 3,
+  },
+  row: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  avatar: {
+    margin: 10,
+  },
+  bigAvatar: {
+    width: 60,
+    height: 60,
   },
 });
 
@@ -28,10 +39,12 @@ class App extends Component {
 	  state = {
 		response: '',
 		sensors: '',
+    camera: '',
 		activeRowId: '',
 		openMiner: false,
 	  openSwitch: false,
 	  openReset: false,
+    openCamera: false,
 		selectedPool: '',
 		radReset: ''
   };
@@ -40,6 +53,9 @@ class App extends Component {
 		this.callApiGetSensors()
       .then(res => this.setState({ sensors: res.knownsensors }))
       .catch(err => console.log(err));
+      this.callApiGetCamera()
+        .then(res => this.setState({ camera: res.camera }))
+        .catch(err => console.log(err));
     this.callApiGetMiners()
       .then(res => this.setState({ response: res.knownminers }))
       .catch(err => console.log(err));
@@ -52,12 +68,23 @@ class App extends Component {
     return body;
   };
 
+  callApiGetCamera = async () => {
+    const response = await fetch('/api/getcamera');
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    return body;
+  };
+
   callApiGetMiners = async () => {
     const response = await fetch('/api/knownminers');
     const body = await response.json();
     if (response.status !== 200) throw Error(body.message);
     return body;
   };
+
+  handleOpenCamera = () => { this.setState({ openCamera: true }); };
+
+  handleCloseCamera = () => { this.setState({ openCamera: false }); };
 
   handleOpenMiner = (rowId) => () => {
     this.setState({
@@ -252,15 +279,24 @@ class App extends Component {
 						{sens.valuetype === 'humidity' ? 'H' : 'T'}
 					</Avatar>
 				}
-			 label={sens.value} />
+			 label={parseFloat(sens.value).toFixed(2).toString()} />
 		);
+	}
 
+  renderCamera(sensor) {
+    if (!sensor || sensor === " ") return null;
+		const sens = sensor[0];
+		return (
+      <span >
+      <Button label='Camera'  onClick={this.handleOpenCamera}>Camera</Button>
+      </span>
+		);
 	}
 
   render() {
 		const jsensors = JSON.parse(JSON.stringify(this.state.sensors));
 		const arrSensors = [];
-		if (jsensors != null){
+		if (jsensors){
 			Object.keys(jsensors).forEach(function(key) {
 			  arrSensors.push(JSON.parse(jsensors[key], function (key, value) {
 					return (value == null) ? "" : value
@@ -268,6 +304,15 @@ class App extends Component {
 			});
 		}
 		const renderedSensors = arrSensors.map((s) => this.renderSensor(s));
+
+    let renderedCamera = null;
+    let sensorCamera = null;
+    const jcamera = JSON.parse(JSON.stringify(this.state.camera));
+    if (jcamera)
+    {
+      sensorCamera = JSON.parse(jcamera);
+      renderedCamera = this.renderCamera(sensorCamera);
+    }
 
 		const j = JSON.parse(JSON.stringify(this.state.response));
     const arrMiners = [];
@@ -300,7 +345,7 @@ class App extends Component {
         </header>
 				<div className="App-intro">
 				<div style={styles.wrapper}>
-				{renderedSensors}
+				{renderedSensors}{renderedCamera}
 				</div>
 		<Table>
         <TableHead>
@@ -320,6 +365,26 @@ class App extends Component {
 			{renderedMiners}
 		</TableBody>
 		</Table>
+
+    {this.state.openCamera && sensorCamera ? (
+      <Dialog
+        modal="true"
+        open={this.state.openCamera}
+      >
+      <DialogContent>
+      <img
+        alt="Camera"
+        src={"data:image/jpeg;base64," + sensorCamera[0].value}
+      />
+      </DialogContent>
+              <DialogActions>
+                <Button onClick={() => {this.handleCloseCamera()}} color="primary" autoFocus>
+                  Close
+                </Button>
+              </DialogActions>
+      </Dialog>
+    ): null}
+
 		{selectedMiner && this.state.openMiner ? (
 			<Dialog
 			  modal="false"
@@ -401,6 +466,5 @@ class App extends Component {
     );
   }
 }
-
 
 export default App;
