@@ -5,9 +5,7 @@ const redis = require('redis');
 const amqp = require('amqplib/callback_api');
 
 const app = express();
-// create application/json parser
 const jsonParser = bodyParser.json();
-// create application/x-www-form-urlencoded parser
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 //todo: these should all be environment settings
