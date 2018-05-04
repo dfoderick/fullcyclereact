@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import Button from 'material-ui/Button';
-import Dialog, {DialogTitle, DialogContent, DialogContentText, DialogActions} from 'material-ui/Dialog';
+import Dialog, {DialogContent, DialogActions} from 'material-ui/Dialog';
 
 export default class CameraButton extends Component {
-    constructor(props) {
-        super(props);
-        }
 
     state = {
         camera: '',

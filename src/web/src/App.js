@@ -6,10 +6,9 @@ import Button from 'material-ui/Button';
 import Dialog, {DialogTitle, DialogContent, DialogContentText, DialogActions} from 'material-ui/Dialog';
 import Radio, { RadioGroup } from 'material-ui/Radio';
 import { FormControl, FormControlLabel } from 'material-ui/Form';
-import Chip from 'material-ui/Chip';
-import Avatar from 'material-ui/Avatar';
 //import FontIcon from 'material-ui/FontIcon';
 //import FaceIcon from '@material-ui/icons/Face';
+import SensorList from './SensorList';
 import CameraButton from './CameraButton';
 import logo from './logo.svg';
 import './App.css';
@@ -96,7 +95,6 @@ class App extends Component {
       openMiner: false
     });
   };
-
 
   handleOpenReset = (rowId) => () => {
     this.setState({
@@ -265,34 +263,8 @@ class App extends Component {
     );
   }
 
-	renderSensor(sensor) {
-		const sens = sensor[0];
-		console.log(sens.value)
-		return (
-			<Chip
-			avatar={
-					<Avatar>
-						{sens.valuetype === 'humidity' ? 'H' : 'T'}
-					</Avatar>
-				}
-			 label={parseFloat(sens.value).toFixed(2).toString()} />
-		);
-	}
-
-
-
   render() {
 		const jsensors = JSON.parse(JSON.stringify(this.state.sensors));
-		const arrSensors = [];
-		if (jsensors){
-			Object.keys(jsensors).forEach(function(key) {
-			  arrSensors.push(JSON.parse(jsensors[key], function (key, value) {
-					return (value == null) ? "" : value
-				}));
-			});
-		}
-		const renderedSensors = arrSensors.map((s) => this.renderSensor(s));
-
     const jcamera = JSON.parse(JSON.stringify(this.state.camera));
 
 		const j = JSON.parse(JSON.stringify(this.state.response));
@@ -326,8 +298,8 @@ class App extends Component {
         </header>
 				<div className="App-intro">
 				<div style={styles.wrapper}>
-				{renderedSensors}
-        <CameraButton sensor={jcamera}></CameraButton>
+				<SensorList sensor = {jsensors}/>
+        <CameraButton sensor={jcamera}/>
 				</div>
 		<Table>
         <TableHead>
