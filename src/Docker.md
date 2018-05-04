@@ -16,5 +16,5 @@ docker stop fullcycleapi fullcycleweb
 docker rm fullcycleapi fullcycleweb
 
 !don't think -i should be passed here
-docker run --name fullcycleapi -d --network=host --restart unless-stopped fullcycle/api
+//docker run --name fullcycleapi -d --network=host --restart unless-stopped fullcycle/api
 docker run --name fullcycleweb -d --network=host --restart unless-stopped fullcycle/web
