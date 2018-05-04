@@ -8,7 +8,7 @@ export default class CameraButton extends Component {
 		const sens = sensor[0];
 		console.log(sens.value)
 		return (
-			<Chip
+			<Chip key={sens.sensorid}
 			avatar={
 					<Avatar>
 						{sens.valuetype === 'humidity' ? 'H' : 'T'}
