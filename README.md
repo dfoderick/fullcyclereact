@@ -1,6 +1,9 @@
 # Full Cycle Web and API site
 This project is the front end (UI) React web site for the Full Cycle Bitcoin Mining Controller.
 Installation of the back end is required and can be found at https://github.com/dfoderick/fullcycle
+![Full Cycle React](src/web/src/images/FullCycleReact.png?raw=true "Full Cycle React")
+![Full Cycle Switch Pool](src/web/src/images/fullcycle_switch.png?raw=true "Full Cycle Switch Pool")
+![Full Cycle Reset Miner](src/web/src/images/fullcycle_reset.png?raw=true "Full Cycle Reset Miner")
 # Installation
 The web sites can be installed on the same Raspberry Pi as the Full Cycle Controller
 or they can be installed on a separate computer.
@@ -43,11 +46,7 @@ if your pi does not have a network name.)
 Then browse to the Web site `http://raspberrypi.local:5000/`.
 
 !Important! The web page will be blank or show an error if the back end Full Cycle Mining Controller is not running. (Install from https://github.com/dfoderick/fullcycle) If everything is working then you will see the web site
-similar to the screenshots below.  
-
-![Full Cycle React](src/web/src/images/FullCycleReact.png?raw=true "Full Cycle React")
-![Full Cycle Switch Pool](src/web/src/images/fullcycle_switch.png?raw=true "Full Cycle Switch Pool")
-![Full Cycle Reset Miner](src/web/src/images/fullcycle_reset.png?raw=true "Full Cycle Reset Miner")
+similar to the screenshots above.  
 
 If you have problems installing or want to give feed back then
 add an issue to this project.  
