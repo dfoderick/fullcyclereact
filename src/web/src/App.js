@@ -10,6 +10,7 @@ import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
 //import FontIcon from 'material-ui/FontIcon';
 //import FaceIcon from '@material-ui/icons/Face';
+import CameraButton from './CameraButton';
 import logo from './logo.svg';
 import './App.css';
 
@@ -44,7 +45,6 @@ class App extends Component {
 		openMiner: false,
 	  openSwitch: false,
 	  openReset: false,
-    openCamera: false,
 		selectedPool: '',
 		radReset: ''
   };
@@ -81,10 +81,6 @@ class App extends Component {
     if (response.status !== 200) throw Error(body.message);
     return body;
   };
-
-  handleOpenCamera = () => { this.setState({ openCamera: true }); };
-
-  handleCloseCamera = () => { this.setState({ openCamera: false }); };
 
   handleOpenMiner = (rowId) => () => {
     this.setState({
@@ -283,15 +279,7 @@ class App extends Component {
 		);
 	}
 
-  renderCamera(sensor) {
-    if (!sensor || sensor === " ") return null;
-		const sens = sensor[0];
-		return (
-      <span >
-      <Button label='Camera'  onClick={this.handleOpenCamera}>Camera</Button>
-      </span>
-		);
-	}
+
 
   render() {
 		const jsensors = JSON.parse(JSON.stringify(this.state.sensors));
@@ -305,14 +293,7 @@ class App extends Component {
 		}
 		const renderedSensors = arrSensors.map((s) => this.renderSensor(s));
 
-    let renderedCamera = null;
-    let sensorCamera = null;
     const jcamera = JSON.parse(JSON.stringify(this.state.camera));
-    if (jcamera)
-    {
-      sensorCamera = JSON.parse(jcamera);
-      renderedCamera = this.renderCamera(sensorCamera);
-    }
 
 		const j = JSON.parse(JSON.stringify(this.state.response));
     const arrMiners = [];
@@ -345,7 +326,8 @@ class App extends Component {
         </header>
 				<div className="App-intro">
 				<div style={styles.wrapper}>
-				{renderedSensors}{renderedCamera}
+				{renderedSensors}
+        <CameraButton sensor={jcamera}></CameraButton>
 				</div>
 		<Table>
         <TableHead>
@@ -365,25 +347,6 @@ class App extends Component {
 			{renderedMiners}
 		</TableBody>
 		</Table>
-
-    {this.state.openCamera && sensorCamera ? (
-      <Dialog
-        modal="true"
-        open={this.state.openCamera}
-      >
-      <DialogContent>
-      <img
-        alt="Camera"
-        src={"data:image/jpeg;base64," + sensorCamera[0].value}
-      />
-      </DialogContent>
-              <DialogActions>
-                <Button onClick={() => {this.handleCloseCamera()}} color="primary" autoFocus>
-                  Close
-                </Button>
-              </DialogActions>
-      </Dialog>
-    ): null}
 
 		{selectedMiner && this.state.openMiner ? (
 			<Dialog
