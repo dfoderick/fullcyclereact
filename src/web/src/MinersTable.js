@@ -5,6 +5,11 @@ import Dialog, {DialogTitle, DialogContent, DialogActions} from 'material-ui/Dia
 import Radio, { RadioGroup } from 'material-ui/Radio';
 import { FormControl, FormControlLabel } from 'material-ui/Form';
 
+const tableColumnStyle = {
+    paddingRight: '5px',
+    paddingLeft: '5px'
+}
+
 export default class MinersTable extends Component {
 
     state = {
@@ -168,31 +173,31 @@ export default class MinersTable extends Component {
         var localDate = new Date(miner.lastmonitor);
         return (
         <TableRow key={miner.name}>
-             <TableCell>
+             <TableCell style={tableColumnStyle}>
              <Button label='Details' onClick={this.handleOpenMiner(miner.name)}>{miner.name}</Button>
              </TableCell>
-             <TableCell>
+             <TableCell style={tableColumnStyle}>
              {miner.minerinfo.miner_type}
              </TableCell>
-             <TableCell>
+             <TableCell style={tableColumnStyle}>
              {miner.status === 'online' ? miner.minerstats.currenthash : miner.status}
              </TableCell>
-             <TableCell>
+             <TableCell style={tableColumnStyle}>
              {miner.status === 'online' ? miner.minerstats.controllertemp : miner.status}
              </TableCell>
-             <TableCell>
+             <TableCell style={tableColumnStyle}>
              {miner.status === 'online' ? this.secondsToString(miner.minerstats.elapsed) : miner.status}
              </TableCell>
-             <TableCell>
+             <TableCell style={tableColumnStyle}>
                 {isNaN(localDate) ? "?" : localDate.toLocaleString()}
              </TableCell>
-             <TableCell>
+             <TableCell style={tableColumnStyle}>
              {miner.minerpool.poolname}
              </TableCell>
-             <TableCell>
+             <TableCell style={tableColumnStyle}>
                 <Button label='Switch' onClick={this.handleOpenSwitch(miner.name)}>Switch</Button>
              </TableCell>
-             <TableCell>
+             <TableCell style={tableColumnStyle}>
                 <Button label='Reset' onClick={this.handleOpenReset(miner.name)} >Reset</Button>
              </TableCell>
         </TableRow>

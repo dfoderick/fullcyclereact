@@ -5,6 +5,15 @@ import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
 import Dialog, {DialogContent, DialogActions} from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
+import CameraButton from './CameraButton';
+import humidity from './icons/humidity.svg';
+import temperature from './icons/temperature.svg';
+
+const sensorStyle = {
+    marginTop: '10px',
+    marginLeft: '3px',
+    marginRight: '3px'
+  };
 
 const styles = theme => ({
     root: {
@@ -13,7 +22,7 @@ const styles = theme => ({
       flexWrap: 'wrap',
     },
     chip: {
-      margin: theme.spacing.unit,
+      //margin: theme.spacing.unit,
     },
   });
   
@@ -40,11 +49,12 @@ export default class SensorList extends Component {
 		console.log(sens.value)
 		return (
             <Chip key={sens.sensorid}
-            style={{ margin : '5px'}}
+            style={sensorStyle}
 			avatar={
-					<Avatar>
-						{sens.valuetype === 'humidity' ? 'H' : 'T'}
-					</Avatar>
+					<Avatar
+                        src={sens.valuetype === 'humidity' ? humidity : temperature}
+                        alt = "sensor"
+                    />
 			}
 			label={parseFloat(sens.value).toFixed(2).toString()}
             onClick={() => {this.handleOpenDialog(sens)}}
@@ -68,6 +78,8 @@ export default class SensorList extends Component {
         return (
         <span >
             {renderedSensors}
+            <CameraButton sensor={this.props.camera}/>
+
              {this.state.openDialog && this.state.selectedSensor ? (
                 <Dialog
                     modal="true"

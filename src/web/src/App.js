@@ -5,7 +5,6 @@ import React, { Component } from 'react';
 //import FaceIcon from '@material-ui/icons/Face';
 import MinersTable from './MinersTable';
 import SensorList from './SensorList';
-import CameraButton from './CameraButton';
 import logo from './logo.svg';
 import './App.css';
 
@@ -16,6 +15,9 @@ const styles = theme => ({
     flexWrap: 'wrap',
   },
   chip: {
+    margin: 3,
+  },
+  wrapper: {
     margin: 3,
   },
   row: {
@@ -83,8 +85,7 @@ class App extends Component {
         </header>
 				<div className="App-intro">
           <div style={styles.wrapper}>
-          <SensorList sensor = {jsensors}/>
-          <CameraButton sensor={jcamera}/>
+          <SensorList sensor = {jsensors} camera={jcamera}/>
           </div>
           <MinersTable miners={jminers} />
         </div>
