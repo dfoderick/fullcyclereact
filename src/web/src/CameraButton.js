@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Button from 'material-ui/Button';
+import Chip from 'material-ui/Chip';
+import Avatar from 'material-ui/Avatar';
 import Dialog, {DialogContent, DialogActions} from 'material-ui/Dialog';
 
 export default class CameraButton extends Component {
@@ -9,7 +11,7 @@ export default class CameraButton extends Component {
         openCamera: false
         };
 
-    handleOpenCamera = () => { this.setState({ openCamera: true }); };
+    handleOpenDialog = () => { this.setState({ openCamera: true }); };
 
     handleCloseCamera = () => { this.setState({ openCamera: false }); };
 
@@ -21,7 +23,15 @@ export default class CameraButton extends Component {
 
         return (
         <span >
-        <Button label='Camera' onClick={this.handleOpenCamera}>Camera</Button>
+            <Chip
+            style={{ margin : '5px'}}
+			avatar={
+					<Avatar src={"data:image/jpeg;base64," + sensorCamera.value}>
+					</Avatar>
+			}
+			label="Camera"
+            onClick={() => {this.handleOpenDialog()}}
+            />
         {this.state.openCamera && sensorCamera ? (
             <Dialog
                 modal="true"
