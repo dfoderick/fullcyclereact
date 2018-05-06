@@ -1,12 +1,30 @@
 import React, { Component } from 'react';
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
+import IconButton from 'material-ui/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 //import PropTypes from 'prop-types';
 //import { withStyles } from 'material-ui/styles';
 //import FontIcon from 'material-ui/FontIcon';
 //import FaceIcon from '@material-ui/icons/Face';
 import MinersTable from './MinersTable';
 import SensorList from './SensorList';
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import './App.css';
+
+const appstyles = {
+  root: {
+    flexGrow: 1,
+  },
+  flex: {
+    flex: 1,
+  },
+  menuButton: {
+    marginLeft: -12,
+    marginRight: 20,
+  },
+};
 
 const styles = theme => ({
   root: {
@@ -18,7 +36,7 @@ const styles = theme => ({
     margin: 3,
   },
   wrapper: {
-    margin: 3,
+    margin: 5,
   },
   row: {
     display: 'flex',
@@ -79,14 +97,22 @@ class App extends Component {
 		const jminers = JSON.parse(JSON.stringify(this.state.response));
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Full Cycle Mining Controller</h1>
-        </header>
+        <div className={appstyles.root}>
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton className={appstyles.menuButton} color="inherit" aria-label="Menu">
+            <MenuIcon/>
+            </IconButton>
+            <Typography variant="title" color="inherit" className={appstyles.flex}>
+              Full Cycle Mining Controller
+            </Typography>
+            <div style={styles.wrapper}>
+            <SensorList sensor = {jsensors} camera={jcamera}/>
+            </div>
+          </Toolbar>
+        </AppBar>
+      </div>
 				<div className="App-intro">
-          <div style={styles.wrapper}>
-          <SensorList sensor = {jsensors} camera={jcamera}/>
-          </div>
           <MinersTable miners={jminers} />
         </div>
       </div>
