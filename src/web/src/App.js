@@ -1,16 +1,27 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
+import { MenuItem } from 'material-ui/Menu';
 import Typography from 'material-ui/Typography';
+import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-//import PropTypes from 'prop-types';
-//import { withStyles } from 'material-ui/styles';
+
+import Drawer from 'material-ui/Drawer';
+import List from 'material-ui/List';
+import Hidden from 'material-ui/Hidden';
+import Divider from 'material-ui/Divider';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+
 //import FontIcon from 'material-ui/FontIcon';
 //import FaceIcon from '@material-ui/icons/Face';
+import classNames from 'classnames';
+import { fullcycleListItems } from './tileData';
 import MinersTable from './MinersTable';
 import SensorList from './SensorList';
-//import logo from './logo.svg';
 import './App.css';
 
 const appstyles = {
@@ -26,37 +37,97 @@ const appstyles = {
   },
 };
 
+const drawerWidth = 190;
+
 const styles = theme => ({
   root: {
+    flexGrow: 1,
+  },
+  appFrame: {
+    height: 430,
+    zIndex: 1,
+    overflow: 'hidden',
+    position: 'relative',
     display: 'flex',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
+    width: '100%',
   },
-  chip: {
-    margin: 3,
+  appBar: {
+    position: 'absolute',
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
   },
-  wrapper: {
-    margin: 5,
+  appBarShift: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
-  row: {
+  'appBarShift-left': {
+    marginLeft: drawerWidth,
+  },
+  'appBarShift-right': {
+    marginRight: drawerWidth,
+  },
+  menuButton: {
+    marginLeft: 12,
+    marginRight: 20,
+  },
+  hide: {
+    display: 'none',
+  },
+  drawerPaper: {
+    position: 'relative',
+    width: drawerWidth,
+  },
+  drawerHeader: {
     display: 'flex',
-    justifyContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: '0 8px',
+    ...theme.mixins.toolbar,
   },
-  avatar: {
-    margin: 10,
+  content: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.default,
+    padding: theme.spacing.unit * 3,
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
   },
-  bigAvatar: {
-    width: 60,
-    height: 60,
+  'content-left': {
+    marginLeft: -drawerWidth,
+  },
+  'content-right': {
+    marginRight: -drawerWidth,
+  },
+  contentShift: {
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  'contentShift-left': {
+    marginLeft: 0,
+  },
+  'contentShift-right': {
+    marginRight: 0,
   },
 });
 
-class App extends Component {
+
+class App extends React.Component {
 	  state = {
       response: '',
       sensors: '',
-      camera: ''
-    };
+      camera: '',
+      mobileOpen: false,
+      open: false,
+      anchor: 'left',
+      };
 
   componentDidMount() {
 		this.callApiGetSensors()
@@ -91,33 +162,105 @@ class App extends Component {
     return body;
   };
 
+  handleDrawerToggle = () => {
+    this.setState({ mobileOpen: !this.state.mobileOpen });
+  };
+  
+  handleDrawerOpen = () => {
+    this.setState({ open: true });
+  };
+
+  handleDrawerClose = () => {
+    this.setState({ open: false });
+  };
+
+  handleChangeAnchor = event => {
+    this.setState({
+      anchor: event.target.value,
+    });
+  }
   render() {
+    const { classes, theme } = this.props;
+    const { anchor, open } = this.state;
+
+    const drawer = (
+      <Drawer
+        variant="persistent"
+        anchor={anchor}
+        open={open}
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+      >
+        <div className={classes.drawerHeader}>
+          <IconButton onClick={this.handleDrawerClose}>
+            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </IconButton>
+        </div>
+        <Divider />
+        <List>{fullcycleListItems}</List>
+      </Drawer>
+    );
+    let before = null;
+    let after = null;
+
+    if (anchor === 'left') {
+      before = drawer;
+    } else {
+      after = drawer;
+    }
+
 		const jsensors = JSON.parse(JSON.stringify(this.state.sensors));
     const jcamera = JSON.parse(JSON.stringify(this.state.camera));
 		const jminers = JSON.parse(JSON.stringify(this.state.response));
     return (
-      <div className="App">
-        <div className={appstyles.root}>
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton className={appstyles.menuButton} color="inherit" aria-label="Menu">
-            <MenuIcon/>
-            </IconButton>
-            <Typography variant="title" color="inherit" className={appstyles.flex}>
+
+      <div className={classes.root}>
+        <div className={classes.appFrame}>
+          <AppBar
+            className={classNames(classes.appBar, {
+              [classes.appBarShift]: open,
+              [classes[`appBarShift-${anchor}`]]: open,
+            })}
+          >
+            <Toolbar disableGutters={!open}>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={this.handleDrawerOpen}
+                className={classNames(classes.menuButton, open && classes.hide)}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="title" color="inherit" noWrap>
               Full Cycle Mining Controller
-            </Typography>
-            <div style={styles.wrapper}>
-            <SensorList sensor = {jsensors} camera={jcamera}/>
+              </Typography>
+              <div style={styles.wrapper}>
+              <SensorList sensor = {jsensors} camera={jcamera}/>
             </div>
-          </Toolbar>
-        </AppBar>
-      </div>
-				<div className="App-intro">
-          <MinersTable miners={jminers} />
+            </Toolbar>
+          </AppBar>
+          {before}
+          <main
+            className={classNames(classes.content, classes[`content-${anchor}`], {
+              [classes.contentShift]: open,
+              [classes[`contentShift-${anchor}`]]: open,
+            })}
+          >
+            <div className={classes.drawerHeader} />
+            <MinersTable miners={jminers} />
+          </main>
+          {after}
         </div>
       </div>
+
     );
   }
 }
 
-export default App;
+App.propTypes = {
+  classes: PropTypes.object.isRequired,
+  theme: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles, { withTheme: true })(App);
