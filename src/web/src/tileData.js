@@ -9,14 +9,10 @@ import SendIcon from '@material-ui/icons/Send';
 import MailIcon from '@material-ui/icons/Mail';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ReportIcon from '@material-ui/icons/Report';
+import About from './About.js';
 
 export const fullcycleListItems = (
   <div>
-    <ListItem button>
-      <ListItemIcon>
-        <StarIcon />
-      </ListItemIcon>
-      <ListItemText primary="About" />
-    </ListItem>
+    <About/>
   </div>
 );
