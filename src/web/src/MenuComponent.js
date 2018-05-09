@@ -1,5 +1,3 @@
-// This file is shared across the demos.
-
 import React from 'react';
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
@@ -13,10 +11,12 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import ReportIcon from '@material-ui/icons/Report';
 import About from './About.js';
 
-export const fullcycleListItems = (
+export default class Menu extends React.Component {
+  render() {
+    return (
   <div>
     <ListItem button
-      onClick={() => {this.handleOpenMiners()}}
+      onClick={() => {this.props.action('miners')}}
     >
     <ListItemIcon>
     <ComputerIcon />
@@ -25,7 +25,7 @@ export const fullcycleListItems = (
     </ListItem>
 
     <ListItem button
-      onClick={() => {this.handleOpenSensors()}}
+      onClick={() => {this.props.action('sensors')}}
       >
     <ListItemIcon>
     <WifiIcon />
@@ -35,3 +35,5 @@ export const fullcycleListItems = (
     <About/>
   </div>
 );
+  }
+}

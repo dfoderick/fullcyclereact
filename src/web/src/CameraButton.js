@@ -44,6 +44,14 @@ export default class CameraButton extends Component {
         let jsensor = JSON.parse(strsensor);
         let sensorCamera = jsensor[0];
 
+        if (this.props.mode === 'expended'){
+            return (
+                <img
+                alt="Camera"
+                src={"data:image/jpeg;base64," + sensorCamera.value}
+                />
+            );
+        } else {
         return (
             <span>
             <Chip style={chipStyle}
@@ -76,5 +84,6 @@ export default class CameraButton extends Component {
             ): null}
             </span>
         );
+    }
     }
 }

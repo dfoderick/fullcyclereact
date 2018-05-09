@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Button from 'material-ui/Button';
+import InfoIcon from '@material-ui/icons/Info';
 import Dialog, {DialogContent, DialogActions} from 'material-ui/Dialog';
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import StarIcon from '@material-ui/icons/Star';
@@ -22,7 +23,7 @@ export default class About extends Component {
                     onClick={() => {this.handleOpenDialog()}}
                 >
                 <ListItemIcon>
-                <StarIcon />
+                <InfoIcon />
                 </ListItemIcon>
                 <ListItemText primary="About" />
                 </ListItem>

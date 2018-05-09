@@ -78,7 +78,7 @@ export default class SensorList extends Component {
         return (
         <span >
             {renderedSensors}
-            <CameraButton sensor={this.props.camera}/>
+            <CameraButton sensor={this.props.camera} mode={this.props.mode}/>
 
              {this.state.openDialog && this.state.selectedSensor ? (
                 <Dialog

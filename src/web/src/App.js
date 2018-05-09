@@ -8,6 +8,7 @@ import Typography from 'material-ui/Typography';
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import camera from './icons/camera.svg';
 
 import Drawer from 'material-ui/Drawer';
 import List from 'material-ui/List';
@@ -16,10 +17,8 @@ import Divider from 'material-ui/Divider';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
-//import FontIcon from 'material-ui/FontIcon';
-//import FaceIcon from '@material-ui/icons/Face';
 import classNames from 'classnames';
-import { fullcycleListItems } from './tileData';
+import Menu from './MenuComponent';
 import MinersTable from './MinersTable';
 import SensorList from './SensorList';
 import './App.css';
@@ -42,6 +41,9 @@ const drawerWidth = 190;
 const styles = theme => ({
   root: {
     flexGrow: 1,
+  },
+  flex: {
+    flex: 1,
   },
   appFrame: {
     height: 430,
@@ -118,6 +120,10 @@ const styles = theme => ({
   },
 });
 
+var sensorStyle = {
+  marginLeft: 100,
+  align: 'right'
+};
 
 class App extends React.Component {
 	  state = {
@@ -126,8 +132,9 @@ class App extends React.Component {
       camera: '',
       mobileOpen: false,
       open: false,
+      selectedPanel: 'miners',
       anchor: 'left',
-      };
+    };
 
   componentDidMount() {
 		this.callApiGetSensors()
@@ -179,6 +186,9 @@ class App extends React.Component {
       anchor: event.target.value,
     });
   }
+
+  handleSwitchPanel = (whichPanel) => { this.setState({ selectedPanel: whichPanel }); };
+
   render() {
     const { classes, theme } = this.props;
     const { anchor, open } = this.state;
@@ -198,7 +208,7 @@ class App extends React.Component {
           </IconButton>
         </div>
         <Divider />
-        <List>{fullcycleListItems}</List>
+        <List><Menu action={this.handleSwitchPanel}/></List>
       </Drawer>
     );
     let before = null;
@@ -235,9 +245,9 @@ class App extends React.Component {
               <Typography variant="title" color="inherit" noWrap>
               Full Cycle Mining Controller
               </Typography>
-              <div style={styles.wrapper}>
+              <div style={sensorStyle}>
               <SensorList sensor = {jsensors} camera={jcamera}/>
-            </div>
+              </div>
             </Toolbar>
           </AppBar>
           {before}
@@ -248,7 +258,12 @@ class App extends React.Component {
             })}
           >
             <div className={classes.drawerHeader} />
-            <MinersTable miners={jminers} />
+            {this.state.selectedPanel === 'sensors' ? (
+              <SensorList sensor = {jsensors} camera={jcamera} mode="expended"/>
+            ): null}
+            {this.state.selectedPanel === 'miners' ? (
+              <MinersTable miners={jminers} />
+            ): null}
           </main>
           {after}
         </div>
