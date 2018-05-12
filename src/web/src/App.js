@@ -46,7 +46,7 @@ const styles = theme => ({
     flex: 1,
   },
   appFrame: {
-    height: 430,
+    height: 1024,
     zIndex: 1,
     overflow: 'hidden',
     position: 'relative',

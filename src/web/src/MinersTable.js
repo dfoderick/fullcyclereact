@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
+import Table, { TableBody, TableCell, TableHead, TableRow, TableFooter } from 'material-ui/Table';
 import Button from 'material-ui/Button';
 import Dialog, {DialogTitle, DialogContent, DialogActions} from 'material-ui/Dialog';
 import Radio, { RadioGroup } from 'material-ui/Radio';
@@ -120,6 +120,7 @@ export default class MinersTable extends Component {
     };
     
     secondsToString(sseconds){
+        if (!sseconds) return "no stats";
         var seconds = parseInt(sseconds);
         var numdays = Math.floor(seconds / 86400);
         var numhours = Math.floor((seconds % 86400) / 3600);
@@ -216,15 +217,19 @@ export default class MinersTable extends Component {
 		}
 		var renderedPools = [];
 		//renderedMiners are a list of miners rendered as table rows
-		var renderedMiners = arrMiners.map((m) => this.renderMiner(m));
+        var renderedMiners = arrMiners.map((m) => this.renderMiner(m));
+        console.log(arrMiners.length.toString() + " miners")
+        console.log(renderedMiners.length.toString() + " miners rendered")
 		// find the data for this active row `id`
         const selectedMiner = this.find(arrMiners, this.state.activeRowId );
 	 	if (selectedMiner && selectedMiner.minerpool && selectedMiner.minerpool.allpools){
 			var selectedpool = this.findcurrentpool(selectedMiner.minerpool.allpools.POOLS);
 			//can't do this otherwise it messes up the radio button and won't select
 			if (selectedpool)
-				console.log(this.state.selectedPool)
-				console.log(selectedpool.POOL)
+                console.log(this.state.selectedPool)
+                // if (selectedpool.POOL) {
+                //     console.log(selectedpool.POOL)
+                // }
 				//this.state.selectedPool = selectedpool.POOL.toString();
 			renderedPools = this.renderPools(selectedMiner);
 	 	}
@@ -248,6 +253,10 @@ export default class MinersTable extends Component {
             <TableBody>
                 {renderedMiners}
             </TableBody>
+            <TableFooter>
+            <TableRow>
+            </TableRow>
+            </TableFooter>
             </Table>
     
             {selectedMiner && this.state.openMiner ? (
