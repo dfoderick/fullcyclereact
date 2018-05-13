@@ -6,11 +6,15 @@
   "private": false,
   "proxy": "http://127.0.0.1:5000/",
   "dependencies": {
+    "@babel/runtime": "^7.0.0-beta.46",
     "@material-ui/icons": "^1.0.0-beta.43",
+    "classnames": "^2.2.5",
+    "material-ui": "^1.0.0-beta.46",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-scripts": "1.1.4",
-    "redux-form-material-ui": "^5.0.0-beta.2"
+    "redux-form-material-ui": "^5.0.0-beta.2",
+    "withstyles": "^1.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
