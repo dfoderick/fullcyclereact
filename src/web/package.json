@@ -1,25 +1,41 @@
 {
   "name": "fullcycle-web",
-  "description": "web site for full cycle mining controller",
+  "description": "full cycle mining controller web",
   "version": "0.1.0",
   "license": "MIT",
   "private": false,
   "proxy": "http://127.0.0.1:5000/",
   "dependencies": {
+    "npm-run-all": "4.1.2",
     "@babel/runtime": "^7.0.0-beta.46",
-    "@material-ui/icons": "^1.0.0-beta.43",
-    "classnames": "^2.2.5",
-    "material-ui": "^1.0.0-beta.46",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-scripts": "1.1.4",
+    "react-router-dom": "4.2.2",
     "redux-form-material-ui": "^5.0.0-beta.2",
-    "withstyles": "^1.0.3"
+    "react-chartist": "0.13.1",
+    "react-swipeable-views": "0.12.12",
+    "material-ui": "1.0.0-beta.41",
+    "@material-ui/icons": "^1.0.0-beta.43",
+    "classnames": "^2.2.5",
+    "withstyles": "^1.0.3",
+    "chartist": "0.10.1",
+    "perfect-scrollbar": "1.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dfoderick/fullcyclereact.git"
+  },
+  "keywords": [],
+  "author": "Dave Foderick <dfoderick@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/dfoderick/fullcyclereact/issues"
+  },
+  "homepage": "https://github.com/dfoderick/fullcyclereact"
 }
