@@ -55,8 +55,8 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variables file
-.env
+# dotenv environment variables file. Needed for react.
+#.env
 # misc
 .DS_Store
 .env.local
