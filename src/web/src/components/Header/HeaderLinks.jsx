@@ -11,9 +11,11 @@ import {
   ClickAwayListener,
   Hidden
 } from "material-ui";
-import { Person, Notifications, Dashboard, Search } from "@material-ui/icons";
+import { Person, Notifications, Dashboard
+  //, Search 
+} from "@material-ui/icons";
 
-import { CustomInput, IconButton as SearchButton } from "components";
+//import { CustomInput, IconButton as SearchButton } from "components";
 
 import headerLinksStyle from "assets/jss/material-dashboard-react/headerLinksStyle";
 

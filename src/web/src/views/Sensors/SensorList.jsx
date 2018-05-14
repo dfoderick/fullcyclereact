@@ -1,52 +1,31 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import Chip from 'material-ui/Chip';
-import Avatar from 'material-ui/Avatar';
+//import PropTypes from 'prop-types';
+//import { withStyles } from 'material-ui/styles';
 import Dialog, {DialogContent, DialogActions} from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
 import CameraButton from './CameraButton';
-import humidity from './icons/humidity.svg';
-import temperature from './icons/temperature.svg';
+//import humidity from './icons/humidity.svg';
+//import temperature from './icons/temperature.svg';
 import { Grid } from "material-ui";
 import {
     StatsCard,
-    ChartCard,
-    TasksCard,
-    RegularCard,
-    Table,
+//    ChartCard,
+//    TasksCard,
+//    RegularCard,
+//    Table,
     ItemGrid
   } from "components";
   import {
-    ContentCopy,
     Store,
-    InfoOutline,
-    Warning,
-    DateRange,
-    LocalOffer,
-    Update,
-    ArrowUpward,
-    AccessTime,
-    Accessibility
+//    Warning,
+    DateRange
+//    LocalOffer,
+//    Update,
+//    ArrowUpward,
+//    AccessTime,
+//    Accessibility
   } from "@material-ui/icons";
-
-const sensorStyle = {
-    marginTop: '10px',
-    marginLeft: '3px',
-    marginRight: '3px'
-  };
-
-const styles = theme => ({
-    root: {
-      display: 'flex',
-      justifyContent: 'center',
-      flexWrap: 'wrap',
-    },
-    chip: {
-      //margin: theme.spacing.unit,
-    },
-  });
-  
+ 
 export default class SensorList extends Component {
     state = {
         sensors: '',

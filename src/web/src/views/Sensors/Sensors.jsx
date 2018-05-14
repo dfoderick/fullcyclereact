@@ -33,7 +33,6 @@ class Sensors extends React.Component {
   };
 
     render() {
-        const { classes } = this.props;
 		const jsensors = JSON.parse(JSON.stringify(this.state.sensors));
         const jcamera = JSON.parse(JSON.stringify(this.state.camera));;
         return (

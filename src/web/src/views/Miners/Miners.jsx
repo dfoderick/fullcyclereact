@@ -22,7 +22,6 @@ class Miners extends React.Component {
       };
     
     render() {
-        const { classes } = this.props;
 		const jminers = JSON.parse(JSON.stringify(this.state.knownminers));
         return (
             <MinersTable miners={jminers} />

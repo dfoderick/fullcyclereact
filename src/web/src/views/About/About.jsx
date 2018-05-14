@@ -5,20 +5,19 @@ import React from "react";
 
 class About extends React.Component {
     render() {
-        const { classes } = this.props;
         return (
             <div>
                 <div>
                     Full Cycle Mining Controller
                 </div>
                 <div>
-                    Source code is at <a target="_blank" href="http://github.com/dfoderick/fullcycle.git">GitHub</a>
+                    Source code is at <a target="_blank" rel="noopener noreferrer" href="http://github.com/dfoderick/fullcycle.git">GitHub</a>
                 </div>
                 <div>
-                    Project page <a target="_blank" href="https://dfoderick.github.io/fullcycle/">GitHub</a>
+                    Project page <a target="_blank" rel="noopener noreferrer" href="https://dfoderick.github.io/fullcycle/">GitHub</a>
                 </div>
                 <div>
-                    <a target="_blank" href="https://github.com/dfoderick/fullcycle/wiki">Wiki</a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://github.com/dfoderick/fullcycle/wiki">Wiki</a>
                 </div>
                 <div>
                     Author David Foderick dfoderick@gmail.com

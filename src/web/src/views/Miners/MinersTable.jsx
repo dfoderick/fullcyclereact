@@ -121,7 +121,7 @@ export default class MinersTable extends Component {
     
     secondsToString(sseconds){
         if (!sseconds) return "no stats";
-        var seconds = parseInt(sseconds);
+        var seconds = parseInt(sseconds, 10);
         var numdays = Math.floor(seconds / 86400);
         var numhours = Math.floor((seconds % 86400) / 3600);
         var numminutes = Math.floor(((seconds % 86400) % 3600) / 60);

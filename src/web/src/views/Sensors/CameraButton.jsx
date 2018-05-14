@@ -1,50 +1,16 @@
 import React, { Component } from 'react';
 import Button from 'material-ui/Button';
-import Chip from 'material-ui/Chip';
-import Avatar from 'material-ui/Avatar';
 import Dialog, {DialogContent, DialogActions} from 'material-ui/Dialog';
-import camera from './icons/camera.svg';
+//import camera from './icons/camera.svg';
 import {
     StatsCard,
-    ChartCard,
-    TasksCard,
-    RegularCard,
-    Table,
     ItemGrid
   } from "components";
 import {
-    ContentCopy,
     Store,
-    InfoOutline,
-    Warning,
-    DateRange,
-    LocalOffer,
-    Update,
-    ArrowUpward,
-    AccessTime,
-    Accessibility
+    DateRange
   } from "@material-ui/icons";
 
-const rootStyle = {
-  };
-
-const chipStyle = {
-  };
-
-  const imageStyle = {
-  };
-
-
-  const styles = theme => ({
-    root: {
-      display: 'flex',
-      justifyContent: 'center',
-      flexWrap: 'wrap',
-    },
-    chip: {
-      margin: theme.spacing.unit,
-    },
-  });
 
 export default class CameraButton extends Component {
 

@@ -5,7 +5,6 @@ import React from "react";
 
 class Pools extends React.Component {
     render() {
-        const { classes } = this.props;
         return (
             <div>
 
