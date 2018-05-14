@@ -18,9 +18,8 @@ COPY src/api/. .
 WORKDIR /usr/src/fullcyclereact/src/web/
 COPY src/web/package*.json ./
 RUN npm install
-#RUN npm install material-ui@next
-RUN npm install @material-ui/icons
-RUN npm install --save @fortawesome/react-fontawesome
+#RUN npm install @material-ui/icons
+#RUN npm install --save @fortawesome/react-fontawesome
 
 #then copy web source and build it, bundled output in build dir
 COPY src/web/. .
