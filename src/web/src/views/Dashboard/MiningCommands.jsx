@@ -13,7 +13,7 @@ class MiningCommands extends React.Component {
         .catch(err => console.log(err));
     }
     provision() {
-        this.callApiCommand('provision')
+        this.callApiCommand('poolconfigurationchanged')
         .then(res => this.setState({ }))
         .catch(err => console.log(err));
     }
