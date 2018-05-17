@@ -107,6 +107,17 @@ app.get('/api/knownminers', (req, res) => {
     });
 });
 
+app.get('/api/knownpools', (req, res) => {
+	console.log('called knownpools')
+	getredishashset('knownpools', function(object) {
+	res.send({ knownpools: object });;
+	});
+});
+
+app.post('/api/sendcommand',jsonParser, (req, res) => {
+	publish(req.body.command,JSON.stringify(req.body.command));
+});
+
 app.post('/api/minerrestart',jsonParser, (req, res) => {
 	console.log(req.body);
 	//1) create restart minercommand

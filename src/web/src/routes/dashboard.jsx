@@ -6,17 +6,14 @@ import About from "views/About/About.jsx";
 
 // import UserProfile from "views/UserProfile/UserProfile.jsx";
 // import TableList from "views/TableList/TableList.jsx";
-// import Typography from "views/Typography/Typography.jsx";
-// import Icons from "views/Icons/Icons.jsx";
 // import NotificationsPage from "views/Notifications/Notifications.jsx";
 
 import {
   Dashboard,
-//  Person,
   ContentPaste,
   SettingsEthernet,
   SettingsInputAntenna,
-    Info
+  Info
 //  Notifications
 } from "@material-ui/icons";
 
@@ -70,20 +67,6 @@ const dashboardRoutes = [
   //   navbarName: "Table List",
   //   icon: ContentPaste,
   //   component: TableList
-  // },
-  // {
-  //   path: "/typography",
-  //   sidebarName: "Typography",
-  //   navbarName: "Typography",
-  //   icon: LibraryBooks,
-  //   component: Typography
-  // },
-  // {
-  //   path: "/icons",
-  //   sidebarName: "Icons",
-  //   navbarName: "Icons",
-  //   icon: BubbleChart,
-  //   component: Icons
   // },
   // {
   //   path: "/notifications",
