@@ -1,5 +1,6 @@
 import React from "react";
-//import { Grid } from "material-ui";
+import { Grid } from "material-ui";
+import { RegularCard, Table, ItemGrid } from "components";
 
 import MinersTable from './MinersTable';
 
@@ -24,7 +25,17 @@ class Miners extends React.Component {
     render() {
 		const jminers = JSON.parse(JSON.stringify(this.state.knownminers));
         return (
-            <MinersTable miners={jminers} />
+            <Grid container>
+            <ItemGrid xs={12} sm={12} md={12}>
+              <RegularCard
+                cardTitle="Miners"
+                cardSubtitle="All Miners"
+                content={
+                    <MinersTable miners={jminers} />
+                }
+                />
+            </ItemGrid>
+            </Grid>
         );
     }    
 }

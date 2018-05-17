@@ -169,6 +169,10 @@ export default class MinersTable extends Component {
         </RadioGroup>
       );
     }
+
+    clean(stratum){
+        return stratum.replace('stratum+tcp://','')
+    }
   
     renderMiner(miner) {
         var localDate = new Date(miner.lastmonitor);
@@ -193,7 +197,7 @@ export default class MinersTable extends Component {
                 {isNaN(localDate) ? "?" : localDate.toLocaleString()}
              </TableCell>
              <TableCell style={tableColumnStyle}>
-             {miner.minerpool.poolname}
+             {miner.minerpool.poolname === '?' ? this.clean(miner.minerpool.currentpool) : miner.minerpool.poolname}
              </TableCell>
              <TableCell style={tableColumnStyle}>
                 <Button label='Switch' onClick={this.handleOpenSwitch(miner.name)}>Switch</Button>

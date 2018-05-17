@@ -1,7 +1,7 @@
 import DashboardPage from "views/Dashboard/Dashboard.jsx";
 import Miners from "views/Miners/Miners.jsx";
 import Sensors from "views/Sensors/Sensors.jsx";
-//import Pools from "views/Pools/Pools.jsx";
+import Pools from "views/Pools/Pools.jsx";
 import About from "views/About/About.jsx";
 
 // import UserProfile from "views/UserProfile/UserProfile.jsx";
@@ -11,12 +11,12 @@ import About from "views/About/About.jsx";
 // import NotificationsPage from "views/Notifications/Notifications.jsx";
 
 import {
-  Dashboard
+  Dashboard,
 //  Person,
-//  ContentPaste,
-//  LibraryBooks,
-//  BubbleChart,
-//  LocationOn,
+  ContentPaste,
+  SettingsEthernet,
+  SettingsInputAntenna,
+    Info
 //  Notifications
 } from "@material-ui/icons";
 
@@ -32,28 +32,28 @@ const dashboardRoutes = [
     path: "/miners",
     sidebarName: "Miners",
     navbarName: "Miners",
-    icon: Dashboard,
+    icon: ContentPaste,
     component: Miners
   },
   {
     path: "/sensors",
     sidebarName: "Sensors",
     navbarName: "Sensors",
-    icon: Dashboard,
+    icon: SettingsInputAntenna,
     component: Sensors
   },
-  // {
-  //   path: "/pools",
-  //   sidebarName: "Pools",
-  //   navbarName: "Pools",
-  //   icon: Dashboard,
-  //   component: Pools
-  // },
+  {
+    path: "/pools",
+    sidebarName: "Pools",
+    navbarName: "Pools",
+    icon: SettingsEthernet,
+    component: Pools
+  },
   {
     path: "/about",
     sidebarName: "About",
     navbarName: "About",
-    icon: Dashboard,
+    icon: Info,
     component: About
   },
 
