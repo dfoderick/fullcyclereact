@@ -23,15 +23,36 @@ class Pools extends React.Component {
       };
 
       render() {
-		const jpools = JSON.parse(JSON.stringify(this.state.knownpools));
+        const jpools = JSON.parse(JSON.stringify(this.state.knownpools));
+        const arrPools = []
+        if (jpools != null){
+            Object.keys(jpools).forEach(function(key) {
+              arrPools.push(JSON.parse(jpools[key], function (key, value) {
+                return (value == null) ? "" : value
+              }));
+            });
+          }
+  
+        const pools_named = arrPools.filter(pool => pool[0].named_pool);
+        const pools_available = arrPools.filter(pool => !pool[0].named_pool);
+
         return (
             <Grid container>
+            <ItemGrid xs={12} sm={12} md={12}>
+              <RegularCard
+                cardTitle="Named Pools"
+                cardSubtitle="All Pools configured with friendly names"
+                content={
+                    <PoolsTable pools={pools_named} />
+                }
+                />
+            </ItemGrid>
             <ItemGrid xs={12} sm={12} md={12}>
               <RegularCard
                 cardTitle="Pools"
                 cardSubtitle="All Pools available on Miners"
                 content={
-                    <PoolsTable pools={jpools} />
+                    <PoolsTable pools={pools_available} />
                 }
                 />
             </ItemGrid>

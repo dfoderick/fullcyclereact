@@ -24,6 +24,9 @@ export default class PoolsTable extends Component {
               {pool.pool_type}
              </TableCell>
              <TableCell style={tableColumnStyle}>
+              {pool.named_pool.name}
+             </TableCell>
+             <TableCell style={tableColumnStyle}>
               {pool.priority}
              </TableCell>
              <TableCell style={tableColumnStyle}>
@@ -41,14 +44,14 @@ export default class PoolsTable extends Component {
     
     render() {
         const jpools = this.props.pools;
-        const arrPools = [];
-        if (jpools != null){
-          Object.keys(jpools).forEach(function(key) {
-            arrPools.push(JSON.parse(jpools[key], function (key, value) {
-              return (value == null) ? "" : value
-            }));
-          });
-        }
+        const arrPools = jpools;
+        // if (jpools != null){
+        //   Object.keys(jpools).forEach(function(key) {
+        //     arrPools.push(JSON.parse(jpools[key], function (key, value) {
+        //       return (value == null) ? "" : value
+        //     }));
+        //   });
+        // }
         var renderedPools = arrPools.map((p) => this.renderPool(p));
         console.log(arrPools.length.toString() + " pools")
 
@@ -58,6 +61,7 @@ export default class PoolsTable extends Component {
               <TableHead>
                 <TableRow>
                   <TableCell>Type</TableCell>
+                  <TableCell>Name</TableCell>
                   <TableCell numeric>Priority</TableCell>
                   <TableCell>Url</TableCell>
                   <TableCell>User</TableCell>
