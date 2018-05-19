@@ -36,7 +36,7 @@ export default class SensorList extends Component {
       }
 
     renderSensor(sensor) {
-		const sens = sensor[0];
+		const sens = sensor;
 		console.log(sens.value)
 		return (            
           <ItemGrid xs={12} sm={6} md={3} key={sens.sensorid}>
