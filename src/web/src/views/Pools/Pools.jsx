@@ -33,8 +33,8 @@ class Pools extends React.Component {
             });
           }
   
-        const pools_named = arrPools.filter(pool => pool[0].named_pool);
-        const pools_available = arrPools.filter(pool => !pool[0].named_pool);
+        const pools_named = arrPools.filter(pool => pool.named_pool);
+        const pools_available = arrPools.filter(pool => !pool.named_pool);
 
         return (
             <Grid container>

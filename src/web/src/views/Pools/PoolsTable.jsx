@@ -36,7 +36,7 @@ export default class PoolsTable extends Component {
     };
 
     handleNamePool = (ppool, newPoolName) => {
-        const pool = ppool[0]
+        const pool = ppool
         if (pool){
             if (!pool.named_pool){
                 pool.named_pool = {name: newPoolName};
@@ -84,7 +84,7 @@ export default class PoolsTable extends Component {
     };
 
     renderPool(p) {
-        const pool = p[0]
+        const pool = p
         return (
         <TableRow key={pool.url+'|'+pool.user}>
              <TableCell style={tableColumnStyle}>
@@ -123,7 +123,7 @@ export default class PoolsTable extends Component {
     
     find(array, key) {
         return array.find((element) => {
-            return element[0].url+'|'+element[0].user === key;
+            return element.url+'|'+element.user === key;
         });
     }
 
@@ -158,7 +158,7 @@ export default class PoolsTable extends Component {
         console.log(arrPools.length.toString() + " pools");
         const selectedPool = this.find(arrPools, this.state.activeRowId );
         // if (selectedPool)
-        //     this.handleSetPoolName(selectedPool[0].named_pool.name);
+        //     this.handleSetPoolName(selectedPool.named_pool.name);
         return (
             <div>
             <Table>
@@ -187,7 +187,7 @@ export default class PoolsTable extends Component {
                   open={this.state.openPool}
                 >
                 <DialogContent>
-                <DialogTitle >{selectedPool[0].named_pool ? 'Edit' : 'Add'} Pool Name</DialogTitle>
+                <DialogTitle >{selectedPool.named_pool ? 'Edit' : 'Add'} Pool Name</DialogTitle>
                 <DialogContent>
                     <FormControl component="fieldset" >
                     <TextField
