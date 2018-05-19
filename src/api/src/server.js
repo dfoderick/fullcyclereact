@@ -45,6 +45,18 @@ function makeCommand(pcommand,pparameter){
 	}
 }
 
+// ConfigurationMessage
+function makeConfigurationMessage(pbody){
+	return {
+		command: pbody.command,
+		parameter: pbody.parameter,
+		id: pbody.id,
+		entity: pbody.entity,
+		values: pbody.values
+	}
+}
+
+
 function bail(err) {
   console.error(err);
   process.exit(1);
@@ -116,6 +128,15 @@ app.get('/api/knownpools', (req, res) => {
 
 app.post('/api/sendcommand',jsonParser, (req, res) => {
 	publish(req.body.command,JSON.stringify(req.body.command));
+});
+
+app.post('/api/save',jsonParser, (req, res) => {
+	console.log(req.body);
+	//1) make configmessage with command
+	var configmsg = makeConfigurationMessage(req.body);
+	//2) wrap the configmessage into an envelope
+	var envelope = makeMessage('configuration', JSON.stringify(configmsg))
+	publish('save',JSON.stringify(envelope));
 });
 
 app.post('/api/minerrestart',jsonParser, (req, res) => {

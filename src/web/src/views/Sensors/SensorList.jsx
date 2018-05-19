@@ -9,21 +9,12 @@ import CameraButton from './CameraButton';
 import { Grid } from "material-ui";
 import {
     StatsCard,
-//    ChartCard,
-//    TasksCard,
-//    RegularCard,
-//    Table,
     ItemGrid
   } from "components";
-  import {
+
+import {
     Store,
-//    Warning,
     DateRange
-//    LocalOffer,
-//    Update,
-//    ArrowUpward,
-//    AccessTime,
-//    Accessibility
   } from "@material-ui/icons";
  
 export default class SensorList extends Component {
@@ -48,7 +39,7 @@ export default class SensorList extends Component {
 		const sens = sensor[0];
 		console.log(sens.value)
 		return (            
-          <ItemGrid xs={12} sm={6} md={3}>
+          <ItemGrid xs={12} sm={6} md={3} key={sens.sensorid}>
           <StatsCard
             icon={Store}
             iconColor='blue'
@@ -58,9 +49,9 @@ export default class SensorList extends Component {
             statText={sens.valuetype}
             onClick={() => {this.handleOpenDialog(sens)}}
           />
-        </ItemGrid>
+            </ItemGrid>
 
-            );
+        );
 	}
 
     render() {
