@@ -175,37 +175,46 @@ var server = app.listen(port, () => console.log(`Listening on port ${port}`));
 //set up the full cycle alerts feed to send alerts to the browser
 var sse = new SSE(server);
 sse.on('connection', function (sse_connection) {
-	console.log('new sse connection')
+	console.log('new sse connection');
 	
 	amqp.connect(messagebus, on_connect);
 
 	function on_connect(err, conn) {
 		if (err !== null) return bail(err);
 		process.once('SIGINT', function() { conn.close(); });
+	
+		var ex = 'alert';
 		
-		var q = 'alert';
-	
 		function on_channel_open(err, ch) {
-			ch.assertQueue(q, {durable: false}, function(err, ok) {
-				if (err !== null) return bail(err, conn);
-				ch.consume(q, function(msg) { 
-					// message callback
-					console.log(" [x] Received '%s'", msg.content.toString());
-	
-					sse_connection.send({
-							event: 'full-cycle-alert',
-							data: msg.content.toString()
-						});
-	
-				}, {noAck: true}, function(_consumeOk) { 
-					// consume callback
-					console.log(' [*] Waiting for messages. To exit press CTRL+C');
+			if (err !== null) return bail(err, conn);
+			ch.assertQueue('', {exclusive: true}, function(err, ok) {
+				var q = ok.queue;
+				ch.bindQueue(q, ex, '');
+				ch.consume(q, logMessage, {noAck: true}, function(err, ok) {
+					if (err !== null) return bail(err, conn);
+					console.log(" [*] Waiting for alert. To exit press CTRL+C.");
 				});
 			});
 		}
 	
+		function logMessage(msg) {
+			if (msg) {
+				console.log(" [x] '%s'", msg.content.toString());
+				sse_connection.send({
+					event: 'full-cycle-alert',
+					data: msg.content.toString()
+				});
+			}
+		}
+	
 		conn.createChannel(on_channel_open);
 	}
+
+	// sse_connection.send({
+	// 	event: 'full-cycle-alert',
+	// 	data: msg.content.toString()
+	// });
+	// console.log(" [x] Sent to browser '%s'", msg.content.toString());
 	
   sse_connection.on('close', function () {
     console.log('lost sse connection');
