@@ -6,15 +6,15 @@ import About from "views/About/About.jsx";
 
 // import UserProfile from "views/UserProfile/UserProfile.jsx";
 // import TableList from "views/TableList/TableList.jsx";
-// import NotificationsPage from "views/Notifications/Notifications.jsx";
+import NotificationsPage from "views/Notifications/Notifications.jsx";
 
 import {
   Dashboard,
   ContentPaste,
   SettingsEthernet,
   SettingsInputAntenna,
-  Info
-//  Notifications
+  Info,
+  Notifications
 } from "@material-ui/icons";
 
 const dashboardRoutes = [
@@ -61,20 +61,14 @@ const dashboardRoutes = [
   //   icon: Person,
   //   component: UserProfile
   // },
-  // {
-  //   path: "/table",
-  //   sidebarName: "Table List",
-  //   navbarName: "Table List",
-  //   icon: ContentPaste,
-  //   component: TableList
-  // },
-  // {
-  //   path: "/notifications",
-  //   sidebarName: "Notifications",
-  //   navbarName: "Notifications",
-  //   icon: Notifications,
-  //   component: NotificationsPage
-  // },
+
+  {
+    path: "/notifications",
+    sidebarName: "Notifications",
+    navbarName: "Notifications",
+    icon: Notifications,
+    component: NotificationsPage
+  },
   { redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }
 ];
 

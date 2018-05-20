@@ -5,9 +5,9 @@ import Dialog, {DialogTitle, DialogContent, DialogActions} from 'material-ui/Dia
 import { FormControl } from 'material-ui/Form';
 import TextField from 'material-ui/TextField';
 import {
-    Button,
-    CustomInput,
-    ItemGrid
+    Button
+    //CustomInput,
+    //ItemGrid
   } from "components";
 
 const tableColumnStyle = {

@@ -1,5 +1,6 @@
 const express = require('express');
 const serveStatic = require('serve-static');
+const SSE = require('sse');
 const bodyParser = require('body-parser');
 const redis = require('redis');
 const amqp = require('amqplib/callback_api');
@@ -56,10 +57,9 @@ function makeConfigurationMessage(pbody){
 	}
 }
 
-
-function bail(err) {
+function bail(err, conn) {
   console.error(err);
-  process.exit(1);
+  if (conn) conn.close(function() { process.exit(1); });
 }
 
 function publish (q, msg){
@@ -170,4 +170,47 @@ app.get('/api/knownsensors', (req, res) => {
 
 //in production this serves up the react bundle
 app.use(serveStatic('../web/build'));
-app.listen(port, () => console.log(`Listening on port ${port}`));
+var server = app.listen(port, () => console.log(`Listening on port ${port}`));
+
+//set up the full cycle alerts feed to send alerts to the browser
+var sse = new SSE(server);
+sse.on('connection', function (sse_connection) {
+	console.log('new sse connection')
+	
+	amqp.connect(messagebus, on_connect);
+
+	function on_connect(err, conn) {
+		if (err !== null) return bail(err);
+		process.once('SIGINT', function() { conn.close(); });
+		
+		var q = 'alert';
+	
+		function on_channel_open(err, ch) {
+			ch.assertQueue(q, {durable: false}, function(err, ok) {
+				if (err !== null) return bail(err, conn);
+				ch.consume(q, function(msg) { 
+					// message callback
+					console.log(" [x] Received '%s'", msg.content.toString());
+	
+					sse_connection.send({
+							event: 'full-cycle-alert',
+							data: msg.content.toString()
+						});
+	
+				}, {noAck: true}, function(_consumeOk) { 
+					// consume callback
+					console.log(' [*] Waiting for messages. To exit press CTRL+C');
+				});
+			});
+		}
+	
+		conn.createChannel(on_channel_open);
+	}
+	
+  sse_connection.on('close', function () {
+    console.log('lost sse connection');
+		//how to close amqp conn???
+		//conn.close();
+  })
+});
+
