@@ -1,4 +1,5 @@
 import React from "react";
+import EventSource from "../../eventsource.js";
 import PropTypes from "prop-types";
 import { Switch, Route, Redirect } from "react-router-dom";
 // creates a beautiful scrollbar
@@ -15,37 +16,72 @@ import appStyle from "assets/jss/material-dashboard-react/appStyle.jsx";
 import image from "assets/img/sidebar-2.jpg";
 import logo from "assets/img/reactlogo.png";
 
-const switchRoutes = (
-  <Switch>
-    {dashboardRoutes.map((prop, key) => {
-      if (prop.redirect)
-        return <Redirect from={prop.path} to={prop.to} key={key} />;
-      return <Route path={prop.path} component={prop.component} key={key} />;
-    })}
-  </Switch>
-);
-
 class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {alerts:[]};
+  }
+
   state = {
-    mobileOpen: false
+    mobileOpen: false,
+    alerts: []
   };
+
+  sseEvents = new EventSource('/sse');
+
   handleDrawerToggle = () => {
     this.setState({ mobileOpen: !this.state.mobileOpen });
   };
-  getRoute() {
-    return this.props.location.pathname !== "/maps";
+  
+  ismaps() {
+    return this.props.location.pathname === "/maps";
   }
+
+  isnotifications() {
+    return this.props.location.pathname === "/notifications";
+  }
+
   componentDidMount() {
     if(navigator.platform.indexOf('Win') > -1){
       // eslint-disable-next-line
       const ps = new PerfectScrollbar(this.refs.mainPanel);
     }
+    this.subscribe(this.sseEvents);
   }
+
   componentDidUpdate() {
     this.refs.mainPanel.scrollTop = 0;
   }
+  
+  componentWillUnMount() {
+    this.sseEvents.close();
+  }
+
+  subscribe(es) {
+    const that = this;
+    es.addEventListener('full-cycle-alert', (e) => {
+      console.log(e.data);
+        that.setState({
+          alerts: [...that.state.alerts, e.data]
+        });
+    });
+  }
+
+  switchRoutes= () => {
+    const that = this;
+    return (
+    <Switch>
+      {dashboardRoutes.map((prop, key) => {
+        if (prop.redirect)
+          return <Redirect from={prop.path} to={prop.to} key={key} />;
+        return <Route path={prop.path} component={prop.component} key={key} alerts={ that.state.alerts} />;
+      })}
+    </Switch>
+  )};
+  
   render() {
     const { classes, ...rest } = this.props;
+    const routeswitches = this.switchRoutes();
     return (
       <div className={classes.wrapper}>
         <Sidebar
@@ -64,15 +100,15 @@ class App extends React.Component {
             handleDrawerToggle={this.handleDrawerToggle}
             {...rest}
           />
-          {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
-          {this.getRoute() ? (
+          {/* custom layouts */}
+          {!this.ismaps() ? (
             <div className={classes.content}>
-              <div className={classes.container}>{switchRoutes}</div>
+              <div className={classes.container}>{routeswitches}</div>
             </div>
           ) : (
-            <div className={classes.map}>{switchRoutes}</div>
+            <div className={classes.map}>{routeswitches}</div>
           )}
-          {this.getRoute() ? <Footer /> : null}
+          {!this.ismaps() ? <Footer /> : null}
         </div>
       </div>
     );
