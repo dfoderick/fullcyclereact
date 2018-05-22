@@ -51,7 +51,7 @@ function RegularCard({ ...props }) {
 }
 
 RegularCard.defaultProps = {
-  headerColor: "purple"
+  headerColor: "blue"
 };
 
 RegularCard.propTypes = {

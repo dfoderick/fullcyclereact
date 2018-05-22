@@ -20,7 +20,7 @@ export default class MinersTable extends Component {
         openMiner: false,
         openSwitch: false,
         openReset: false,
-            };
+    };
 
     handleOpenMiner = (rowId) => () => {
         this.setState({

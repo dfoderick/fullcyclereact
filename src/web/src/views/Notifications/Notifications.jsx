@@ -1,62 +1,60 @@
 import React from "react";
-import { Grid } from "material-ui";
-import { AddAlert } from "@material-ui/icons";
+//import { Grid } from "material-ui";
+//import { AddAlert } from "@material-ui/icons";
 import EventSource from "../../eventsource.js";
 
 import {
   RegularCard,
-  A,
-  P,
-  Small,
-  Button,
-  SnackbarContent,
-  Snackbar,
-  ItemGrid
+  //A,
+  P
+  //Small,
+  //Button,
+  //SnackbarContent,
+  //Snackbar,
+  //ItemGrid
 } from "components";
 
 class Notifications extends React.Component {
   constructor(props) {
-    super(props);
-    this.state = {
-      tl: false,
-      tc: false,
-      tr: false,
-      bl: false,
-      bc: false,
-      br: false
-    };
+      super(props);
+      this.state = {
+        alerts: []
+      };
   }
-  
-  showNotification(place) {
-    var x = [];
-    x[place] = true;
-    this.setState(x);
-    setTimeout(
-      function() {
-        x[place] = false;
-        this.setState(x);
-      }.bind(this),
-      6000
-    );
-  }
+
+  state = {
+    alerts: []
+  };
+
+  sseEvents = new EventSource('/sse');
 
   componentDidMount() {
-    this.subscribe(new EventSource('/sse'), document.getElementById('es-messages'));
+    this.subscribe(this.sseEvents);
   }
 
-  subscribe(es, ul) {
-    if (!ul) {
-      console.log('could not subscribe. element es-messages could not be found')
-      return;
-    }
-    es.addEventListener('full-cycle-alert', function (e) {
-      var li = document.createElement("LI");
-      li.appendChild(document.createTextNode(e.data));
-      ul.appendChild(li);
+  componentWillUnMount() {
+    this.sseEvents.close();
+  }
+
+  subscribe(es) {
+    es.addEventListener('full-cycle-alert', (e) => {
+      console.log(e.data);
+        this.setState({
+          alerts: [...this.state.alerts, e.data]
+        });
     });
+  }
+
+  renderAlert(alert) {
+    return (
+      <li key={alert}>
+        {alert}
+      </li>
+    );
   }
   
   render() {
+    const renderedAlerts = this.state.alerts.map((a) => this.renderAlert(a));
     return (
       <RegularCard
         cardTitle="Notifications"
@@ -67,10 +65,9 @@ class Notifications extends React.Component {
         }
         content={  
           <div>
-            <div class='col'>
-              <ul id='es-messages'>
-              </ul>
-            </div>
+            <ul id='es-messages'>
+              {renderedAlerts}
+            </ul>
           </div>
         }
       />
