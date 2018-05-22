@@ -174,14 +174,14 @@ app.get('/api/knownsensors', (req, res) => {
     });
 });
 
-//route all other calls to the home page
-app.get('/*', function(req, res) {
-  res.sendFile(path.join(__dirname, '/index.html'), function(err) {
-    if (err) {
-      res.status(500).send(err)
-    }
-  })
-});
+//route all other calls to the home page. this is causing "path is not defined" in line 179
+// app.get('/*', function(req, res) {
+//   res.sendFile(path.join(__dirname, '/index.html'), function(err) {
+//     if (err) {
+//       res.status(500).send(err)
+//     }
+//   })
+// });
 
 //in production this serves up the react bundle
 app.use(serveStatic('../web/build'));
