@@ -1,3 +1,5 @@
+"use strict";
+
 const express = require('express');
 const serveStatic = require('serve-static');
 const SSE = require('sse');
@@ -58,8 +60,12 @@ function makeConfigurationMessage(pbody){
 }
 
 function bail(err, conn) {
+  console.error('bailing...');
   console.error(err);
-  if (conn) conn.close(function() { process.exit(1); });
+  if (conn) conn.close(function() {
+		// if (doexit)
+		// 	process.exit(1); 
+	});
 }
 
 function publish (q, msg){
@@ -168,6 +174,15 @@ app.get('/api/knownsensors', (req, res) => {
     });
 });
 
+//route all other calls to the home page
+app.get('/*', function(req, res) {
+  res.sendFile(path.join(__dirname, '/index.html'), function(err) {
+    if (err) {
+      res.status(500).send(err)
+    }
+  })
+});
+
 //in production this serves up the react bundle
 app.use(serveStatic('../web/build'));
 var server = app.listen(port, () => console.log(`Listening on port ${port}`));
@@ -176,40 +191,49 @@ var server = app.listen(port, () => console.log(`Listening on port ${port}`));
 var sse = new SSE(server);
 sse.on('connection', function (sse_connection) {
 	console.log('new sse connection');
-	
-	amqp.connect(messagebus, on_connect);
 
-	function on_connect(err, conn) {
-		if (err !== null) return bail(err);
-		process.once('SIGINT', function() { conn.close(); });
-	
-		var ex = 'alert';
-		
-		function on_channel_open(err, ch) {
-			if (err !== null) return bail(err, conn);
-			ch.assertQueue('', {exclusive: true}, function(err, ok) {
-				var q = ok.queue;
-				ch.bindQueue(q, ex, '');
-				ch.consume(q, logMessage, {noAck: true}, function(err, ok) {
-					if (err !== null) return bail(err, conn);
-					console.log(" [*] Waiting for alert. To exit press CTRL+C.");
-				});
-			});
-		}
-	
-		function logMessage(msg) {
-			if (msg) {
-				console.log(" [x] '%s'", msg.content.toString());
-				sse_connection.send({
-					event: 'full-cycle-alert',
-					data: msg.content.toString()
-				});
-			}
-		}
-	
-		conn.createChannel(on_channel_open);
+	try {
+		amqp.connect(messagebus, on_connect);
+	}
+	catch(error) {
+		console.error(error);
 	}
 
+		function on_connect(err, conn) {
+			if (err !== null) return bail(err);
+			process.once('SIGINT', function() { conn.close(); });
+		
+			var ex = 'alert';
+			
+			function on_channel_open(err, ch) {
+				if (err !== null) return bail(err, conn);
+				ch.on('error', function (err) {
+					console.error(err)
+					console.log('channel Closed');
+				});
+				ch.assertQueue('', {exclusive: true}, function(err, ok) {
+					var q = ok.queue;
+					ch.bindQueue(q, ex, '');
+					ch.consume(q, logMessage, {noAck: true}, function(err, ok) {
+						if (err !== null) return bail(err, conn);
+						console.log(" [*] Waiting for alert. To exit press CTRL+C.");
+					});
+				});
+			}
+	
+			function logMessage(msg) {
+				if (msg) {
+					console.log(" [x] '%s'", msg.content.toString());
+					sse_connection.send({
+						event: 'full-cycle-alert',
+						data: msg.content.toString()
+					});
+				}
+			}
+	
+			conn.createChannel(on_channel_open);
+		}
+	
 	// sse_connection.send({
 	// 	event: 'full-cycle-alert',
 	// 	data: msg.content.toString()

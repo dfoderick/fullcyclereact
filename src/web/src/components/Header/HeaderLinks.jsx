@@ -30,9 +30,23 @@ class HeaderLinks extends React.Component {
   handleClose = () => {
     this.setState({ open: false });
   };
+
+  // className={classes.dropdownItem}
+  renderAlert(alert) {
+    return (
+      <MenuItem
+        onClick={this.handleClose}
+      >
+        {alert}
+      </MenuItem>
+      );
+  }
+
   render() {
     const { classes } = this.props;
     const { open } = this.state;
+    const renderedAlerts = this.props.alerts && this.props.alerts.map((a) => this.renderAlert(a));
+
     return (
       <div>
         <IconButton
@@ -45,7 +59,7 @@ class HeaderLinks extends React.Component {
             <p className={classes.linkText}>Dashboard</p>
           </Hidden>
         </IconButton>
-        <Manager style={{ display: "none" }}>
+        <Manager style={{ display: "inline-block" }}>
           <Target>
             <IconButton
               color="inherit"
@@ -55,9 +69,9 @@ class HeaderLinks extends React.Component {
               onClick={this.handleClick}
               className={classes.buttonLink}
             >
-              <Notifications style={{ display: "hone" }} 
+              <Notifications
               className={classes.links} />
-              <span className={classes.notifications}>2</span>
+              <span className={classes.notifications}>{renderedAlerts.length}</span>
               <Hidden mdUp>
                 <p onClick={this.handleClick} className={classes.linkText}>
                   Notification
@@ -82,18 +96,7 @@ class HeaderLinks extends React.Component {
               >
                 <Paper className={classes.dropdown}>
                   <MenuList role="menu">
-                    <MenuItem
-                      onClick={this.handleClose}
-                      className={classes.dropdownItem}
-                    >
-                      Test Notification
-                    </MenuItem>
-                    <MenuItem
-                      onClick={this.handleClose}
-                      className={classes.dropdownItem}
-                    >
-                      Another One
-                    </MenuItem>
+                    {renderedAlerts}
                   </MenuList>
                 </Paper>
               </Grow>

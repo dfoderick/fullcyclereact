@@ -46,13 +46,6 @@ const dashboardRoutes = [
     icon: SettingsEthernet,
     component: Pools
   },
-  {
-    path: "/about",
-    sidebarName: "About",
-    navbarName: "About",
-    icon: Info,
-    component: About
-  },
 
   // {
   //   path: "/user",
@@ -68,6 +61,13 @@ const dashboardRoutes = [
     navbarName: "Notifications",
     icon: Notifications,
     component: NotificationsPage
+  },
+  {
+    path: "/about",
+    sidebarName: "About",
+    navbarName: "About",
+    icon: Info,
+    component: About
   },
   { redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }
 ];

@@ -97,6 +97,7 @@ class App extends React.Component {
         <div className={classes.mainPanel} ref="mainPanel">
           <Header
             routes={dashboardRoutes}
+            alerts={this.state.alerts}
             handleDrawerToggle={this.handleDrawerToggle}
             {...rest}
           />
