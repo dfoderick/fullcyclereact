@@ -74,7 +74,11 @@ class App extends React.Component {
       {dashboardRoutes.map((prop, key) => {
         if (prop.redirect)
           return <Redirect from={prop.path} to={prop.to} key={key} />;
-        return <Route path={prop.path} component={prop.component} key={key} alerts={ that.state.alerts} />;
+
+        var RoutedComponent = prop.component;
+        return <Route path={prop.path} key={key} 
+          render={(props) => <RoutedComponent {...props} alerts={ that.state.alerts} />}
+         />;
       })}
     </Switch>
   )};

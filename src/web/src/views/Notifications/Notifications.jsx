@@ -1,7 +1,6 @@
 import React from "react";
 //import { Grid } from "material-ui";
 //import { AddAlert } from "@material-ui/icons";
-import EventSource from "../../eventsource.js";
 
 import {
   RegularCard,
@@ -16,33 +15,18 @@ import {
 
 class Notifications extends React.Component {
   constructor(props) {
-      super(props);
-      this.state = {
-        alerts: []
-      };
+    super(props);
+    this.state = {alerts: props.alerts};
   }
 
   state = {
     alerts: []
   };
 
-  sseEvents = new EventSource('/sse');
-
-  componentDidMount() {
-    this.subscribe(this.sseEvents);
-  }
-
-  componentWillUnMount() {
-    this.sseEvents.close();
-  }
-
-  subscribe(es) {
-    es.addEventListener('full-cycle-alert', (e) => {
-      console.log(e.data);
-        this.setState({
-          alerts: [...this.state.alerts, e.data]
-        });
-    });
+  componentWillReceiveProps(nextProps){
+    if(nextProps.alerts !== this.props.alerts){
+        this.setState({alerts: nextProps.alerts});
+    }
   }
 
   renderAlert(alert) {
@@ -54,7 +38,11 @@ class Notifications extends React.Component {
   }
   
   render() {
-    const renderedAlerts = this.state.alerts.map((a) => this.renderAlert(a));
+    const renderedAlerts = this.state.alerts && this.state.alerts.map((a) => this.renderAlert(a));
+    if (renderedAlerts)
+      console.log(renderedAlerts.length);
+    else
+      console.log("no alerts");
     return (
       <RegularCard
         cardTitle="Notifications"
