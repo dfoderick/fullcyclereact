@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {
-  ContentCopy,
-  Store,
+  CheckCircle,
+  HighlightOff,
   InfoOutline,
   Warning,
   DateRange,
@@ -68,7 +68,7 @@ callApiGetMiners = async () => {
         <Grid container>
           <ItemGrid xs={12} sm={6} md={3}>
             <StatsCard
-              icon={Store}
+              icon={CheckCircle}
               iconColor="green"
               title="Online"
               description={counts['online'] || 0}
@@ -78,7 +78,7 @@ callApiGetMiners = async () => {
           </ItemGrid>
           <ItemGrid xs={12} sm={6} md={3}>
             <StatsCard
-              icon={ContentCopy}
+              icon={HighlightOff}
               iconColor="orange"
               title="Offline"
               description={counts['offline'] || 0}

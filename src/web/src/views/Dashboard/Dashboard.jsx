@@ -16,7 +16,7 @@ class Dashboard extends React.Component {
       <div>
         <MiningCommands/>
         <MinerSummary/>
-        <Sensors/>
+        <Sensors mode="small"/>
       </div>
     );
   }

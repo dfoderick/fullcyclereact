@@ -13,7 +13,7 @@ import {
   } from "components";
 
 import {
-    Store,
+    SettingsInputAntenna,
     DateRange
   } from "@material-ui/icons";
  
@@ -33,7 +33,7 @@ export default class SensorList extends Component {
  
     handleClick = (sensor) => { 
         alert(JSON.stringify(sensor)); // eslint-disable-line no-alert
-      }
+    }
 
     renderSensor(sensor) {
 		const sens = sensor;
@@ -41,7 +41,7 @@ export default class SensorList extends Component {
 		return (            
           <ItemGrid xs={12} sm={6} md={3} key={sens.sensorid}>
           <StatsCard
-            icon={Store}
+            icon={SettingsInputAntenna}
             iconColor='blue'
             title={sens.valuetype}
             description={parseFloat(sens.value).toFixed(2).toString()}
@@ -49,8 +49,7 @@ export default class SensorList extends Component {
             statText={sens.valuetype}
             onClick={() => {this.handleOpenDialog(sens)}}
           />
-            </ItemGrid>
-
+          </ItemGrid>
         );
 	}
 
@@ -90,7 +89,6 @@ export default class SensorList extends Component {
                 </Dialog>
                 ): null}
         </Grid>
-
         );
     }
 }

@@ -71,7 +71,9 @@ class HeaderLinks extends React.Component {
             >
               <Notifications
               className={classes.links} />
-              <span className={classes.notifications}>{renderedAlerts.length}</span>
+              <span className={classes.notifications}>
+                {renderedAlerts ? renderedAlerts.length : 0}
+              </span>
               <Hidden mdUp>
                 <p onClick={this.handleClick} className={classes.linkText}>
                   Notification

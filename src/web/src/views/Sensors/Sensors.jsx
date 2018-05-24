@@ -9,7 +9,7 @@ class Sensors extends React.Component {
         camera: '',
       }
 
-    componentDidMount() {
+  componentDidMount() {
 		this.callApiGetSensors()
       .then(res => this.setState({ sensors: res.knownsensors }))
       .catch(err => console.log(err));
@@ -32,15 +32,15 @@ class Sensors extends React.Component {
     return body;
   };
 
-    render() {
+  render() {
 		const jsensors = JSON.parse(JSON.stringify(this.state.sensors));
-        const jcamera = JSON.parse(JSON.stringify(this.state.camera));;
-        return (
-            <div>
-              <SensorList sensor = {jsensors} camera={jcamera} mode="expanded"/>
-            </div>
-        );
-    }    
+    const jcamera = JSON.parse(JSON.stringify(this.state.camera));
+    return (
+        <div>
+          <SensorList sensor = {jsensors} camera={jcamera} mode={this.props.mode}/>
+        </div>
+    );
+  }    
 }
 
 export default Sensors;

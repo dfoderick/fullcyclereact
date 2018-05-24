@@ -1,6 +1,6 @@
 import React from "react";
 import { Grid } from "material-ui";
-import { RegularCard, Table, ItemGrid } from "components";
+import { RegularCard, ItemGrid } from "components";
 
 import MinersTable from './MinersTable';
 
