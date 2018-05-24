@@ -14,7 +14,8 @@ import {
 
 import {
     SettingsInputAntenna,
-    DateRange
+    Info,
+    Opacity
   } from "@material-ui/icons";
  
 export default class SensorList extends Component {
@@ -45,7 +46,7 @@ export default class SensorList extends Component {
             iconColor='blue'
             title={sens.valuetype}
             description={parseFloat(sens.value).toFixed(2).toString()}
-            statIcon={DateRange}
+            statIcon={Info}
             statText={sens.valuetype}
             onClick={() => {this.handleOpenDialog(sens)}}
           />

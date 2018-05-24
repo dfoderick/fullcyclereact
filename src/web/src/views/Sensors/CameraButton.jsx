@@ -8,7 +8,7 @@ import {
   } from "components";
 import {
     Store,
-    DateRange
+    Info
   } from "@material-ui/icons";
 
 
@@ -38,7 +38,7 @@ export default class CameraButton extends Component {
                         iconColor="purple"
                         title="Camera"
                         description="Camera"
-                        statIcon={DateRange}
+                        statIcon={Info}
                         statText='Camera'
                         onClick={() => {this.handleOpenDialog()}}
                     />

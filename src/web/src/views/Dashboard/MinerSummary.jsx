@@ -5,8 +5,8 @@ import {
   HighlightOff,
   InfoOutline,
   Warning,
-  DateRange,
-  LocalOffer
+  Cancel,
+  Info
 } from "@material-ui/icons";
 import { withStyles, Grid } from "material-ui";
 
@@ -72,7 +72,7 @@ callApiGetMiners = async () => {
               iconColor="green"
               title="Online"
               description={counts['online'] || 0}
-              statIcon={DateRange}
+              statIcon={Info}
               statText="Miners online"
             />
           </ItemGrid>
@@ -90,11 +90,11 @@ callApiGetMiners = async () => {
           </ItemGrid>
           <ItemGrid xs={12} sm={6} md={3}>
             <StatsCard
-              icon={InfoOutline}
+              icon={Cancel}
               iconColor="red"
               title="Disabled"
               description={counts['disabled'] || 0}
-              statIcon={LocalOffer}
+              statIcon={Info}
               statText="Miners disabled"
             />
           </ItemGrid>
