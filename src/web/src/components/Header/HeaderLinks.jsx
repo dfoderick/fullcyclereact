@@ -34,7 +34,7 @@ class HeaderLinks extends React.Component {
   // className={classes.dropdownItem}
   renderAlert(alert) {
     return (
-      <MenuItem
+      <MenuItem key = {alert}
         onClick={this.handleClose}
       >
         {alert}

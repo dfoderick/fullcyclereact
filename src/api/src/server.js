@@ -2,6 +2,7 @@
 
 const express = require('express');
 const serveStatic = require('serve-static');
+const path = require("path");
 const SSE = require('sse');
 const bodyParser = require('body-parser');
 const redis = require('redis');
@@ -12,7 +13,7 @@ const jsonParser = bodyParser.json();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 //todo: these should all be environment settings
-const serverhost = 'localhost'
+const serverhost = '192.168.1.165'
 const port = process.env.PORT || 5000;
 const messagebus = 'amqp://fullcycle:mining@'+serverhost
 const redis_port = 6379
@@ -175,75 +176,78 @@ app.get('/api/knownsensors', (req, res) => {
 });
 
 //route all other calls to the home page. this is causing "path is not defined" in line 179
-// app.get('/*', function(req, res) {
-//   res.sendFile(path.join(__dirname, '/index.html'), function(err) {
-//     if (err) {
-//       res.status(500).send(err)
-//     }
-//   })
-// });
+app.get('/*', function(req, res) {
+  res.sendFile(path.join(__dirname, '/index.html'), function(err) {
+    if (err) {
+      res.status(500).send(err)
+    }
+  })
+});
 
 //in production this serves up the react bundle
 app.use(serveStatic('../web/build'));
 var server = app.listen(port, () => console.log(`Listening on port ${port}`));
 
+var  bus_connect = null;
+
+function on_connect(err, conn) {
+	if (err !== null) return bail(err);
+	process.once('SIGINT', function() { conn.close(); });
+
+	bus_connect = conn;
+
+}
+
+
 //set up the full cycle alerts feed to send alerts to the browser
 var sse = new SSE(server);
 sse.on('connection', function (sse_connection) {
 	console.log('new sse connection');
+	
+	var ex = 'alert';
+	var alert_channel = null;
 
-	try {
-		amqp.connect(messagebus, on_connect);
-	}
-	catch(error) {
-		console.error(error);
-	}
-
-		function on_connect(err, conn) {
-			if (err !== null) return bail(err);
-			process.once('SIGINT', function() { conn.close(); });
-		
-			var ex = 'alert';
-			
-			function on_channel_open(err, ch) {
+	function on_channel_open(err, ch) {
+		if (err !== null) return bail(err, conn);
+		alert_channel = ch;
+		ch.on('error', function (err) {
+			console.error(err)
+			console.log('channel Closed');
+		});
+		ch.assertQueue('', {exclusive: true}, function(err, ok) {
+			var q = ok.queue;
+			ch.bindQueue(q, ex, '');
+			ch.consume(q, logMessage, {noAck: true}, function(err, ok) {
 				if (err !== null) return bail(err, conn);
-				ch.on('error', function (err) {
-					console.error(err)
-					console.log('channel Closed');
-				});
-				ch.assertQueue('', {exclusive: true}, function(err, ok) {
-					var q = ok.queue;
-					ch.bindQueue(q, ex, '');
-					ch.consume(q, logMessage, {noAck: true}, function(err, ok) {
-						if (err !== null) return bail(err, conn);
-						console.log(" [*] Waiting for alert. To exit press CTRL+C.");
-					});
-				});
-			}
-	
-			function logMessage(msg) {
-				if (msg) {
-					console.log(" [x] '%s'", msg.content.toString());
-					sse_connection.send({
-						event: 'full-cycle-alert',
-						data: msg.content.toString()
-					});
-				}
-			}
-	
-			conn.createChannel(on_channel_open);
+				console.log(" [*] Waiting for alert. To exit press CTRL+C.");
+			});
+		});
+	}
+
+	function logMessage(msg) {
+		if (msg) {
+			console.log(" [x] '%s'", msg.content.toString());
+			sse_connection.send({
+				event: 'full-cycle-alert',
+				data: msg.content.toString()
+			});
 		}
-	
-	// sse_connection.send({
-	// 	event: 'full-cycle-alert',
-	// 	data: msg.content.toString()
-	// });
-	// console.log(" [x] Sent to browser '%s'", msg.content.toString());
+	}
+
+	if (bus_connect)
+		bus_connect.createChannel(on_channel_open);
 	
   sse_connection.on('close', function () {
     console.log('lost sse connection');
-		//how to close amqp conn???
-		//conn.close();
-  })
+		if (alert_channel)
+			alert_channel.close();
+	});
+	
 });
 
+try {
+	amqp.connect(messagebus, on_connect);
+}
+catch(error) {
+	console.error(error);
+}

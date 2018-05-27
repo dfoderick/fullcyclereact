@@ -32,7 +32,7 @@ function EventSource (url, eventSourceInitDict) {
   })
 
   var self = this
-  self.reconnectInterval = 1000
+  self.reconnectInterval = 60000
 
   function onConnectionClosed () {
     if (readyState === EventSource.CLOSED) return
@@ -142,6 +142,12 @@ function EventSource (url, eventSourceInitDict) {
       if (res.statusCode !== 200) {
         _emit('error', new Event('error', {status: res.statusCode}))
         return self.close()
+      }
+
+      // protect against multiple connects
+      //https://github.com/tigertext/eventsource/commit/ca8a6e0ca0db10c23ba7bf2b7f8affaa23d7a265
+      if (readyState === EventSource.OPEN) {
+          return;
       }
 
       readyState = EventSource.OPEN

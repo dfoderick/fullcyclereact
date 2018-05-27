@@ -1,5 +1,6 @@
 import React from "react";
-import EventSource from "../../eventsource.js";
+//try native implementation instead of this helper lib
+//import EventSource from "../../eventsource.js";
 import PropTypes from "prop-types";
 import { Switch, Route, Redirect } from "react-router-dom";
 // creates a beautiful scrollbar
@@ -19,7 +20,12 @@ import logo from "assets/img/reactlogo.png";
 class App extends React.Component {
   constructor() {
     super();
-    this.state = {alerts:[]};
+    if (this.supportsSSE()) {
+      this.state = {alerts:[]};
+      this.sseEvents = new EventSource('/sse');
+    } else {
+      this.state = {alerts:["Browser does not support EventSource :("]};
+    }
   }
 
   state = {
@@ -27,8 +33,10 @@ class App extends React.Component {
     alerts: []
   };
 
-  sseEvents = new EventSource('/sse');
-
+  supportsSSE() {
+    return !!window.EventSource;
+  }
+  
   handleDrawerToggle = () => {
     this.setState({ mobileOpen: !this.state.mobileOpen });
   };
@@ -54,17 +62,51 @@ class App extends React.Component {
   }
   
   componentWillUnMount() {
-    this.sseEvents.close();
+    if (this.sseEvents)
+      this.sseEvents.close();
   }
+
+  addAlert(alert) {
+    //limits alerts to 100 messages.
+    //todo: make configurable
+    console.log(alert);
+    this.setState({
+      alerts: [alert, ...this.state.alerts.slice(0, 99)]
+    });
+}
 
   subscribe(es) {
     const that = this;
+    if (!es) return;
     es.addEventListener('full-cycle-alert', (e) => {
-      console.log(e.data);
-        that.setState({
-          alerts: [...that.state.alerts, e.data]
-        });
-    });
+      var d = new Date();
+      let txt = d.toLocaleString() + ": EventSource: " + e.data;
+      that.addAlert(txt);
+    }, false);
+
+    es.addEventListener('open', (e) => {
+      var d = new Date();
+      let txt = d.toLocaleString() + ": EventSource opened";
+      that.addAlert(txt);
+    }, false);
+
+    es.addEventListener('error', (e) => {
+      var d = new Date();
+      let txt = d.toLocaleString() + ": ";
+      switch (e.readyState) {
+          case EventSource.CONNECTING:
+              txt += 'EventSource reconnecting...';
+              break;
+          case EventSource.CLOSED:
+              txt += 'EventSource failed. Will not retry.';
+              break;
+          default:
+          txt += 'EventSource failed. unknown readyState ' + e.readyState;
+      }
+      that.addAlert(txt);
+
+    }, false);
+
   }
 
   switchRoutes= () => {
