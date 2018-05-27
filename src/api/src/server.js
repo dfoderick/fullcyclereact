@@ -13,12 +13,12 @@ const jsonParser = bodyParser.json();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 //todo: these should all be environment settings
-const serverhost = '192.168.1.165'
+const serverhost = 'localhost'
 const port = process.env.PORT || 5000;
 const messagebus = 'amqp://fullcycle:mining@'+serverhost
 const redis_port = 6379
 const redis_host = serverhost
-const redis_password = 'mining'
+const redis_password = ''
 
 //Message envelope for putting messages on the bus
 function makeMessage(ptype, pbody){
@@ -176,13 +176,13 @@ app.get('/api/knownsensors', (req, res) => {
 });
 
 //route all other calls to the home page. this is causing "path is not defined" in line 179
-app.get('/*', function(req, res) {
-  res.sendFile(path.join(__dirname, '/index.html'), function(err) {
-    if (err) {
-      res.status(500).send(err)
-    }
-  })
-});
+// app.get('/*', function(req, res) {
+//   res.sendFile(path.join(__dirname, '/index.html'), function(err) {
+//     if (err) {
+//       res.status(500).send(err)
+//     }
+//   })
+// });
 
 //in production this serves up the react bundle
 app.use(serveStatic('../web/build'));
