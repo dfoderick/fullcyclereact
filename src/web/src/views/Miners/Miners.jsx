@@ -7,13 +7,14 @@ import MinersTable from './MinersTable';
 class Miners extends React.Component {
     constructor() {
         super();
+        this.state = { knownminers: [] };
         if (this.supportsSSE()) {
           this.eventListener = new EventSource('/sse');
         }
       }
     
     state = {
-        knownminers: '',
+        knownminers: [],
     };
 
     supportsSSE() {
@@ -22,7 +23,17 @@ class Miners extends React.Component {
     
     componentDidMount() {
         this.callApiGetMiners()
-        .then(res => this.setState({ knownminers: res.knownminers }))
+        .then(res => {
+            const arrMiners = [];
+            if (res.knownminers != null){
+                Object.keys(res.knownminers).forEach(function(key) {
+                  arrMiners.push(JSON.parse(res.knownminers[key], function (key, value) {
+                        return (value == null) ? "" : value
+                    }));
+                });
+            };
+            this.setState({ knownminers: arrMiners });
+        })
         .catch(err => console.log(err));
         this.subscribe(this.eventListener);
     }
@@ -35,7 +46,7 @@ class Miners extends React.Component {
         const response = await fetch('/api/knownminers');
         const body = await response.json();
         if (response.status !== 200) throw Error(body.message);
-        return body;
+        return JSON.parse(JSON.stringify(body));
     };
     
     subscribe(es) {
@@ -51,16 +62,50 @@ class Miners extends React.Component {
    
       }
     
-      addMiner(miner_message) {
+      addMiner = (miner_message) => {
         const msg_json = JSON.parse(miner_message);
         const minerstats = JSON.parse(msg_json.body)[0];
         //todo: should use key property
-        this.setState({ [minerstats.miner.name]: minerstats });
-        this.addAlert(msg_json.timestamp + ':' + minerstats.miner.name);
+        this.updateMiner(this.getMinerKey(minerstats.miner), minerstats.miner);
+      }
+
+      getMinerKey(miner) {
+        if (!!miner.minerid) return miner.minerid;
+        if (!!miner.networkid) return miner.networkid;
+        return miner.name;
       }
     
+      updateMiner = (key, miner) => {
+        // let updatedMiner = {...this.state.knownminers, [key]: miner};
+        // this.setState({updatedMiner});
+
+        // if (this.state.knownminers.hasOwnProperty(miner.key))
+        // {
+        //     this.setState({
+        //         knownminers: [ miner.key, ...this.state.knownminers ]
+        //       });
+        //     }
+        // }
+        var index = this.state.knownminers.findIndex(x=> x.name === miner.name);
+        if (index === -1)
+        {
+            this.setState({
+                knownminers: [ miner, ...this.state.knownminers ]
+              });
+            }
+        else {
+            this.setState({
+                knownminers: [
+                ...this.state.knownminers.slice(0,index),
+                Object.assign({}, this.state.knownminers[index], miner),
+                ...this.state.knownminers.slice(index+1)
+                ]
+            });
+        }
+      }
+
     render() {
-		const jminers = JSON.parse(JSON.stringify(this.state.knownminers));
+		const jminers = this.state.knownminers;
         return (
             <Grid container>
             <ItemGrid xs={12} sm={12} md={12}>
