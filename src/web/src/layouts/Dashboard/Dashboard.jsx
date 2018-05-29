@@ -22,7 +22,7 @@ class App extends React.Component {
     super();
     if (this.supportsSSE()) {
       this.state = {alerts:[]};
-      this.sseEvents = new EventSource('/sse');
+      this.eventListener = new EventSource('/sse');
     } else {
       this.state = {alerts:["Browser does not support EventSource :("]};
     }
@@ -30,7 +30,9 @@ class App extends React.Component {
 
   state = {
     mobileOpen: false,
-    alerts: []
+    alerts: [],
+    sensors: {},
+    miners: {}
   };
 
   supportsSSE() {
@@ -54,7 +56,7 @@ class App extends React.Component {
       // eslint-disable-next-line
       const ps = new PerfectScrollbar(this.refs.mainPanel);
     }
-    this.subscribe(this.sseEvents);
+    this.subscribe(this.eventListener);
   }
 
   componentDidUpdate() {
@@ -62,8 +64,7 @@ class App extends React.Component {
   }
   
   componentWillUnMount() {
-    if (this.sseEvents)
-      this.sseEvents.close();
+    if (this.eventListener) this.eventListener.close();
   }
 
   addAlert(alert) {
@@ -73,7 +74,7 @@ class App extends React.Component {
     this.setState({
       alerts: [alert, ...this.state.alerts.slice(0, 99)]
     });
-}
+  }
 
   subscribe(es) {
     const that = this;
@@ -83,6 +84,20 @@ class App extends React.Component {
       let txt = d.toLocaleString() + ": EventSource: " + e.data;
       that.addAlert(txt);
     }, false);
+
+    es.addEventListener('full-cycle-sensor', (e) => {
+      var d = new Date();
+      let txt = d.toLocaleString() + ": EventSource: " + e.data;
+      console.log(txt);
+      that.addSensor(e.data);
+    }, false);
+
+    // es.addEventListener('full-cycle-miner', (e) => {
+    //   var d = new Date();
+    //   let txt = d.toLocaleString() + ": EventSource: " + e.data;
+    //   console.log(txt);
+    //   that.addMiner(e.data);
+    // }, false);
 
     es.addEventListener('open', (e) => {
       var d = new Date();
@@ -107,6 +122,21 @@ class App extends React.Component {
 
     }, false);
 
+  }
+
+  addSensor(sensor_message) {
+    const msg_json = JSON.parse(sensor_message);
+    const sensorvalue = JSON.parse(msg_json.body)[0];
+    this.setState({ [sensorvalue.sensorid]: sensorvalue });
+    this.addAlert(msg_json.timestamp + ':' + sensorvalue.sensorid);
+  }
+
+  addMiner(miner_message) {
+    const msg_json = JSON.parse(miner_message);
+    const minerstats = JSON.parse(msg_json.body)[0];
+    //todo: should use key property
+    this.setState({ [minerstats.miner.name]: minerstats });
+    this.addAlert(msg_json.timestamp + ':' + minerstats.miner.name);
   }
 
   switchRoutes= () => {

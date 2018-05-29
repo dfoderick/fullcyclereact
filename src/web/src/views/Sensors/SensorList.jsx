@@ -14,8 +14,8 @@ import {
 
 import {
     SettingsInputAntenna,
-    Info,
-    Opacity
+    Info
+    //Opacity
   } from "@material-ui/icons";
  
 export default class SensorList extends Component {

@@ -13,7 +13,7 @@ const tableColumnStyle = {
 export default class MinersTable extends Component {
 
     state = {
-        knownminers: '',
+        //knownminers: '',
         activeRowId: '',
 		selectedPool: '',
 		radReset: '',
