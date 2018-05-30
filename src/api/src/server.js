@@ -217,7 +217,7 @@ sse.on('connection', function (sse_connection) {
 			var q = ok.queue;
 			ch.bindQueue(q, q_alert, '');
 			ch.consume(q, alertMessage, {noAck: true}, function(err, ok) {
-				if (err !== null) return bail(err, conn);
+				if (err !== null) return bail(err, bus_connect);
 				console.log(" [*] Waiting for alert. To exit press CTRL+C.");
 			});
 		});
