@@ -47,7 +47,7 @@ export default class SensorList extends Component {
             title={sens.valuetype}
             description={parseFloat(sens.value).toFixed(2).toString()}
             statIcon={Info}
-            statText={sens.valuetype}
+            statText={sens.sensortime}
             onClick={() => {this.handleOpenDialog(sens)}}
           />
           </ItemGrid>
@@ -55,17 +55,10 @@ export default class SensorList extends Component {
 	}
 
     render() {
-        const strsensor = this.props.sensor;
-        const jsensors = strsensor;
-		const arrSensors = [];
-		if (jsensors){
-			Object.keys(jsensors).forEach(function(key) {
-			  arrSensors.push(JSON.parse(jsensors[key], function (key, value) {
-					return (value == null) ? "" : value
-				}));
-			});
-        }
-		const renderedSensors = arrSensors.map((s) => this.renderSensor(s));
+        const arrSensors = this.props.sensor;
+        let renderedSensors = null;
+        if (arrSensors) 
+            renderedSensors = arrSensors.map((s) => this.renderSensor(s));
 
         return (
             <Grid container>

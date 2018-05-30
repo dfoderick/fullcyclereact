@@ -198,17 +198,16 @@ function on_connect(err, conn) {
 
 }
 
-
 //set up the full cycle alerts feed to send alerts to the browser
 var sse = new SSE(server);
 sse.on('connection', function (sse_connection) {
 	console.log('new sse connection');
 	
-	var ex = 'alert';
-	var alert_channel = null;
+	const q_alert = 'alert';
+	let alert_channel = null;
 
-	function on_channel_open(err, ch) {
-		if (err !== null) return bail(err, conn);
+	function on_channel_open_alert(err, ch) {
+		if (err !== null) return bail(err, bus_connect);
 		alert_channel = ch;
 		ch.on('error', function (err) {
 			console.error(err)
@@ -216,17 +215,18 @@ sse.on('connection', function (sse_connection) {
 		});
 		ch.assertQueue('', {exclusive: true}, function(err, ok) {
 			var q = ok.queue;
-			ch.bindQueue(q, ex, '');
-			ch.consume(q, logMessage, {noAck: true}, function(err, ok) {
+			ch.bindQueue(q, q_alert, '');
+			ch.consume(q, alertMessage, {noAck: true}, function(err, ok) {
 				if (err !== null) return bail(err, conn);
 				console.log(" [*] Waiting for alert. To exit press CTRL+C.");
 			});
 		});
 	}
 
-	function logMessage(msg) {
+	function alertMessage(msg) {
 		if (msg) {
-			console.log(" [x] '%s'", msg.content.toString());
+			//msg.content.toString()
+			console.log(" [x] '%s'", "received alert message");
 			sse_connection.send({
 				event: 'full-cycle-alert',
 				data: msg.content.toString()
@@ -234,13 +234,78 @@ sse.on('connection', function (sse_connection) {
 		}
 	}
 
+	const q_miner = 'statisticsupdated';
+	let miner_channel = null;
+	function on_channel_open_miner(err, ch) {
+		if (err !== null) return bail(err, bus_connect);
+		miner_channel = ch;
+		ch.on('error', function (err) {
+			console.error(err)
+			console.log('miner channel Closed');
+		});
+		ch.assertQueue('', {exclusive: true}, function(err, ok) {
+			var q = ok.queue;
+			ch.bindQueue(q, q_miner, '');
+			ch.consume(q, minerMessage, {noAck: true}, function(err, ok) {
+				if (err !== null) return bail(err, bus_connect);
+				console.log(" [*] Waiting for miner stats. To exit press CTRL+C.");
+			});
+		});
+	}
+
+	function minerMessage(msg) {
+		if (msg) {
+			//msg.content.toString()
+			console.log(" [x] '%s'", "received miner message");
+			sse_connection.send({
+				event: 'full-cycle-miner',
+				data: msg.content.toString()
+			});
+		}
+	}
+
+	const q_sensor = 'sensor';
+	let sensor_channel = null;
+	function on_channel_open_sensor(err, ch) {
+		if (err !== null) return bail(err, bus_connect);
+		sensor_channel = ch;
+		ch.on('error', function (err) {
+			console.error(err)
+			console.log('sensor channel Closed');
+		});
+		ch.assertQueue('', {exclusive: true}, function(err, ok) {
+			var q = ok.queue;
+			ch.bindQueue(q, q_sensor, '');
+			ch.consume(q, sensorMessage, {noAck: true}, function(err, ok) {
+				if (err !== null) return bail(err, bus_connect);
+				console.log(" [*] Waiting for sensor. To exit press CTRL+C.");
+			});
+		});
+	}
+
+	function sensorMessage(msg) {
+		if (msg) {
+			//msg.content.toString()
+			console.log(" [x] '%s'", "received sensor message");
+			sse_connection.send({
+				event: 'full-cycle-sensor',
+				data: msg.content.toString()
+			});
+		}
+	}
+
 	if (bus_connect)
-		bus_connect.createChannel(on_channel_open);
+	{
+		bus_connect.createChannel(on_channel_open_alert);
+		bus_connect.createChannel(on_channel_open_miner);
+		bus_connect.createChannel(on_channel_open_sensor);
+	}
 	
   sse_connection.on('close', function () {
     console.log('lost sse connection');
-		if (alert_channel)
-			alert_channel.close();
+		if (alert_channel) alert_channel.close();
+		if (miner_channel) miner_channel.close();
+		if (sensor_channel) sensor_channel.close();
 	});
 	
 });

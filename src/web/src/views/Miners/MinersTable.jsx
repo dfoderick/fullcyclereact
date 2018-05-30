@@ -13,7 +13,6 @@ const tableColumnStyle = {
 export default class MinersTable extends Component {
 
     state = {
-        //knownminers: '',
         activeRowId: '',
 		selectedPool: '',
 		radReset: '',
@@ -208,7 +207,7 @@ export default class MinersTable extends Component {
         </TableRow>
         );
       }
-    
+      
     render() {
         let arrMiners = this.props.miners;
         let renderedPools = [];
@@ -219,8 +218,8 @@ export default class MinersTable extends Component {
         if (arrMiners)
         {
             renderedMiners = arrMiners.map((m) => this.renderMiner(m));
-            console.log(arrMiners.length.toString() + " miners")
-            console.log(renderedMiners.length.toString() + " miners rendered")
+            //console.log(arrMiners.length.toString() + " miners")
+            //console.log(renderedMiners.length.toString() + " miners rendered")
             // find the data for this active row `id`
             selectedMiner = this.find(arrMiners, this.state.activeRowId );
             if (selectedMiner && selectedMiner.minerpool && selectedMiner.minerpool.allpools){

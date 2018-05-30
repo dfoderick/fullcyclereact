@@ -4,18 +4,50 @@ import React from "react";
 import SensorList from './SensorList';
 
 class Sensors extends React.Component {
-    state = {
-        sensors: '',
-        camera: '',
+  constructor() {
+    super();
+    this.state = { sensors: [] };
+  }
+
+  state = {
+        sensors: [],
+        camera: null,
+      }
+
+      supportsSSE() {
+        return !!window.EventSource;
       }
 
   componentDidMount() {
 		this.callApiGetSensors()
-      .then(res => this.setState({ sensors: res.knownsensors }))
+      .then(res => {
+        const arrSensors = [];
+        if (res.knownsensors != null){
+            Object.keys(res.knownsensors).forEach(function(key) {
+              arrSensors.push(JSON.parse(res.knownsensors[key], function (key, value) {
+                    return (value == null) ? "" : value
+                }));
+            });
+        };
+        this.setState({ sensors: arrSensors });
+      })
       .catch(err => console.log(err));
+
     this.callApiGetCamera()
         .then(res => this.setState({ camera: res.camera }))
         .catch(err => console.log(err));
+
+    if (this.supportsSSE() && !this.eventListener) {
+      this.eventListener = new EventSource('/sse');
+      this.subscribe(this.eventListener);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.eventListener){
+      this.eventListener.close();
+      console.log("Sensors: unsubscribed");
+    }
   }
 
   callApiGetSensors = async () => {
@@ -32,9 +64,55 @@ class Sensors extends React.Component {
     return body;
   };
 
+  subscribe(es) {
+    const that = this;
+    if (!es) return;
+
+    es.addEventListener('full-cycle-sensor', (e) => {
+      var d = new Date();
+      let txt = d.toLocaleString() + ": EventSource: " + e.data;
+      console.log(txt);
+      that.addSensor(e.data);
+    }, false);
+
+    console.log("Sensors: subscribed");
+
+  }
+
+  addSensor = (sensor_message) => {
+    const msg_json = JSON.parse(sensor_message);
+    const sensorvalue = JSON.parse(msg_json.body)[0];
+    this.updateSensor(sensorvalue);
+  }
+
+  updateSensor = (sensorvalue) => {
+    var index = this.state.sensors.findIndex(x=> x.sensorid === sensorvalue.sensorid);
+    if (index === -1)
+    {
+        this.setState({
+            sensors: [ sensorvalue, ...this.state.sensors ]
+          });
+        }
+    else {
+        this.setState({
+            sensors: [
+            ...this.state.sensors.slice(0,index),
+            Object.assign({}, this.state.sensors[index], sensorvalue),
+            ...this.state.sensors.slice(index+1)
+            ]
+        });
+    }
+  }
+
   render() {
-		const jsensors = JSON.parse(JSON.stringify(this.state.sensors));
-    const jcamera = JSON.parse(JSON.stringify(this.state.camera));
+    const jsensors = this.state.sensors;
+    let jcamera = null;
+    try {
+      jcamera = JSON.parse(JSON.stringify(this.state.camera));
+    }
+    catch (error) {
+      jcamera = null;
+    };
     return (
         <div>
           <SensorList sensor = {jsensors} camera={jcamera} mode={this.props.mode}/>

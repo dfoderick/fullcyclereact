@@ -8,9 +8,6 @@ class Miners extends React.Component {
     constructor() {
         super();
         this.state = { knownminers: [] };
-        if (this.supportsSSE()) {
-          this.eventListener = new EventSource('/sse');
-        }
       }
     
     state = {
@@ -19,7 +16,7 @@ class Miners extends React.Component {
 
     supportsSSE() {
         return !!window.EventSource;
-      }
+    }
     
     componentDidMount() {
         this.callApiGetMiners()
@@ -35,11 +32,18 @@ class Miners extends React.Component {
             this.setState({ knownminers: arrMiners });
         })
         .catch(err => console.log(err));
-        this.subscribe(this.eventListener);
+
+        if (this.supportsSSE() && !this.eventListener) {
+            this.eventListener = new EventSource('/sse');
+            this.subscribe(this.eventListener);
+        }
     }
 
-    componentWillUnMount() {
-        if (this.eventListener) this.eventListener.close();
+    componentWillUnmount() {
+        if (this.eventListener){
+            this.eventListener.close();
+            console.log("Miners: unsubscribed");
+        }
     }
     
     callApiGetMiners = async () => {
@@ -56,9 +60,9 @@ class Miners extends React.Component {
         es.addEventListener('full-cycle-miner', (e) => {
           var d = new Date();
           let txt = d.toLocaleString() + ": EventSource: " + e.data;
-          console.log(txt);
           that.addMiner(e.data);
         }, false);
+        console.log("Miners: subscribed");
    
       }
     
@@ -66,6 +70,7 @@ class Miners extends React.Component {
         const msg_json = JSON.parse(miner_message);
         const minerstats = JSON.parse(msg_json.body)[0];
         //todo: should use key property
+        console.log("Miner:"+minerstats.miner.lastmonitor+":"+minerstats.miner.name);
         this.updateMiner(this.getMinerKey(minerstats.miner), minerstats.miner);
       }
 
@@ -76,16 +81,6 @@ class Miners extends React.Component {
       }
     
       updateMiner = (key, miner) => {
-        // let updatedMiner = {...this.state.knownminers, [key]: miner};
-        // this.setState({updatedMiner});
-
-        // if (this.state.knownminers.hasOwnProperty(miner.key))
-        // {
-        //     this.setState({
-        //         knownminers: [ miner.key, ...this.state.knownminers ]
-        //       });
-        //     }
-        // }
         var index = this.state.knownminers.findIndex(x=> x.name === miner.name);
         if (index === -1)
         {

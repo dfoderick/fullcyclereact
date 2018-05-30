@@ -22,7 +22,6 @@ class App extends React.Component {
     super();
     if (this.supportsSSE()) {
       this.state = {alerts:[]};
-      this.eventListener = new EventSource('/sse');
     } else {
       this.state = {alerts:["Browser does not support EventSource :("]};
     }
@@ -56,14 +55,17 @@ class App extends React.Component {
       // eslint-disable-next-line
       const ps = new PerfectScrollbar(this.refs.mainPanel);
     }
-    this.subscribe(this.eventListener);
+    if (this.supportsSSE() && !this.eventListener) {
+      this.eventListener = new EventSource('/sse');
+      this.subscribe(this.eventListener);
+    }
   }
 
   componentDidUpdate() {
     this.refs.mainPanel.scrollTop = 0;
   }
   
-  componentWillUnMount() {
+  componentWillUnmount() {
     if (this.eventListener) this.eventListener.close();
   }
 
@@ -85,12 +87,12 @@ class App extends React.Component {
       that.addAlert(txt);
     }, false);
 
-    es.addEventListener('full-cycle-sensor', (e) => {
-      var d = new Date();
-      let txt = d.toLocaleString() + ": EventSource: " + e.data;
-      console.log(txt);
-      that.addSensor(e.data);
-    }, false);
+    // es.addEventListener('full-cycle-sensor', (e) => {
+    //   var d = new Date();
+    //   let txt = d.toLocaleString() + ": EventSource: " + e.data;
+    //   console.log(txt);
+    //   that.addSensor(e.data);
+    // }, false);
 
     // es.addEventListener('full-cycle-miner', (e) => {
     //   var d = new Date();
@@ -102,7 +104,7 @@ class App extends React.Component {
     es.addEventListener('open', (e) => {
       var d = new Date();
       let txt = d.toLocaleString() + ": EventSource opened";
-      that.addAlert(txt);
+      console.log(txt);
     }, false);
 
     es.addEventListener('error', (e) => {
@@ -118,26 +120,26 @@ class App extends React.Component {
           default:
           txt += 'EventSource failed. unknown readyState ' + e.readyState;
       }
-      that.addAlert(txt);
+      console.log(txt);
 
     }, false);
 
   }
 
-  addSensor(sensor_message) {
-    const msg_json = JSON.parse(sensor_message);
-    const sensorvalue = JSON.parse(msg_json.body)[0];
-    this.setState({ [sensorvalue.sensorid]: sensorvalue });
-    this.addAlert(msg_json.timestamp + ':' + sensorvalue.sensorid);
-  }
+  // addSensor(sensor_message) {
+  //   const msg_json = JSON.parse(sensor_message);
+  //   const sensorvalue = JSON.parse(msg_json.body)[0];
+  //   this.setState({ [sensorvalue.sensorid]: sensorvalue });
+  //   this.addAlert(msg_json.timestamp + ':' + sensorvalue.sensorid);
+  // }
 
-  addMiner(miner_message) {
-    const msg_json = JSON.parse(miner_message);
-    const minerstats = JSON.parse(msg_json.body)[0];
-    //todo: should use key property
-    this.setState({ [minerstats.miner.name]: minerstats });
-    this.addAlert(msg_json.timestamp + ':' + minerstats.miner.name);
-  }
+  // addMiner(miner_message) {
+  //   const msg_json = JSON.parse(miner_message);
+  //   const minerstats = JSON.parse(msg_json.body)[0];
+  //   //todo: should use key property
+  //   this.setState({ [minerstats.miner.name]: minerstats });
+  //   this.addAlert(msg_json.timestamp + ':' + minerstats.miner.name);
+  // }
 
   switchRoutes= () => {
     const that = this;
