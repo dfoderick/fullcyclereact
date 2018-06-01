@@ -1,8 +1,9 @@
 import React from "react";
-import { Grid, Button } from "material-ui";
+import { Grid } from "material-ui";
 
 import {
-  ItemGrid
+  ItemGrid,
+  Button
 } from "components";
 
 class MiningCommands extends React.Component {
@@ -40,8 +41,9 @@ class MiningCommands extends React.Component {
     };
 
     render() {
-        return (
-            <Grid container justify="center">
+      const { classes } = this.props;
+      return (
+            <Grid container justify="left">
             <ItemGrid xs={12} sm={12} md={10} lg={8}>
 
                 <Grid container>

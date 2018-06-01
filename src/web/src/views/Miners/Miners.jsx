@@ -58,8 +58,6 @@ class Miners extends React.Component {
         if (!es) return;
     
         es.addEventListener('full-cycle-miner', (e) => {
-          var d = new Date();
-          let txt = d.toLocaleString() + ": EventSource: " + e.data;
           that.addMiner(e.data);
         }, false);
         console.log("Miners: subscribed");

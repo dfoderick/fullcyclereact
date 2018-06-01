@@ -33,11 +33,14 @@ class HeaderLinks extends React.Component {
 
   // className={classes.dropdownItem}
   renderAlert(alert) {
+    const { classes } = this.props;
     return (
       <MenuItem key = {alert}
         onClick={this.handleClose}
+        className={classes.dropdownItem}
+        style={{"white-space": "pre-line"}}
       >
-        {alert}
+        {alert && alert.slice(0,150)}
       </MenuItem>
       );
   }

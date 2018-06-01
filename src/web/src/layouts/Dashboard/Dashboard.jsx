@@ -3,7 +3,6 @@ import React from "react";
 //import EventSource from "../../eventsource.js";
 import PropTypes from "prop-types";
 import { Switch, Route, Redirect } from "react-router-dom";
-// creates a beautiful scrollbar
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import { withStyles } from "material-ui";
@@ -70,11 +69,17 @@ class App extends React.Component {
   }
 
   addAlert(alert) {
-    //limits alerts to 100 messages.
+    //limits alerts to 1000 messages.
     //todo: make configurable
-    console.log(alert);
+    let txt = alert
+    if (txt.indexOf(":") < 0)
+    {
+      const d = new Date();
+      txt = d.toLocaleString() + ":" + txt;
+    }
+    console.log(txt);
     this.setState({
-      alerts: [alert, ...this.state.alerts.slice(0, 99)]
+      alerts: [txt, ...this.state.alerts.slice(0, 999)]
     });
   }
 
@@ -82,24 +87,8 @@ class App extends React.Component {
     const that = this;
     if (!es) return;
     es.addEventListener('full-cycle-alert', (e) => {
-      var d = new Date();
-      let txt = d.toLocaleString() + ": EventSource: " + e.data;
-      that.addAlert(txt);
+      that.addAlert(e.data);
     }, false);
-
-    // es.addEventListener('full-cycle-sensor', (e) => {
-    //   var d = new Date();
-    //   let txt = d.toLocaleString() + ": EventSource: " + e.data;
-    //   console.log(txt);
-    //   that.addSensor(e.data);
-    // }, false);
-
-    // es.addEventListener('full-cycle-miner', (e) => {
-    //   var d = new Date();
-    //   let txt = d.toLocaleString() + ": EventSource: " + e.data;
-    //   console.log(txt);
-    //   that.addMiner(e.data);
-    // }, false);
 
     es.addEventListener('open', (e) => {
       var d = new Date();
@@ -125,21 +114,6 @@ class App extends React.Component {
     }, false);
 
   }
-
-  // addSensor(sensor_message) {
-  //   const msg_json = JSON.parse(sensor_message);
-  //   const sensorvalue = JSON.parse(msg_json.body)[0];
-  //   this.setState({ [sensorvalue.sensorid]: sensorvalue });
-  //   this.addAlert(msg_json.timestamp + ':' + sensorvalue.sensorid);
-  // }
-
-  // addMiner(miner_message) {
-  //   const msg_json = JSON.parse(miner_message);
-  //   const minerstats = JSON.parse(msg_json.body)[0];
-  //   //todo: should use key property
-  //   this.setState({ [minerstats.miner.name]: minerstats });
-  //   this.addAlert(msg_json.timestamp + ':' + minerstats.miner.name);
-  // }
 
   switchRoutes= () => {
     const that = this;
