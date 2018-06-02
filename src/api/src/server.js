@@ -12,53 +12,8 @@ const app = express();
 const jsonParser = bodyParser.json();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-//todo: these should all be environment settings
-const serverhost = 'localhost'
-const port = process.env.PORT || 5000;
-const messagebus = 'amqp://fullcycle:mining@'+serverhost
-const redis_port = 6379
-const redis_host = serverhost
-const redis_password = ''
-
-//Message envelope for putting messages on the bus
-function makeMessage(ptype, pbody){
-	return {
-		version: '1.1',
-		sender: 'fullcyclereact',
-		type: ptype,
-		timestamp: new Date().toISOString(),
-		body: pbody
-	}
-}
-
-// MinerMessage
-function makeMinerMessage(pminer, pcommand, ppool){
-	return {
-		miner: pminer,
-		command: pcommand,
-		minerstats: null,
-		minerpool: ppool
-	}
-}
-
-//MinerCommandMessge
-function makeCommand(pcommand,pparameter){
-	return {
-		command: pcommand,
-		parameter: pparameter
-	}
-}
-
-// ConfigurationMessage
-function makeConfigurationMessage(pbody){
-	return {
-		command: pbody.command,
-		parameter: pbody.parameter,
-		id: pbody.id,
-		entity: pbody.entity,
-		values: pbody.values
-	}
-}
+const services = require('./services');
+const messages = require('./messages');
 
 function bail(err, conn) {
   console.error('bailing...');
@@ -72,7 +27,7 @@ function bail(err, conn) {
 function publish (q, msg){
 	console.log(q + ' => ' + msg);
 
-	amqp.connect(messagebus, function(err, conn) {
+	amqp.connect(services.messagebus.connection, function(err, conn) {
 	  conn.createChannel(function(err, ch) {
 		if (err != null) bail(err);
 		ch.assertQueue(q, {durable: false});
@@ -96,8 +51,8 @@ app.get('/api/getcamera', (req, res) => {
 });
 
 function redisclient(){
-	var client = redis.createClient(redis_port, redis_host, {no_ready_check: true});
-	client.auth(redis_password, function (err) {
+	var client = redis.createClient(services.redis.port, services.redis.host, {no_ready_check: true});
+	client.auth(services.redis.password, function (err) {
 		 if (err) throw err;
 	});
   return client;
@@ -140,36 +95,36 @@ app.post('/api/sendcommand',jsonParser, (req, res) => {
 app.post('/api/save',jsonParser, (req, res) => {
 	console.log(req.body);
 	//1) make configmessage with command
-	var configmsg = makeConfigurationMessage(req.body);
+	var configmsg = messages.makeConfigurationMessage(req.body);
 	//2) wrap the configmessage into an envelope
-	var envelope = makeMessage('configuration', JSON.stringify(configmsg))
+	var envelope = messages.makeMessage('configuration', JSON.stringify(configmsg))
 	publish('save',JSON.stringify(envelope));
 });
 
 app.post('/api/minerrestart',jsonParser, (req, res) => {
 	console.log(req.body);
 	//1) create restart minercommand
-	var cmd = makeCommand(req.body.command, req.body.parameter);
+	var cmd = messages.makeCommand(req.body.command, req.body.parameter);
 	//2) make minermessage with command
-	var minermsg = makeMinerMessage(req.body.miner, cmd, null);
+	var minermsg = messages.makeMinerMessage(req.body.miner, cmd, null);
 	//3) wrap the minermessage into an envelope
-	var envelope = makeMessage('minercommand', JSON.stringify(minermsg))
+	var envelope = messages.makeMessage('minercommand', JSON.stringify(minermsg))
 	publish('restart',JSON.stringify(envelope));
 });
 
 app.post('/api/minerswitchpool', jsonParser, (req, res) => {
 	console.log(req.body);
 	//1) create minercommand
-	var cmd = makeCommand(req.body.command, req.body.parameter);
+	var cmd = messages.makeCommand(req.body.command, req.body.parameter);
 	//2) make minermessage with command
-	var minermsg = makeMinerMessage(req.body.miner, cmd, null);
+	var minermsg = messages.makeMinerMessage(req.body.miner, cmd, null);
 	//3) wrap the minermessage into an envelope
-	var envelope = makeMessage('minercommand', JSON.stringify(minermsg))
+	var envelope = messages.makeMessage('minercommand', JSON.stringify(minermsg))
 	publish('switch',JSON.stringify(envelope));
 });
 
 app.get('/api/knownsensors', (req, res) => {
-		console.log('called knownsensors')
+	console.log('called knownsensors');
     getredishashset('knownsensors', function(object) {
 		res.send({ knownsensors: object });;
     });
@@ -186,9 +141,9 @@ app.get('/api/knownsensors', (req, res) => {
 
 //in production this serves up the react bundle
 app.use(serveStatic('../web/build'));
-var server = app.listen(port, () => console.log(`Listening on port ${port}`));
+var server = app.listen(services.web.port, () => console.log(`Listening on port ${services.web.port}`));
 
-var  bus_connect = null;
+var bus_connect = null;
 
 function on_connect(err, conn) {
 	if (err !== null) return bail(err);
@@ -311,7 +266,7 @@ sse.on('connection', function (sse_connection) {
 });
 
 try {
-	amqp.connect(messagebus, on_connect);
+	amqp.connect(services.messagebus.connection, on_connect);
 }
 catch(error) {
 	console.error(error);
