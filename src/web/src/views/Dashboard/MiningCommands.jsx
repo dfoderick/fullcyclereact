@@ -41,7 +41,6 @@ class MiningCommands extends React.Component {
     };
 
     render() {
-      const { classes } = this.props;
       return (
             <Grid container justify="left">
             <ItemGrid xs={12} sm={12} md={10} lg={8}>

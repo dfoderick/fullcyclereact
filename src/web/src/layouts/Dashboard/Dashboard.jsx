@@ -70,7 +70,6 @@ class App extends React.Component {
 
   addAlert(alert) {
     //limits alerts to 1000 messages.
-    //todo: make configurable
     let txt = alert
     if (txt.indexOf(":") < 0)
     {

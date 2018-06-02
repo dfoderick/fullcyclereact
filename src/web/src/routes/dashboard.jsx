@@ -10,7 +10,7 @@ import NotificationsPage from "views/Notifications/Notifications.jsx";
 
 import {
   Dashboard,
-  ContentPaste,
+  Computer,
   SettingsEthernet,
   SettingsInputAntenna,
   Info,
@@ -29,7 +29,7 @@ const dashboardRoutes = [
     path: "/miners",
     sidebarName: "Miners",
     navbarName: "Miners",
-    icon: ContentPaste,
+    icon: Computer,
     component: Miners
   },
   {
