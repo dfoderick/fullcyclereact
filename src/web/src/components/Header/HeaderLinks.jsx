@@ -38,7 +38,7 @@ class HeaderLinks extends React.Component {
       <MenuItem key = {alert}
         onClick={this.handleClose}
         className={classes.dropdownItem}
-        style={{"white-space": "pre-line"}}
+        style={{"whiteSpace": "pre-line"}}
       >
         {alert && alert.slice(0,150)}
       </MenuItem>

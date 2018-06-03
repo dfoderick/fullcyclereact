@@ -42,7 +42,7 @@ class MiningCommands extends React.Component {
 
     render() {
       return (
-            <Grid container justify="left">
+            <Grid container justify="flex-start">
             <ItemGrid xs={12} sm={12} md={10} lg={8}>
 
                 <Grid container>

@@ -32,7 +32,7 @@ class Notifications extends React.Component {
   renderAlert(alert) {
     return (
       <li key={alert}>
-      style={{"white-space": "pre-line"}}
+      style={{"whiteSpace": "pre-line"}}
         {alert}
       </li>
     );
