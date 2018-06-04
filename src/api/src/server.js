@@ -4,16 +4,30 @@ const express = require('express');
 const serveStatic = require('serve-static');
 const path = require("path");
 const SSE = require('sse');
-const bodyParser = require('body-parser');
 const redis = require('redis');
 const amqp = require('amqplib/callback_api');
 
 const app = express();
-const jsonParser = bodyParser.json();
-const urlencodedParser = bodyParser.urlencoded({ extended: false });
+
+// const passport = require('passport')    
+// const BasicStrategy = require('passport-http').BasicStrategy
+// passport.use(new BasicStrategy(
+// 	function(username, password, done) {
+// 		//todo: obviously needs to change
+// 	  	if (username.valueOf() === 'fullcycle' && password.valueOf() === 'mining')
+// 			return done(null, true);
+// 		  else
+// 		  {
+// 			console.log("rejected!")
+// 			return done(null, false);
+// 		  }
+// 	}
+//   ));
 
 const services = require('./services');
 const messages = require('./messages');
+
+var api = require('./api.js');
 
 function bail(err, conn) {
   console.error('bailing...');
@@ -24,111 +38,6 @@ function bail(err, conn) {
 	});
 }
 
-function publish (q, msg){
-	console.log(q + ' => ' + msg);
-
-	amqp.connect(services.messagebus.connection, function(err, conn) {
-	  conn.createChannel(function(err, ch) {
-		if (err != null) bail(err);
-		ch.assertQueue(q, {durable: false});
-		ch.sendToQueue(q, new Buffer(msg));
-		console.log(" [x] Sent %s", msg);
-	  });
-	  //conn.close();
-	});
-}
-
-app.get('/api/hello', (req, res) => {
-	console.log('called hello')
-  res.send({ express: 'Welcome to Full Cycle Mining' });
-});
-
-app.get('/api/getcamera', (req, res) => {
-		console.log('called getcamera')
-    getredis('camera', function(object) {
-		res.send({ camera: object });;
-    });
-});
-
-function redisclient(){
-	var client = redis.createClient(services.redis.port, services.redis.host, {no_ready_check: true});
-	client.auth(services.redis.password, function (err) {
-		 if (err) throw err;
-	});
-  return client;
-}
-
-function getredis(key, callback) {
-	var client = redisclient();
-	client.get([key], function(err, object) {
-		callback(object);
-		client.quit();
-	});
-};
-
-function getredishashset(key, callback) {
-	var client = redisclient();
-	client.hgetall([key], function(err, object) {
-		callback(object);
-		client.quit();
-	});
-};
-
-app.get('/api/knownminers', (req, res) => {
-		console.log('called knownminers')
-    getredishashset('knownminers', function(object) {
-		res.send({ knownminers: object });;
-    });
-});
-
-app.get('/api/knownpools', (req, res) => {
-	console.log('called knownpools')
-	getredishashset('knownpools', function(object) {
-	res.send({ knownpools: object });;
-	});
-});
-
-app.post('/api/sendcommand',jsonParser, (req, res) => {
-	publish(req.body.command,JSON.stringify(req.body.command));
-});
-
-app.post('/api/save',jsonParser, (req, res) => {
-	console.log(req.body);
-	//1) make configmessage with command
-	var configmsg = messages.makeConfigurationMessage(req.body);
-	//2) wrap the configmessage into an envelope
-	var envelope = messages.makeMessage('configuration', JSON.stringify(configmsg))
-	publish('save',JSON.stringify(envelope));
-});
-
-app.post('/api/minerrestart',jsonParser, (req, res) => {
-	console.log(req.body);
-	//1) create restart minercommand
-	var cmd = messages.makeCommand(req.body.command, req.body.parameter);
-	//2) make minermessage with command
-	var minermsg = messages.makeMinerMessage(req.body.miner, cmd, null);
-	//3) wrap the minermessage into an envelope
-	var envelope = messages.makeMessage('minercommand', JSON.stringify(minermsg))
-	publish('restart',JSON.stringify(envelope));
-});
-
-app.post('/api/minerswitchpool', jsonParser, (req, res) => {
-	console.log(req.body);
-	//1) create minercommand
-	var cmd = messages.makeCommand(req.body.command, req.body.parameter);
-	//2) make minermessage with command
-	var minermsg = messages.makeMinerMessage(req.body.miner, cmd, null);
-	//3) wrap the minermessage into an envelope
-	var envelope = messages.makeMessage('minercommand', JSON.stringify(minermsg))
-	publish('switch',JSON.stringify(envelope));
-});
-
-app.get('/api/knownsensors', (req, res) => {
-	console.log('called knownsensors');
-    getredishashset('knownsensors', function(object) {
-		res.send({ knownsensors: object });;
-    });
-});
 
 //route all other calls to the home page. this is causing "path is not defined" in line 179
 // app.get('/*', function(req, res) {
@@ -140,8 +49,36 @@ app.get('/api/knownsensors', (req, res) => {
 // });
 
 //in production this serves up the react bundle
-app.use(serveStatic('../web/build'));
+app.use(serveStatic('../web/build') 
+//,
+//	passport.authenticate('basic', { session: false })
+);
+app.use('/api', api);
 var server = app.listen(services.web.port, () => console.log(`Listening on port ${services.web.port}`));
+server.on('error', onWebError);
+function onWebError(error) {
+	if (error.syscall !== 'listen') {
+	  throw error;
+	}
+  
+	var bind = typeof port === 'string'
+	  ? 'Pipe ' + port
+	  : 'Port ' + port;
+  
+	// handle specific listen errors with friendly messages
+	switch (error.code) {
+	  case 'EACCES':
+		console.error(error.code + ':' + bind + ' requires elevated privileges');
+		process.exit(1);
+		break;
+	  case 'EADDRINUSE':
+		console.error(error.code + ':' + bind + ' is already in use. Close the other app and try again');
+		process.exit(1);
+		break;
+	  default:
+		throw error;
+	}
+  }
 
 var bus_connect = null;
 
