@@ -108,7 +108,7 @@ class HeaderLinks extends React.Component {
             </ClickAwayListener>
           </Popper>
         </Manager>
-        <IconButton style={{ display: "none" }}
+        <IconButton
           color="inherit"
           aria-label="Person"
           className={classes.buttonLink}

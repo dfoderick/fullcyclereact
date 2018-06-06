@@ -2,11 +2,17 @@
 
 const express = require('express');
 const serveStatic = require('serve-static');
+const bodyParser = require('body-parser');
 const path = require("path");
 const SSE = require('sse');
 const redis = require('redis');
 const amqp = require('amqplib/callback_api');
+const bcrypt = require('bcrypt-nodejs');
+var jwt = require('jsonwebtoken');
+//const User = require("../models/user");
 
+const encryptedpassword = "$2a$10$RxKTlL9YMMwEE./jBaYP.u0PL8omTKXy9mynRvFzvd0fDtjHIG7ou";
+const jsonParser = bodyParser.json();
 const app = express();
 
 // const passport = require('passport')    
@@ -38,6 +44,29 @@ function bail(err, conn) {
 	});
 }
 
+function comparePassword (passw, cb) {
+    bcrypt.compare(passw, encryptedpassword, function (err, isMatch) {
+        if (err) {
+            return cb(err);
+        }
+        cb(null, isMatch);
+	});
+}
+	
+app.post('/api/auth/login', jsonParser, function(req, res) {
+		// check if password matches
+		let user = {username:req.body.password, password:req.body.password}
+		comparePassword(req.body.password, function (err, isMatch) {
+		  if (isMatch && !err) {
+			// if user is found and password is right create a token
+			var token = jwt.sign(user, services.auth.secret);
+			// return the information including token as JSON
+			res.json({success: true, token: 'JWT ' + token});
+		  } else {
+			res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
+		  }
+		});
+  });
 
 //route all other calls to the home page. this is causing "path is not defined" in line 179
 // app.get('/*', function(req, res) {
@@ -55,7 +84,32 @@ app.use(serveStatic('../web/build')
 );
 app.use('/api', api);
 var server = app.listen(services.web.port, () => console.log(`Listening on port ${services.web.port}`));
+server.on('listen', onWebListen);
+
+function onWebListen() {
+	var addr = server.address();
+	var bind = typeof addr === 'string'
+	  ? 'pipe ' + addr
+	  : 'port ' + addr.port;
+	debug('Listening on ' + bind);
+	// let plainpassword = 'mining'
+	// bcrypt.genSalt(10, function (err, salt) {
+	// 	if (err) {
+	// 		return false;
+	// 	}
+	// 	bcrypt.hash(plainpassword, salt, null, function (err, hash) {
+	// 		if (err) {
+	// 			return false;
+	// 		}
+	// 		user.password = hash;
+	// 	});
+	// });
+	
+  }
+
+
 server.on('error', onWebError);
+
 function onWebError(error) {
 	if (error.syscall !== 'listen') {
 	  throw error;
