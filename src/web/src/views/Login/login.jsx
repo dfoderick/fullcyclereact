@@ -47,7 +47,7 @@ class Login extends Component {
                 sessionStorage.setItem('jwtToken', res.token);
                 this.setState({ message: '' });
                 this.setState({ count: 0 });
-                this.props.history.push('/')
+                this.props.history.push('/');
             }
         )
         .catch(err => {

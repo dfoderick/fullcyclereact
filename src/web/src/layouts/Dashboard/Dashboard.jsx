@@ -3,6 +3,7 @@ import React from "react";
 //import EventSource from "../../eventsource.js";
 import PropTypes from "prop-types";
 import { Switch, Route, Redirect } from "react-router-dom";
+import { createBrowserHistory } from "history";
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import { withStyles } from "material-ui";
@@ -116,6 +117,7 @@ class App extends React.Component {
 
   switchRoutes= () => {
     const that = this;
+    const hist = createBrowserHistory();
     return (
     <Switch>
       {dashboardRoutes.map((prop, key) => {
@@ -124,7 +126,7 @@ class App extends React.Component {
 
         var RoutedComponent = prop.component;
         return <Route path={prop.path} key={key} 
-          render={(props) => <RoutedComponent {...props} alerts={ that.state.alerts} />}
+          render={(props) => <RoutedComponent {...props} alerts={ that.state.alerts} history={hist} />}
          />;
       })}
     </Switch>
@@ -133,6 +135,7 @@ class App extends React.Component {
   render() {
     const { classes, ...rest } = this.props;
     const routeswitches = this.switchRoutes();
+    const hist = createBrowserHistory();
     return (
       <div className={classes.wrapper}>
         <Sidebar
@@ -149,6 +152,7 @@ class App extends React.Component {
           <Header
             routes={dashboardRoutes}
             alerts={this.state.alerts}
+            history={hist}
             handleDrawerToggle={this.handleDrawerToggle}
             {...rest}
           />

@@ -31,7 +31,14 @@ class HeaderLinks extends React.Component {
     this.setState({ open: false });
   };
 
-  // className={classes.dropdownItem}
+  handleLogout = () => {
+    this.props.history.push('/login');
+  };
+
+  handleDashboard = () => {
+    this.props.history.push('/dashboard');
+  };
+
   renderAlert(alert) {
     const { classes } = this.props;
     return (
@@ -56,6 +63,7 @@ class HeaderLinks extends React.Component {
           color="inherit"
           aria-label="Dashboard"
           className={classes.buttonLink}
+          onClick={this.handleDashboard}
         >
           <Dashboard className={classes.links} />
           <Hidden mdUp>
@@ -100,9 +108,11 @@ class HeaderLinks extends React.Component {
                 style={{ transformOrigin: "0 0 0" }}
               >
                 <Paper className={classes.dropdown}>
-                  <MenuList role="menu">
+                <Hidden mdUp>
+                <MenuList role="menu">
                     {renderedAlerts}
                   </MenuList>
+              </Hidden>
                 </Paper>
               </Grow>
             </ClickAwayListener>
@@ -112,10 +122,18 @@ class HeaderLinks extends React.Component {
           color="inherit"
           aria-label="Person"
           className={classes.buttonLink}
-        >
+          onClick={this.handleLogout}
+          >
           <Person className={classes.links} />
           <Hidden mdUp>
-            <p className={classes.linkText}>Profile</p>
+          <MenuList role="menu">
+              <MenuItem
+            onClick={this.handleLogout}
+            className={classes.dropdownItem}
+          >
+            Log out
+          </MenuItem>
+          </MenuList>
           </Hidden>
         </IconButton>
       </div>
