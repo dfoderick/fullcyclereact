@@ -172,7 +172,15 @@ export default class MinersTable extends Component {
     clean(stratum){
         return stratum.replace('stratum+tcp://','')
     }
-  
+
+    temperaturefrom(stats){
+        return stats.controllertemp + ' ' + Math.max(stats.tempboard1,stats.tempboard2,stats.tempboard3)
+    }
+
+    hashfrom(stats){
+        return stats.currenthash + '@' + stats.frequency
+    }
+
     renderMiner(miner) {
         var localDate = new Date(miner.lastmonitor);
         return (
@@ -184,10 +192,10 @@ export default class MinersTable extends Component {
              {miner.minerinfo.miner_type}
              </TableCell>
              <TableCell style={tableColumnStyle}>
-             {miner.status === 'online' ? miner.minerstats.currenthash : miner.status}
+             {miner.status === 'online' ? this.hashfrom(miner.minerstats) : miner.status}
              </TableCell>
              <TableCell style={tableColumnStyle}>
-             {miner.status === 'online' ? miner.minerstats.controllertemp : miner.status}
+             {miner.status === 'online' ? this.temperaturefrom(miner.minerstats) : miner.status}
              </TableCell>
              <TableCell style={tableColumnStyle}>
              {miner.status === 'online' ? this.secondsToString(miner.minerstats.elapsed) : miner.status}
