@@ -4,6 +4,7 @@ import Button from 'material-ui/Button';
 import Dialog, {DialogTitle, DialogContent, DialogActions} from 'material-ui/Dialog';
 import Radio, { RadioGroup } from 'material-ui/Radio';
 import { FormControl, FormControlLabel } from 'material-ui/Form';
+import TextField from 'material-ui/TextField';
 
 const tableColumnStyle = {
     paddingRight: '5px',
@@ -17,25 +18,63 @@ export default class MinersTable extends Component {
 		selectedPool: '',
 		radReset: '',
         openMiner: false,
+        isaddMiner: false,
+        minerDetails: true,
+        minerip: '1.2.3.4',
+        minerid: '',
+        minername: 'name',
+        minerport: 'port',
+        minerRaw: false,
         openSwitch: false,
         openReset: false,
     };
 
-    handleOpenMiner = (rowId) => () => {
-        this.setState({
-            activeRowId: rowId
-        });
-        this.setState({
-            openMiner: true
-        });
+    handleAddMiner() {
+        console.log("adding...");
+        this.setState({isaddMiner: true});
+        var miner = {name:'NewMiner', ipaddress: '192.168.1.1', minerid: '', port: '4028'};
+        this.openMiner(miner);
+    };
+
+    handleOpenMiner = (miner) => () => { 
+        this.setState({isaddMiner: false});
+        this.openMiner(miner)};
+
+    openMiner(miner) {
+        this.setState({activeRowId: miner.name});
+        this.setState({openMiner: true});
+        this.setState({minerDetails: true});
+        this.setState({minerRaw: false});
+        this.setState({minerip: miner.ipaddress});
+        this.setState({minername: miner.name});
+        this.setState({minerport: miner.port});
+        this.setState({minerid: miner.minerid});
     };
     
     handleCloseMiner = () => {
+        this.setState({openMiner: false});
+    };
+
+    handleMinerRaw = () => {
         this.setState({
-            openMiner: false
+            minerRaw: true,
+            minerDetails: false
         });
     };
-    
+
+    handleChange = name => event => {
+        this.setState({
+          [name]: event.target.value,
+        });
+    };
+
+    handleMinerDetails = () => {
+        this.setState({
+            minerDetails: true,
+            minerRaw: false
+        });
+    };
+
     handleOpenReset = (rowId) => () => {
         this.setState({
             activeRowId: rowId
@@ -159,6 +198,47 @@ export default class MinersTable extends Component {
     handleResetChange = event => {
       this.setState({ radReset: event.target.value });
     };
+
+    handleSaveMiner = (pminer) => {
+        const m = pminer
+        if (m){
+            m.name = this.state.minername;
+            m.ipaddress = this.state.minerip;
+            m.port = this.state.minerport;
+        }
+            
+        this.callApiSaveMiner(m)
+            .then(res => this.setState({ }))
+            .catch(err => console.log(err));
+        //todo: if there is an error should not close dialog
+        this.handleCloseMiner();
+    };
+
+    callApiSaveMiner = async (miner) => {
+        let bod = {
+            command: 'save',
+            parameter: '',
+            id: miner.minerid,
+            entity: 'miner',
+            values: [
+                {name: miner.name},
+                {ipaddress: miner.ipaddress},
+                {port: miner.port}
+            ]
+        }
+
+        const response = await fetch('/api/save', {
+            method: 'POST',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(bod)
+        });
+        const body = await response.json();
+        if (response.status !== 200) throw Error(body.message);
+        return body;
+    };
   
     renderPools(miner) {
       var pools = miner.minerpool.allpools.POOLS.map((p) => this.renderPool(p));
@@ -186,7 +266,7 @@ export default class MinersTable extends Component {
         return (
         <TableRow key={miner.name}>
              <TableCell style={tableColumnStyle}>
-             <Button label='Details' onClick={this.handleOpenMiner(miner.name)}>{miner.name}</Button>
+             <Button label='Details' onClick={this.handleOpenMiner(miner)}>{miner.name}</Button>
              </TableCell>
              <TableCell style={tableColumnStyle}>
              {miner.minerinfo.miner_type}
@@ -241,10 +321,23 @@ export default class MinersTable extends Component {
                     //this.state.selectedPool = selectedpool.POOL.toString();
                 renderedPools = this.renderPools(selectedMiner);
          }
-	 	}
+         }
+         
+         if (this.state.isaddMiner)
+         {
+            selectedMiner = {name:'NewMiner', ipaddress: '192.168.1.1', minerid: '', port: '4028'};
+         }
 
         return (
             <div>
+                <div>
+                    <Button onClick={() => this.handleAddMiner()}>
+                      Add +
+                    </Button>
+                    {/* <Button>
+                      Import
+                    </Button> */}
+                </div>
             <Table>
             <TableHead>
               <TableRow>
@@ -275,13 +368,49 @@ export default class MinersTable extends Component {
                 >
                 <DialogContent>
                 <DialogTitle >{selectedMiner.name} Details</DialogTitle>
-                <span>
+                { this.state.minerDetails ? (
+                  <FormControl component="fieldset" >
+                    <Button onClick={() => {this.handleSaveMiner(selectedMiner)}} color="primary" autoFocus>
+                        Save
+                    </Button>
+                        <TextField
+                        id="miner-name"
+                        label="Miner Name"
+                        value={this.state.minername}
+                        onChange={this.handleChange('minername')}
+                        margin="normal"
+                        />
+                        <TextField
+                        id="miner-ip"
+                        label="IP Address"
+                        value={this.state.minerip}
+                        onChange={this.handleChange('minerip')}
+                        margin="normal"
+                        />
+                        <TextField
+                        id="miner-port"
+                        label="Port"
+                        value={this.state.minerport}
+                        onChange={this.handleChange('minerport')}
+                        margin="normal"
+                        />
+                    </FormControl>
+                ) : null}
+                { this.state.minerRaw ? (
+                    <span>
                     <pre>
                     {JSON.stringify(selectedMiner, null, 2)}
                     </pre>
-                </span>
+                    </span>
+                ) : null}
                 </DialogContent>
                   <DialogActions>
+                  <Button onClick={() => {this.handleMinerDetails()}} color="primary">
+                      Edit
+                    </Button>
+                  <Button onClick={() => {this.handleMinerRaw()}} color="primary">
+                      Raw
+                    </Button>
                     <Button onClick={() => {this.handleCloseMiner()}} color="primary" autoFocus>
                       Close
                     </Button>
