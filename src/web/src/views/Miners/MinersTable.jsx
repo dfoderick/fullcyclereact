@@ -1,29 +1,29 @@
-import React, { Component } from 'react';
-import Table, { TableBody, TableCell, TableHead, TableRow, TableFooter } from 'material-ui/Table';
-import Button from 'material-ui/Button';
-import Dialog, {DialogTitle, DialogContent, DialogActions} from 'material-ui/Dialog';
-import Radio, { RadioGroup } from 'material-ui/Radio';
-import { FormControl, FormControlLabel } from 'material-ui/Form';
-import TextField from 'material-ui/TextField';
+import React, { Component } from "react";
+import Table, { TableBody, TableCell, TableHead, TableRow, TableFooter } from "material-ui/Table";
+import Button from "material-ui/Button";
+import Dialog, {DialogTitle, DialogContent, DialogActions} from "material-ui/Dialog";
+import Radio, { RadioGroup } from "material-ui/Radio";
+import { FormControl, FormControlLabel } from "material-ui/Form";
+import TextField from "material-ui/TextField";
 
 const tableColumnStyle = {
-    paddingRight: '5px',
-    paddingLeft: '5px'
-}
+    paddingRight: "5px",
+    paddingLeft: "5px"
+};
 
 export default class MinersTable extends Component {
 
     state = {
-        activeRowId: '',
-		selectedPool: '',
-		radReset: '',
+        activeRowId: "",
+		selectedPool: "",
+		radReset: "",
         openMiner: false,
         isaddMiner: false,
         minerDetails: true,
-        minerip: '1.2.3.4',
-        minerid: '',
-        minername: 'name',
-        minerport: 'port',
+        minerip: "1.2.3.4",
+        minerid: "",
+        minername: "name",
+        minerport: "port",
         minerRaw: false,
         openSwitch: false,
         openReset: false,
@@ -32,13 +32,14 @@ export default class MinersTable extends Component {
     handleAddMiner() {
         console.log("adding...");
         this.setState({isaddMiner: true});
-        var miner = {name:'NewMiner', ipaddress: '192.168.1.1', minerid: '', port: '4028'};
+        var miner = {name:"NewMiner", ipaddress: "192.168.1.1", minerid: "", port: "4028"};
         this.openMiner(miner);
-    };
+    }
 
     handleOpenMiner = (miner) => () => { 
         this.setState({isaddMiner: false});
-        this.openMiner(miner)};
+        this.openMiner(miner);
+    };
 
     openMiner(miner) {
         this.setState({activeRowId: miner.name});
@@ -91,7 +92,7 @@ export default class MinersTable extends Component {
     };
     
     handleDoReset = (miner, pparameter) => {
-        if (miner === null) return;
+        if (miner === null) { return; }
         this.handleCloseReset();
         this.callApiReset(miner, pparameter)
             .then(res => this.setState({ }))
@@ -99,15 +100,15 @@ export default class MinersTable extends Component {
     };
     
     callApiReset = async (pminer, pparameter) => {
-        const response = await fetch('/api/minerrestart', {
-            method: 'POST',
+        const response = await fetch("/api/minerrestart", {
+            method: "POST",
             headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
+            Accept: "application/json",
+            "Content-Type": "application/json",
             },
             body: JSON.stringify({
             miner: pminer,
-            command: 'restart',
+            command: "restart",
             parameter: pparameter
             }),
         });
@@ -140,15 +141,15 @@ export default class MinersTable extends Component {
     };
     
     callApiSwitch = async (pminer, ppool) => {
-        const response = await fetch('/api/minerswitchpool', {
-            method: 'POST',
+        const response = await fetch("/api/minerswitchpool", {
+            method: "POST",
             headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
+            Accept: "application/json",
+            "Content-Type": "application/json",
             },
             body: JSON.stringify({
             miner: pminer,
-            command: 'switch',
+            command: "switch",
             parameter: ppool
             }),
         });
@@ -178,7 +179,7 @@ export default class MinersTable extends Component {
         return pools.find((pool) => {
             //todo; it should really be lowest priority, not priority 0
             //also could get selected pool from miner.minerpool?
-            return pool.Status === 'Alive' && pool.Priority === 0;
+            return pool.Status === "Alive" && pool.Priority === 0;
         });
     }
           
@@ -187,7 +188,7 @@ export default class MinersTable extends Component {
           <FormControlLabel key={pool.POOL.toString()}
           value={pool.POOL.toString()}
           control={<Radio/>}
-          label={pool.Priority+'. '+pool.URL + ' ('+pool.User+')'} />
+          label={pool.Priority+". "+pool.URL + " ("+pool.User+")"} />
         );
     }
   
@@ -216,10 +217,10 @@ export default class MinersTable extends Component {
 
     callApiSaveMiner = async (miner) => {
         let bod = {
-            command: 'save',
-            parameter: '',
+            command: "save",
+            parameter: "",
             id: miner.minerid,
-            entity: 'miner',
+            entity: "miner",
             values: [
                 {name: miner.name},
                 {ipaddress: miner.ipaddress},
@@ -227,11 +228,11 @@ export default class MinersTable extends Component {
             ]
         }
 
-        const response = await fetch('/api/save', {
-            method: 'POST',
+        const response = await fetch("/api/save", {
+            method: "POST",
             headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
+            Accept: "application/json",
+            "Content-Type": "application/json",
             },
             body: JSON.stringify(bod)
         });
@@ -250,15 +251,15 @@ export default class MinersTable extends Component {
     }
 
     clean(stratum){
-        return stratum.replace('stratum+tcp://','')
+        return stratum.replace("stratum+tcp://","")
     }
 
     temperaturefrom(stats){
-        return stats.controllertemp + ' ' + Math.max(stats.tempboard1,stats.tempboard2,stats.tempboard3)
+        return stats.controllertemp + " " + Math.max(stats.tempboard1,stats.tempboard2,stats.tempboard3)
     }
 
     hashfrom(stats){
-        return stats.currenthash + '@' + stats.frequency
+        return stats.currenthash + "@" + stats.frequency
     }
 
     renderMiner(miner) {
@@ -266,31 +267,31 @@ export default class MinersTable extends Component {
         return (
         <TableRow key={miner.name}>
              <TableCell style={tableColumnStyle}>
-             <Button label='Details' onClick={this.handleOpenMiner(miner)}>{miner.name}</Button>
+             <Button label="Details" onClick={this.handleOpenMiner(miner)}>{miner.name}</Button>
              </TableCell>
              <TableCell style={tableColumnStyle}>
              {miner.minerinfo.miner_type}
              </TableCell>
              <TableCell style={tableColumnStyle}>
-             {miner.status === 'online' ? this.hashfrom(miner.minerstats) : miner.status}
+             {miner.status === "online" ? this.hashfrom(miner.minerstats) : miner.status}
              </TableCell>
              <TableCell style={tableColumnStyle}>
-             {miner.status === 'online' ? this.temperaturefrom(miner.minerstats) : miner.status}
+             {miner.status === "online" ? this.temperaturefrom(miner.minerstats) : miner.status}
              </TableCell>
              <TableCell style={tableColumnStyle}>
-             {miner.status === 'online' ? this.secondsToString(miner.minerstats.elapsed) : miner.status}
+             {miner.status === "online" ? this.secondsToString(miner.minerstats.elapsed) : miner.status}
              </TableCell>
              <TableCell style={tableColumnStyle}>
                 {isNaN(localDate) ? "?" : localDate.toLocaleString()}
              </TableCell>
              <TableCell style={tableColumnStyle}>
-             {miner.minerpool.poolname === '?' ? this.clean(miner.minerpool.currentpool) : miner.minerpool.poolname}
+             {miner.minerpool.poolname === "?" ? this.clean(miner.minerpool.currentpool) : miner.minerpool.poolname}
              </TableCell>
              <TableCell style={tableColumnStyle}>
-                <Button label='Switch' onClick={this.handleOpenSwitch(miner.name)}>Switch</Button>
+                <Button label="Switch" onClick={this.handleOpenSwitch(miner.name)}>Switch</Button>
              </TableCell>
              <TableCell style={tableColumnStyle}>
-                <Button label='Reset' onClick={this.handleOpenReset(miner.name)} >Reset</Button>
+                <Button label="Reset" onClick={this.handleOpenReset(miner.name)} >Reset</Button>
              </TableCell>
         </TableRow>
         );
@@ -325,7 +326,7 @@ export default class MinersTable extends Component {
          
          if (this.state.isaddMiner)
          {
-            selectedMiner = {name:'NewMiner', ipaddress: '192.168.1.1', minerid: '', port: '4028'};
+            selectedMiner = {name:"NewMiner", ipaddress: "192.168.1.1", minerid: "", port: "4028"};
          }
 
         return (
@@ -377,21 +378,21 @@ export default class MinersTable extends Component {
                         id="miner-name"
                         label="Miner Name"
                         value={this.state.minername}
-                        onChange={this.handleChange('minername')}
+                        onChange={this.handleChange("minername")}
                         margin="normal"
                         />
                         <TextField
                         id="miner-ip"
                         label="IP Address"
                         value={this.state.minerip}
-                        onChange={this.handleChange('minerip')}
+                        onChange={this.handleChange("minerip")}
                         margin="normal"
                         />
                         <TextField
                         id="miner-port"
                         label="Port"
                         value={this.state.minerport}
-                        onChange={this.handleChange('minerport')}
+                        onChange={this.handleChange("minerport")}
                         margin="normal"
                         />
                     </FormControl>
@@ -450,14 +451,14 @@ export default class MinersTable extends Component {
                 <DialogContent>
                     <FormControl component="fieldset" >
                     <RadioGroup name="commandrestart" value={this.state.radReset} onChange={this.handleResetChange}>
-                        <FormControlLabel key='reset'
-                        value='reset'
+                        <FormControlLabel key="reset"
+                        value="reset"
                         control={<Radio/>}
-                        label='Restart using miner api (requires privileged access)' />
-                        <FormControlLabel key='reboot'
-                        value='reboot'
+                        label="Restart using miner api (requires privileged access)" />
+                        <FormControlLabel key="reboot"
+                        value="reboot"
                         control={<Radio/>}
-                        label='Reboot using ssh (requires ssh access)' />
+                        label="Reboot using ssh (requires ssh access)" />
                     </RadioGroup>
                     </FormControl>
                 </DialogContent>
