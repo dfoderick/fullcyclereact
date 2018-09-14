@@ -25,7 +25,7 @@ function publish (q, msg){
 
 	amqp.connect(services.messagebus.connection, function(err, conn) {
 	  conn.createChannel(function(err, ch) {
-		if (err != null) bail(err);
+		if (err != null) { bail(err); }
 		ch.assertQueue(q, {durable: false});
 		ch.sendToQueue(q, new Buffer(msg));
 		console.log(" [x] Sent %s", msg);
@@ -48,7 +48,7 @@ function getredis(key, callback) {
 		callback(object);
 		client.quit();
 	});
-};
+}
 
 function getredishashset(key, callback) {
 	var client = redisclient();
@@ -61,7 +61,7 @@ function getredishashset(key, callback) {
 router.get('/hello',
 	// passport.authenticate('basic', { session: false }),
 	(req, res) => {
-		console.log('called hello')
+		console.log("called hello")
   		res.send({ express: 'Welcome to Full Cycle Mining' });
 	});
 
@@ -71,7 +71,7 @@ router.get('/getcamera',
 		console.log('called getcamera')
     	getredis('camera', function(object) {
 		res.send({ camera: object });;
-    });
+    })
 });
 
 
@@ -81,7 +81,7 @@ router.get('/knownminers',
 		console.log('called knownminers')
     	getredishashset('knownminers', function(object) {
 			res.send({ knownminers: object });;
-    	});
+    	})
 	});
 
 router.get('/knownpools', 
@@ -89,7 +89,7 @@ router.get('/knownpools',
 	(req, res) => {
 		console.log('called knownpools')
 		getredishashset('knownpools', function(object) {
-			res.send({ knownpools: object });;
+			res.send({ knownpools: object });
 		});
 	});
 

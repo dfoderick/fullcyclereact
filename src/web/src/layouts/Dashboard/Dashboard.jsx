@@ -84,7 +84,7 @@ class App extends React.Component {
 
   subscribe(es) {
     const that = this;
-    if (!es) return;
+    if (!es) { return; }
     es.addEventListener('full-cycle-alert', (e) => {
       that.addAlert(e.data);
     }, false);

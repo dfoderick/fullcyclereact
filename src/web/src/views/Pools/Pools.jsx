@@ -24,7 +24,7 @@ class Pools extends React.Component {
 
       render() {
         const jpools = JSON.parse(JSON.stringify(this.state.knownpools));
-        const arrPools = []
+        const arrPools = [];
         if (jpools != null){
             Object.keys(jpools).forEach(function(key) {
               arrPools.push(JSON.parse(jpools[key], function (key, value) {

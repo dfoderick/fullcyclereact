@@ -57,7 +57,7 @@ class Miners extends React.Component {
         const that = this;
         if (!es) return;
     
-        es.addEventListener('full-cycle-miner', (e) => {
+        es.addEventListener("full-cycle-miner", (e) => {
           that.addMiner(e.data);
         }, false);
         console.log("Miners: subscribed");
@@ -73,8 +73,8 @@ class Miners extends React.Component {
       }
 
       getMinerKey(miner) {
-        if (!!miner.minerid) return miner.minerid;
-        if (!!miner.networkid) return miner.networkid;
+        if (!!miner.minerid) { return miner.minerid; }
+        if (!!miner.networkid) { return miner.networkid; }
         return miner.name;
       }
     
@@ -82,11 +82,13 @@ class Miners extends React.Component {
         var index = this.state.knownminers.findIndex(x=> x.name === miner.name);
         if (index === -1)
         {
+            console.log('updateMiner: adding ' + miner.name)
             this.setState({
                 knownminers: [ miner, ...this.state.knownminers ]
               });
             }
         else {
+            console.log('updateMiner: replacing ' + miner.name + '@' + index.toString())
             this.setState({
                 knownminers: [
                 ...this.state.knownminers.slice(0,index),

@@ -24,13 +24,13 @@ const app = express();
 // 	}
 //   ));
 
-const services = require('./services');
-const messages = require('./messages');
+const services = require("./services");
+const messages = require("./messages");
 
-var api = require('./api.js');
+var api = require("./api.js");
 
 function bail(err, conn) {
-  console.error('bailing...');
+  console.error("bailing...");
   console.error(err);
   if (conn) conn.close(function() {
 		// if (doexit)
@@ -61,9 +61,7 @@ function onWebError(error) {
 	  throw error;
 	}
   
-	var bind = typeof port === 'string'
-	  ? 'Pipe ' + port
-	  : 'Port ' + port;
+	var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
   
 	// handle specific listen errors with friendly messages
 	switch (error.code) {

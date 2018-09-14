@@ -70,7 +70,7 @@ callApiGetMiners = async () => {
               icon={CheckCircle}
               iconColor="green"
               title="Online"
-              description={counts['online'] || 0}
+              description={counts["online"] || 0}
               statIcon={Info}
               statText="Miners online"
             />
@@ -80,7 +80,7 @@ callApiGetMiners = async () => {
               icon={HighlightOff}
               iconColor="orange"
               title="Offline"
-              description={counts['offline'] || 0}
+              description={counts["offline"] || 0}
               small=""
               statIcon={Warning}
               statIconColor="danger"

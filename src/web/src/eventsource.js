@@ -1,6 +1,6 @@
 var original = require('original')
 var parse = require('url').parse
-var events = require('events')
+var events = require('events');
 var https = require('https')
 var http = require('http')
 var util = require('util')
