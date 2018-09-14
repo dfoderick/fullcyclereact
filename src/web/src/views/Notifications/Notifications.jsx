@@ -54,7 +54,7 @@ class Notifications extends React.Component {
         }
         content={  
           <div>
-            <ul id='es-messages'>
+            <ul id="es-messages">
               {renderedAlerts}
             </ul>
           </div>

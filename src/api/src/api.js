@@ -61,7 +61,7 @@ function getredishashset(key, callback) {
 router.get('/hello',
 	// passport.authenticate('basic', { session: false }),
 	(req, res) => {
-		console.log("called hello")
+		console.log("called hello");
   		res.send({ express: 'Welcome to Full Cycle Mining' });
 	});
 
@@ -70,9 +70,9 @@ router.get('/getcamera',
 	(req, res) => {
 		console.log('called getcamera')
     	getredis('camera', function(object) {
-		res.send({ camera: object });;
-    })
-});
+			res.send({ camera: object });
+    	});
+	});
 
 
 router.get('/knownminers', 
@@ -80,8 +80,8 @@ router.get('/knownminers',
 	(req, res) => {
 		console.log('called knownminers')
     	getredishashset('knownminers', function(object) {
-			res.send({ knownminers: object });;
-    	})
+			res.send({ knownminers: object });
+		})
 	});
 
 router.get('/knownpools', 

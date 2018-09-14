@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import Button from 'material-ui/Button';
-import Dialog, {DialogContent, DialogActions} from 'material-ui/Dialog';
-//import camera from './icons/camera.svg';
+import React, { Component } from "react";
+import Button from "material-ui/Button";
+import Dialog, {DialogContent, DialogActions} from "material-ui/Dialog";
+//import camera from "./icons/camera.svg";
 import {
     StatsCard,
     ItemGrid
@@ -15,7 +15,7 @@ import {
 export default class CameraButton extends Component {
 
     state = {
-        camera: '',
+        camera: "",
         openCamera: false
         };
 
@@ -29,7 +29,7 @@ export default class CameraButton extends Component {
         let jsensor = JSON.parse(strsensor);
         let sensorCamera = jsensor[0];
 
-        if (this.props.mode === 'button') {
+        if (this.props.mode === "button") {
             return (
                 <span>
                     <ItemGrid xs={12} sm={6} md={3}>
@@ -39,7 +39,7 @@ export default class CameraButton extends Component {
                         title="Camera"
                         description="Camera"
                         statIcon={Info}
-                        statText='Camera'
+                        statText="Camera"
                         onClick={() => {this.handleOpenDialog()}}
                     />
                     </ItemGrid>
@@ -65,7 +65,7 @@ export default class CameraButton extends Component {
                 </span>
                 );
         } else {
-            if (this.props.mode === 'small') {
+            if (this.props.mode === "small") {
                 return (
                     <img
                     alt="Camera" width="200" height="140"

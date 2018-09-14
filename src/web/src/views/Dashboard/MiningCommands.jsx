@@ -9,27 +9,27 @@ import {
 class MiningCommands extends React.Component {
 
     discover() {
-        this.callApiCommand('discover')
+        this.callApiCommand("discover")
         .then(res => this.setState({ }))
         .catch(err => console.log(err));
     }
     provision() {
-        this.callApiCommand('poolconfigurationchanged')
+        this.callApiCommand("poolconfigurationchanged")
         .then(res => this.setState({ }))
         .catch(err => console.log(err));
     }
     monitor() {
-        this.callApiCommand('monitor')
+        this.callApiCommand("monitor")
         .then(res => this.setState({ }))
         .catch(err => console.log(err));
     }
     
     callApiCommand = async (commandname) => {
-        const response = await fetch('/api/sendcommand', {
-            method: 'POST',
+        const response = await fetch("/api/sendcommand", {
+            method: "POST",
             headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
+            Accept: "application/json",
+            "Content-Type": "application/json",
             },
             body: JSON.stringify({
             command: commandname

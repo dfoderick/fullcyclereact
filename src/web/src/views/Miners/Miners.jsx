@@ -82,13 +82,13 @@ class Miners extends React.Component {
         var index = this.state.knownminers.findIndex(x=> x.name === miner.name);
         if (index === -1)
         {
-            console.log('updateMiner: adding ' + miner.name)
+            console.log("updateMiner: adding " + miner.name);
             this.setState({
                 knownminers: [ miner, ...this.state.knownminers ]
               });
             }
         else {
-            console.log('updateMiner: replacing ' + miner.name + '@' + index.toString())
+            console.log("updateMiner: replacing " + miner.name + "@" + index.toString());
             this.setState({
                 knownminers: [
                 ...this.state.knownminers.slice(0,index),

@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-//import PropTypes from 'prop-types';
-//import { withStyles } from 'material-ui/styles';
-import Dialog, {DialogContent, DialogActions} from 'material-ui/Dialog';
-import Button from 'material-ui/Button';
-import CameraButton from './CameraButton';
-//import humidity from './icons/humidity.svg';
-//import temperature from './icons/temperature.svg';
+import React, { Component } from "react";
+//import PropTypes from "prop-types";
+//import { withStyles } from "material-ui/styles";
+import Dialog, {DialogContent, DialogActions} from "material-ui/Dialog";
+import Button from "material-ui/Button";
+import CameraButton from "./CameraButton";
+//import humidity from "./icons/humidity.svg";
+//import temperature from "./icons/temperature.svg";
 import { Grid } from "material-ui";
 import {
     StatsCard,
@@ -20,8 +20,8 @@ import {
  
 export default class SensorList extends Component {
     state = {
-        sensors: '',
-        selectedSensor: '',
+        sensors: "",
+        selectedSensor: "",
         openDialog: false
     };
 
@@ -43,7 +43,7 @@ export default class SensorList extends Component {
           <ItemGrid xs={12} sm={6} md={3} key={sens.sensorid}>
           <StatsCard
             icon={SettingsInputAntenna}
-            iconColor='blue'
+            iconColor="blue"
             title={sens.valuetype}
             description={parseFloat(sens.value).toFixed(2).toString()}
             statIcon={Info}

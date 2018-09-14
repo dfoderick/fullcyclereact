@@ -2,11 +2,11 @@ import React from "react";
 import { Grid } from "material-ui";
 import { RegularCard, ItemGrid } from "components";
 
-import PoolsTable from './PoolsTable';
+import PoolsTable from "./PoolsTable";
 
 class Pools extends React.Component {
     state = {
-        knownpools: '',
+        knownpools: "",
     };
 
     componentDidMount() {
@@ -16,7 +16,7 @@ class Pools extends React.Component {
     }
 
     callApiGetPools = async () => {
-        const response = await fetch('/api/knownpools');
+        const response = await fetch("/api/knownpools");
         const body = await response.json();
         if (response.status !== 200) throw Error(body.message);
         return body;

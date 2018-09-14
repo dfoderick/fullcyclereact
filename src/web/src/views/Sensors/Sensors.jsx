@@ -1,7 +1,7 @@
 import React from "react";
 //import { Grid } from "material-ui";
 
-import SensorList from './SensorList';
+import SensorList from "./SensorList";
 
 class Sensors extends React.Component {
   constructor() {
@@ -38,7 +38,7 @@ class Sensors extends React.Component {
         .catch(err => console.log(err));
 
     if (this.supportsSSE() && !this.eventListener) {
-      this.eventListener = new EventSource('/sse');
+      this.eventListener = new EventSource("/sse");
       this.subscribe(this.eventListener);
     }
   }
@@ -51,14 +51,14 @@ class Sensors extends React.Component {
   }
 
   callApiGetSensors = async () => {
-    const response = await fetch('/api/knownsensors');
+    const response = await fetch("/api/knownsensors");
     const body = await response.json();
     if (response.status !== 200) throw Error(body.message);
     return body;
   };
 
   callApiGetCamera = async () => {
-    const response = await fetch('/api/getcamera');
+    const response = await fetch("/api/getcamera");
     const body = await response.json();
     if (response.status !== 200) throw Error(body.message);
     return body;
@@ -68,7 +68,7 @@ class Sensors extends React.Component {
     const that = this;
     if (!es) return;
 
-    es.addEventListener('full-cycle-sensor', (e) => {
+    es.addEventListener("full-cycle-sensor", (e) => {
       var d = new Date();
       let txt = d.toLocaleString() + ": EventSource: " + e.data;
       console.log(txt);

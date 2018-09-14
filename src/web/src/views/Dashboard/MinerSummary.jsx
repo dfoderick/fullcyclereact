@@ -18,7 +18,7 @@ import dashboardStyle from "assets/jss/material-dashboard-react/dashboardStyle";
 
 class MinerSummary extends React.Component {
   state = {
-    knownminers: '',
+    knownminers: "",
     value: 0
 };
 
@@ -29,7 +29,7 @@ componentDidMount() {
 }
 
 callApiGetMiners = async () => {
-    const response = await fetch('/api/knownminers');
+    const response = await fetch("/api/knownminers");
     const body = await response.json();
     if (response.status !== 200) throw Error(body.message);
     return body;
@@ -92,7 +92,7 @@ callApiGetMiners = async () => {
               icon={Cancel}
               iconColor="red"
               title="Disabled"
-              description={counts['disabled'] || 0}
+              description={counts["disabled"] || 0}
               statIcon={Info}
               statText="Miners disabled"
             />
