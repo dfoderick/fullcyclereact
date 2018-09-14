@@ -23,7 +23,7 @@ const sidebarStyle = theme => ({
     bottom: "0",
     left: "0",
     zIndex: "1",
-    // overflow: 'auto',
+    // overflow: "auto",
     ...boxShadow,
     width: drawerWidth,
     [theme.breakpoints.up("md")]: {
@@ -130,7 +130,7 @@ const sidebarStyle = theme => ({
     textDecoration: "none",
   },
   itemLink: {
-    width: 'auto',
+    width: "auto",
     transition: "all 300ms linear",
     margin: "10px 15px 0",
     borderRadius: "3px",
@@ -213,7 +213,7 @@ const sidebarStyle = theme => ({
     overflow: "auto",
     width: "260px",
     zIndex: "4",
-    overflowScrolling: 'touch'
+    overflowScrolling: "touch"
   }
 });
 

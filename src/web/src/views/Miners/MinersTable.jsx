@@ -314,12 +314,13 @@ export default class MinersTable extends Component {
             if (selectedMiner && selectedMiner.minerpool && selectedMiner.minerpool.allpools){
                 selectedpool = this.findcurrentpool(selectedMiner.minerpool.allpools.POOLS);
                 //can't do this otherwise it messes up the radio button and won't select
-                if (selectedpool)
+                if (selectedpool) {
                     console.log(this.state.selectedPool)
                     // if (selectedpool.POOL) {
                     //     console.log(selectedpool.POOL)
                     // }
                     //this.state.selectedPool = selectedpool.POOL.toString();
+                }
                 renderedPools = this.renderPools(selectedMiner);
          }
          }
@@ -431,10 +432,10 @@ export default class MinersTable extends Component {
                     </FormControl>
                 </DialogContent>
                   <DialogActions>
-                    <Button onClick={() => {this.handleCloseSwitch()}} color="primary">
+                    <Button onClick={() => {this.handleCloseSwitch();}} color="primary">
                       Cancel
                     </Button>
-                    <Button onClick={() => {this.handleDoSwitch(selectedMiner, this.state.selectedPool)}} color="primary" autoFocus>
+                    <Button onClick={() => {this.handleDoSwitch(selectedMiner, this.state.selectedPool);}} color="primary" autoFocus>
                       Continue switch
                     </Button>
                   </DialogActions>

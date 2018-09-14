@@ -2,8 +2,8 @@ module.exports = {
     //Message envelope for putting messages on the bus
     makeMessage: function (ptype, pbody) {
         return {
-            version: '1.1',
-            sender: 'fullcyclereact',
+            version: "1.1",
+            sender: "fullcyclereact",
             type: ptype,
             timestamp: new Date().toISOString(),
             body: pbody

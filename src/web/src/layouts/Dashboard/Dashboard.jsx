@@ -50,12 +50,12 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    if(navigator.platform.indexOf('Win') > -1){
+    if(navigator.platform.indexOf("Win") > -1){
       // eslint-disable-next-line
       const ps = new PerfectScrollbar(this.refs.mainPanel);
     }
     if (this.supportsSSE() && !this.eventListener) {
-      this.eventListener = new EventSource('/sse');
+      this.eventListener = new EventSource("/sse");
       this.subscribe(this.eventListener);
     }
   }
@@ -70,7 +70,7 @@ class App extends React.Component {
 
   addAlert(alert) {
     //limits alerts to 1000 messages.
-    let txt = alert
+    let txt = alert;
     if (txt.indexOf(":") < 0)
     {
       const d = new Date();
@@ -85,28 +85,28 @@ class App extends React.Component {
   subscribe(es) {
     const that = this;
     if (!es) { return; }
-    es.addEventListener('full-cycle-alert', (e) => {
+    es.addEventListener("full-cycle-alert", (e) => {
       that.addAlert(e.data);
     }, false);
 
-    es.addEventListener('open', (e) => {
+    es.addEventListener("open", (e) => {
       var d = new Date();
       let txt = d.toLocaleString() + ": EventSource opened";
       console.log(txt);
     }, false);
 
-    es.addEventListener('error', (e) => {
+    es.addEventListener("error", (e) => {
       var d = new Date();
       let txt = d.toLocaleString() + ": ";
       switch (e.readyState) {
           case EventSource.CONNECTING:
-              txt += 'EventSource reconnecting...';
+              txt += "EventSource reconnecting...";
               break;
           case EventSource.CLOSED:
-              txt += 'EventSource failed. Will not retry.';
+              txt += "EventSource failed. Will not retry.";
               break;
           default:
-          txt += 'EventSource failed. unknown readyState ' + e.readyState;
+          txt += "EventSource failed. unknown readyState " + e.readyState;
       }
       console.log(txt);
 
