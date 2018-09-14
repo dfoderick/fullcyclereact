@@ -33,8 +33,8 @@ class Pools extends React.Component {
             });
           }
   
-        const pools_named = arrPools.filter(pool => pool.named_pool);
-        const pools_available = arrPools.filter(pool => !pool.named_pool);
+        const poolsNamed = arrPools.filter(pool => pool.named_pool);
+        const poolsAvailable = arrPools.filter(pool => !pool.named_pool);
 
         return (
             <Grid container>
@@ -43,7 +43,7 @@ class Pools extends React.Component {
                 cardTitle="Named Pools"
                 cardSubtitle="All Pools configured with friendly names"
                 content={
-                    <PoolsTable pools={pools_named} />
+                    <PoolsTable pools={poolsNamed} />
                 }
                 />
             </ItemGrid>
@@ -52,7 +52,7 @@ class Pools extends React.Component {
                 cardTitle="Pools"
                 cardSubtitle="All Pools available on Miners"
                 content={
-                    <PoolsTable pools={pools_available} />
+                    <PoolsTable pools={poolsAvailable} />
                 }
                 />
             </ItemGrid>

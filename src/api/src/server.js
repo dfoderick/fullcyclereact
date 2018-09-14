@@ -78,13 +78,13 @@ function onWebError(error) {
 	}
   }
 
-var bus_connect = null;
+var busConnect = null;
 
 function on_connect(err, conn) {
 	if (err !== null) return bail(err);
 	process.once("SIGINT", function() { conn.close(); });
 
-	bus_connect = conn;
+	busConnect = conn;
 
 }
 
@@ -93,21 +93,21 @@ var sse = new SSE(server);
 sse.on("connection", function (sse_connection) {
 	console.log("new sse connection");
 	
-	const q_alert = "alert";
+	const qAlert = "alert";
 	let alert_channel = null;
 
 	function on_channel_open_alert(err, ch) {
-		if (err !== null) return bail(err, bus_connect);
+		if (err !== null) return bail(err, busConnect);
 		alert_channel = ch;
 		ch.on("error", function (err) {
-			console.error(err)
+			console.error(err);
 			console.log("channel Closed");
 		});
 		ch.assertQueue("", {exclusive: true}, function(err, ok) {
 			var q = ok.queue;
-			ch.bindQueue(q, q_alert, "");
+			ch.bindQueue(q, qAlert, "");
 			ch.consume(q, alertMessage, {noAck: true}, function(err, ok) {
-				if (err !== null) return bail(err, bus_connect);
+				if (err !== null) return bail(err, busConnect);
 				console.log(" [*] Waiting for alert. To exit press CTRL+C.");
 			});
 		});
@@ -124,10 +124,10 @@ sse.on("connection", function (sse_connection) {
 		}
 	}
 
-	const q_miner = "statisticsupdated";
+	const qMiner = "statisticsupdated";
 	let miner_channel = null;
 	function on_channel_open_miner(err, ch) {
-		if (err !== null) return bail(err, bus_connect);
+		if (err !== null) return bail(err, busConnect);
 		miner_channel = ch;
 		ch.on("error", function (err) {
 			console.error(err)
@@ -135,9 +135,9 @@ sse.on("connection", function (sse_connection) {
 		});
 		ch.assertQueue("", {exclusive: true}, function(err, ok) {
 			var q = ok.queue;
-			ch.bindQueue(q, q_miner, "");
+			ch.bindQueue(q, qMiner, "");
 			ch.consume(q, minerMessage, {noAck: true}, function(err, ok) {
-				if (err !== null) return bail(err, bus_connect);
+				if (err !== null) return bail(err, busConnect);
 				console.log(" [*] Waiting for miner stats. To exit press CTRL+C.");
 			});
 		});
@@ -154,10 +154,10 @@ sse.on("connection", function (sse_connection) {
 		}
 	}
 
-	const q_sensor = "sensor";
+	const qSensor = "sensor";
 	let sensor_channel = null;
 	function on_channel_open_sensor(err, ch) {
-		if (err !== null) return bail(err, bus_connect);
+		if (err !== null) return bail(err, busConnect);
 		sensor_channel = ch;
 		ch.on("error", function (err) {
 			console.error(err)
@@ -165,9 +165,9 @@ sse.on("connection", function (sse_connection) {
 		});
 		ch.assertQueue("", {exclusive: true}, function(err, ok) {
 			var q = ok.queue;
-			ch.bindQueue(q, q_sensor, "");
+			ch.bindQueue(q, qSensor, "");
 			ch.consume(q, sensorMessage, {noAck: true}, function(err, ok) {
-				if (err !== null) return bail(err, bus_connect);
+				if (err !== null) return bail(err, busConnect);
 				console.log(" [*] Waiting for sensor. To exit press CTRL+C.");
 			});
 		});
@@ -184,11 +184,11 @@ sse.on("connection", function (sse_connection) {
 		}
 	}
 
-	if (bus_connect)
+	if (busConnect)
 	{
-		bus_connect.createChannel(on_channel_open_alert);
-		bus_connect.createChannel(on_channel_open_miner);
-		bus_connect.createChannel(on_channel_open_sensor);
+		busConnect.createChannel(on_channel_open_alert);
+		busConnect.createChannel(on_channel_open_miner);
+		busConnect.createChannel(on_channel_open_sensor);
 	}
 	
   sse_connection.on("close", function () {

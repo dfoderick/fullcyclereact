@@ -64,12 +64,12 @@ class Miners extends React.Component {
    
       }
     
-      addMiner = (miner_message) => {
-        const msg_json = JSON.parse(miner_message);
-        const minerstats = JSON.parse(msg_json.body)[0];
+      addMiner = (minerMessage) => {
+        const msgJson = JSON.parse(minerMessage);
+        const minerStats = JSON.parse(msgJson.body)[0];
         //todo: should use key property
-        console.log("Miner:"+minerstats.miner.lastmonitor+":"+minerstats.miner.name);
-        this.updateMiner(this.getMinerKey(minerstats.miner), minerstats.miner);
+        console.log("Miner:"+minerStats.miner.lastmonitor+":"+minerStats.miner.name);
+        this.updateMiner(this.getMinerKey(minerStats.miner), minerStats.miner);
       }
 
       getMinerKey(miner) {

@@ -79,9 +79,9 @@ class Sensors extends React.Component {
 
   }
 
-  addSensor = (sensor_message) => {
-    const msg_json = JSON.parse(sensor_message);
-    const sensorvalue = JSON.parse(msg_json.body)[0];
+  addSensor = (sensorMessage) => {
+    const msgJson = JSON.parse(sensorMessage);
+    const sensorvalue = JSON.parse(msgJson.body)[0];
     this.updateSensor(sensorvalue);
   }
 

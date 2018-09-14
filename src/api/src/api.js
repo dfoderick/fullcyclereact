@@ -1,18 +1,18 @@
 
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-const bodyParser = require('body-parser');
-const redis = require('redis');
-const amqp = require('amqplib/callback_api');
+const bodyParser = require("body-parser");
+const redis = require("redis");
+const amqp = require("amqplib/callback_api");
 
-const services = require('./services');
-const messages = require('./messages');
+const services = require("./services");
+const messages = require("./messages");
 
 const jsonParser = bodyParser.json();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 function bail(err, conn) {
-    console.error('bailing...');
+    console.error("bailing...");
     console.error(err);
     if (conn) conn.close(function() {
           // if (doexit)
@@ -21,7 +21,7 @@ function bail(err, conn) {
   }
   
 function publish (q, msg){
-	console.log(q + ' => ' + msg);
+	console.log(q + " => " + msg);
 
 	amqp.connect(services.messagebus.connection, function(err, conn) {
 	  conn.createChannel(function(err, ch) {
@@ -58,81 +58,81 @@ function getredishashset(key, callback) {
 	});
 };
 
-router.get('/hello',
-	// passport.authenticate('basic', { session: false }),
+router.get("/hello",
+	// passport.authenticate("basic", { session: false }),
 	(req, res) => {
 		console.log("called hello");
-  		res.send({ express: 'Welcome to Full Cycle Mining' });
+  		res.send({ express: "Welcome to Full Cycle Mining" });
 	});
 
-router.get('/getcamera', 
-	// passport.authenticate('basic', { session: false }),
+router.get("/getcamera", 
+	// passport.authenticate("basic", { session: false }),
 	(req, res) => {
-		console.log('called getcamera')
-    	getredis('camera', function(object) {
+		console.log("called getcamera")
+    	getredis("camera", function(object) {
 			res.send({ camera: object });
     	});
 	});
 
 
-router.get('/knownminers', 
-//	passport.authenticate('basic', { session: false }),
+router.get("/knownminers", 
+//	passport.authenticate("basic", { session: false }),
 	(req, res) => {
-		console.log('called knownminers')
-    	getredishashset('knownminers', function(object) {
+		console.log("called knownminers")
+    	getredishashset("knownminers", function(object) {
 			res.send({ knownminers: object });
 		})
 	});
 
-router.get('/knownpools', 
-//	passport.authenticate('basic', { session: false }),
+router.get("/knownpools", 
+//	passport.authenticate("basic", { session: false }),
 	(req, res) => {
-		console.log('called knownpools')
-		getredishashset('knownpools', function(object) {
+		console.log("called knownpools")
+		getredishashset("knownpools", function(object) {
 			res.send({ knownpools: object });
 		});
 	});
 
-router.post('/sendcommand',jsonParser, (req, res) => {
+router.post("/sendcommand",jsonParser, (req, res) => {
 	publish(req.body.command,JSON.stringify(req.body.command));
 });
 
-router.post('/save',jsonParser, (req, res) => {
+router.post("/save",jsonParser, (req, res) => {
 	console.log(req.body);
 	//1) make configmessage with command
 	var configmsg = messages.makeConfigurationMessage(req.body);
 	//2) wrap the configmessage into an envelope
-	var envelope = messages.makeMessage('configuration', JSON.stringify(configmsg))
-	publish('save',JSON.stringify(envelope));
+	var envelope = messages.makeMessage("configuration", JSON.stringify(configmsg))
+	publish("save",JSON.stringify(envelope));
 });
 
-router.post('/minerrestart',jsonParser, (req, res) => {
+router.post("/minerrestart",jsonParser, (req, res) => {
 	console.log(req.body);
 	//1) create restart minercommand
 	var cmd = messages.makeCommand(req.body.command, req.body.parameter);
 	//2) make minermessage with command
 	var minermsg = messages.makeMinerMessage(req.body.miner, cmd, null);
 	//3) wrap the minermessage into an envelope
-	var envelope = messages.makeMessage('minercommand', JSON.stringify(minermsg))
-	publish('restart',JSON.stringify(envelope));
+	var envelope = messages.makeMessage("minercommand", JSON.stringify(minermsg))
+	publish("restart",JSON.stringify(envelope));
 });
 
-router.post('/minerswitchpool', jsonParser, (req, res) => {
+router.post("/minerswitchpool", jsonParser, (req, res) => {
 	console.log(req.body);
 	//1) create minercommand
 	var cmd = messages.makeCommand(req.body.command, req.body.parameter);
 	//2) make minermessage with command
 	var minermsg = messages.makeMinerMessage(req.body.miner, cmd, null);
 	//3) wrap the minermessage into an envelope
-	var envelope = messages.makeMessage('minercommand', JSON.stringify(minermsg))
-	publish('switch',JSON.stringify(envelope));
+	var envelope = messages.makeMessage("minercommand", JSON.stringify(minermsg))
+	publish("switch",JSON.stringify(envelope));
 });
 
-router.get('/knownsensors', 
-//passport.authenticate('basic', { session: false }),
+router.get("/knownsensors", 
+//passport.authenticate("basic", { session: false }),
 (req, res) => {
-	console.log('called knownsensors');
-    getredishashset('knownsensors', function(object) {
+	console.log("called knownsensors");
+    getredishashset("knownsensors", function(object) {
 		res.send({ knownsensors: object });;
     });
 });

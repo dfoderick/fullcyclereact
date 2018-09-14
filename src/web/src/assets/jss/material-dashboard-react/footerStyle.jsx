@@ -47,7 +47,7 @@ const footerStyle = {
   inlineBlock: {
     display: "inline-block",
     paddingTop: "0px",
-    width: 'auto'
+    width: "auto"
   }
 };
 export default footerStyle;
