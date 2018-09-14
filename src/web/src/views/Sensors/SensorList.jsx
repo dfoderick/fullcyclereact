@@ -38,7 +38,7 @@ export default class SensorList extends Component {
 
     renderSensor(sensor) {
 		const sens = sensor;
-		console.log(sens.value)
+		console.log(sens.value);
 		return (            
           <ItemGrid xs={12} sm={6} md={3} key={sens.sensorid}>
           <StatsCard
@@ -57,9 +57,9 @@ export default class SensorList extends Component {
     render() {
         const arrSensors = this.props.sensor;
         let renderedSensors = null;
-        if (arrSensors) 
+        if (arrSensors) {
             renderedSensors = arrSensors.map((s) => this.renderSensor(s));
-
+        }
         return (
             <Grid container>
             {renderedSensors}

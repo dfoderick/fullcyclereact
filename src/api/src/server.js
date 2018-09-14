@@ -55,7 +55,6 @@ app.use(serveStatic("../web/build")
 );
 app.use("/api", api);
 var server = app.listen(services.web.port, () => console.log(`Listening on port ${services.web.port}`));
-server.on("error", onWebError);
 function onWebError(error) {
 	if (error.syscall !== "listen") {
 	  throw error;
@@ -77,6 +76,7 @@ function onWebError(error) {
 		throw error;
 	}
   }
+  server.on("error", onWebError);
 
 var busConnect = null;
 
@@ -96,6 +96,17 @@ sse.on("connection", function (sse_connection) {
 	const qAlert = "alert";
 	let alert_channel = null;
 
+	function alertMessage(msg) {
+		if (msg) {
+			//msg.content.toString()
+			console.log(" [x] '%s'", "received alert message");
+			sse_connection.send({
+				event: "full-cycle-alert",
+				data: msg.content.toString()
+			});
+		}
+	}
+
 	function on_channel_open_alert(err, ch) {
 		if (err !== null) return bail(err, busConnect);
 		alert_channel = ch;
@@ -113,19 +124,20 @@ sse.on("connection", function (sse_connection) {
 		});
 	}
 
-	function alertMessage(msg) {
+	const qMiner = "statisticsupdated";
+	let miner_channel = null;
+
+	function minerMessage(msg) {
 		if (msg) {
 			//msg.content.toString()
-			console.log(" [x] '%s'", "received alert message");
+			console.log(" [x] '%s'", "received miner message");
 			sse_connection.send({
-				event: "full-cycle-alert",
+				event: "full-cycle-miner",
 				data: msg.content.toString()
 			});
 		}
 	}
 
-	const qMiner = "statisticsupdated";
-	let miner_channel = null;
 	function on_channel_open_miner(err, ch) {
 		if (err !== null) return bail(err, busConnect);
 		miner_channel = ch;
@@ -143,19 +155,19 @@ sse.on("connection", function (sse_connection) {
 		});
 	}
 
-	function minerMessage(msg) {
+	const qSensor = "sensor";
+	let sensor_channel = null;
+	function sensorMessage(msg) {
 		if (msg) {
 			//msg.content.toString()
-			console.log(" [x] '%s'", "received miner message");
+			console.log(" [x] '%s'", "received sensor message");
 			sse_connection.send({
-				event: "full-cycle-miner",
+				event: "full-cycle-sensor",
 				data: msg.content.toString()
 			});
 		}
 	}
 
-	const qSensor = "sensor";
-	let sensor_channel = null;
 	function on_channel_open_sensor(err, ch) {
 		if (err !== null) return bail(err, busConnect);
 		sensor_channel = ch;
@@ -171,17 +183,6 @@ sse.on("connection", function (sse_connection) {
 				console.log(" [*] Waiting for sensor. To exit press CTRL+C.");
 			});
 		});
-	}
-
-	function sensorMessage(msg) {
-		if (msg) {
-			//msg.content.toString()
-			console.log(" [x] '%s'", "received sensor message");
-			sse_connection.send({
-				event: "full-cycle-sensor",
-				data: msg.content.toString()
-			});
-		}
 	}
 
 	if (busConnect)

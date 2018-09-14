@@ -7,7 +7,7 @@ module.exports = {
             type: ptype,
             timestamp: new Date().toISOString(),
             body: pbody
-        }
+        };
     },
 
     // MinerMessage

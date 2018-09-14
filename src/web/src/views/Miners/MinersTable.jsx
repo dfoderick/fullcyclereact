@@ -201,7 +201,7 @@ export default class MinersTable extends Component {
     };
 
     handleSaveMiner = (pminer) => {
-        const m = pminer
+        const m = pminer;
         if (m){
             m.name = this.state.minername;
             m.ipaddress = this.state.minerip;
@@ -226,7 +226,7 @@ export default class MinersTable extends Component {
                 {ipaddress: miner.ipaddress},
                 {port: miner.port}
             ]
-        }
+        };
 
         const response = await fetch("/api/save", {
             method: "POST",
@@ -407,13 +407,13 @@ export default class MinersTable extends Component {
                 ) : null}
                 </DialogContent>
                   <DialogActions>
-                  <Button onClick={() => {this.handleMinerDetails()}} color="primary">
+                  <Button onClick={() => {this.handleMinerDetails();}} color="primary">
                       Edit
                     </Button>
-                  <Button onClick={() => {this.handleMinerRaw()}} color="primary">
+                  <Button onClick={() => {this.handleMinerRaw();}} color="primary">
                       Raw
                     </Button>
-                    <Button onClick={() => {this.handleCloseMiner()}} color="primary" autoFocus>
+                    <Button onClick={() => {this.handleCloseMiner();}} color="primary" autoFocus>
                       Close
                     </Button>
                   </DialogActions>

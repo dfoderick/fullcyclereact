@@ -1,5 +1,6 @@
 
 var express = require("express");
+var buffer = require("buffer");
 var router = express.Router();
 const bodyParser = require("body-parser");
 const redis = require("redis");
@@ -27,7 +28,7 @@ function publish (q, msg){
 	  conn.createChannel(function(err, ch) {
 		if (err != null) { bail(err); }
 		ch.assertQueue(q, {durable: false});
-		ch.sendToQueue(q, new Buffer(msg));
+		ch.sendToQueue(q, new buffer.Buffer(msg));
 		console.log(" [x] Sent %s", msg);
 	  });
 	  //conn.close();
