@@ -59,7 +59,9 @@ export default class MinersTable extends Component {
     handleMinerRaw = () => {
         this.setState({
             minerRaw: true,
-            minerDetails: false
+            minerDetails: false,
+            openReset: false,
+            openSwitch: false
         });
     };
 
@@ -72,7 +74,9 @@ export default class MinersTable extends Component {
     handleMinerDetails = () => {
         this.setState({
             minerDetails: true,
-            minerRaw: false
+            minerRaw: false,
+            openReset: false,
+            openSwitch: false
         });
     };
 
@@ -81,7 +85,8 @@ export default class MinersTable extends Component {
             activeRowId: rowId
         });
         this.setState({
-            openReset: true
+            openReset: true,
+            openMiner: false
         });
     };
     
@@ -122,7 +127,8 @@ export default class MinersTable extends Component {
             activeRowId: rowId
         });
         this.setState({
-            openSwitch: true
+            openSwitch: true,
+            openMiner: false
         });
     };
     
@@ -258,10 +264,24 @@ export default class MinersTable extends Component {
         return stats.controllertemp + " " + Math.max(stats.tempboard1,stats.tempboard2,stats.tempboard3)
     }
 
+    fansfrom(stats){
+        let fancount = 0;
+        let fans = [];
+        if (stats.fan1) { fans.push(stats.fan1); }
+        if (stats.fan2) { fans.push(stats.fan2); }
+        return fans.length + ":" + fans.join(",") + "rpm"
+    }
+
     hashfrom(stats){
         return stats.currenthash + "@" + stats.frequency
     }
 
+//     <Button onClick={() => {this.handleOpenSwitch(selectedMiner.name);}} color="primary">
+//     Switch
+//   </Button>
+//   <Button onClick={() => {this.handleOpenReset(selectedMiner.name);}} color="primary">
+//     Reset
+//   </Button>
     renderMiner(miner) {
         var localDate = new Date(miner.lastmonitor);
         return (
@@ -286,6 +306,9 @@ export default class MinersTable extends Component {
              </TableCell>
              <TableCell style={tableColumnStyle}>
              {miner.minerpool.poolname === "?" ? this.clean(miner.minerpool.currentpool) : miner.minerpool.poolname}
+             </TableCell>
+             <TableCell style={tableColumnStyle}>
+             {miner.status === "online" ? this.fansfrom(miner.minerstats) : miner.status}
              </TableCell>
              <TableCell style={tableColumnStyle}>
                 <Button label="Switch" onClick={this.handleOpenSwitch(miner.name)}>Switch</Button>
@@ -350,6 +373,7 @@ export default class MinersTable extends Component {
                 <TableCell>Uptime</TableCell>
                 <TableCell>Last Monitored</TableCell>
                 <TableCell>Pool</TableCell>
+                <TableCell>Fans</TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
               </TableRow>
@@ -406,11 +430,11 @@ export default class MinersTable extends Component {
                     </span>
                 ) : null}
                 </DialogContent>
-                  <DialogActions>
-                  <Button onClick={() => {this.handleMinerDetails();}} color="primary">
+                    <DialogActions>
+                    <Button onClick={() => {this.handleMinerDetails();}} color="primary">
                       Edit
                     </Button>
-                  <Button onClick={() => {this.handleMinerRaw();}} color="primary">
+                    <Button onClick={() => {this.handleMinerRaw();}} color="primary">
                       Raw
                     </Button>
                     <Button onClick={() => {this.handleCloseMiner();}} color="primary" autoFocus>
