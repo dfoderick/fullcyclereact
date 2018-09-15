@@ -42,7 +42,7 @@ class Miners extends React.Component {
     componentWillUnmount() {
         if (this.eventListener){
             this.eventListener.close();
-            console.log("Miners: unsubscribed");
+            //console.log("Miners: unsubscribed");
         }
     }
     
@@ -60,7 +60,7 @@ class Miners extends React.Component {
         es.addEventListener("full-cycle-miner", (e) => {
           that.addMiner(e.data);
         }, false);
-        console.log("Miners: subscribed");
+        //console.log("Miners: subscribed");
    
       }
     
@@ -68,7 +68,7 @@ class Miners extends React.Component {
         const msgJson = JSON.parse(minerMessage);
         const minerStats = JSON.parse(msgJson.body)[0];
         //todo: should use key property
-        console.log("Miner:"+minerStats.miner.lastmonitor+":"+minerStats.miner.name);
+        //console.log("Miner:"+minerStats.miner.lastmonitor+":"+minerStats.miner.name);
         this.updateMiner(this.getMinerKey(minerStats.miner), minerStats.miner);
       }
 
@@ -82,13 +82,13 @@ class Miners extends React.Component {
         var index = this.state.knownminers.findIndex(x=> x.name === miner.name);
         if (index === -1)
         {
-            console.log("updateMiner: adding " + miner.name);
+            //console.log("updateMiner: adding " + miner.name);
             this.setState({
                 knownminers: [ miner, ...this.state.knownminers ]
               });
             }
         else {
-            console.log("updateMiner: replacing " + miner.name + "@" + index.toString());
+            //console.log("updateMiner: replacing " + miner.name + "@" + index.toString());
             this.setState({
                 knownminers: [
                 ...this.state.knownminers.slice(0,index),

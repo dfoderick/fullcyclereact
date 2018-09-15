@@ -41,9 +41,9 @@ class Notifications extends React.Component {
   render() {
     const renderedAlerts = this.state.alerts && this.state.alerts.map((a) => this.renderAlert(a));
     if (renderedAlerts) {
-      console.log(renderedAlerts.length);
+      //console.log(renderedAlerts.length);
     } else {
-      console.log("no alerts");
+      //console.log("no alerts");
     }
     return (
       <RegularCard

@@ -76,7 +76,7 @@ class App extends React.Component {
       const d = new Date();
       txt = d.toLocaleString() + ":" + txt;
     }
-    console.log(txt);
+    //console.log(txt);
     this.setState({
       alerts: [txt, ...this.state.alerts.slice(0, 999)]
     });
@@ -92,7 +92,7 @@ class App extends React.Component {
     es.addEventListener("open", (e) => {
       var d = new Date();
       let txt = d.toLocaleString() + ": EventSource opened";
-      console.log(txt);
+      //console.log(txt);
     }, false);
 
     es.addEventListener("error", (e) => {
@@ -108,7 +108,7 @@ class App extends React.Component {
           default:
           txt += "EventSource failed. unknown readyState " + e.readyState;
       }
-      console.log(txt);
+     //console.log(txt);
 
     }, false);
 

@@ -30,7 +30,7 @@ export default class MinersTable extends Component {
     };
 
     handleAddMiner() {
-        console.log("adding...");
+        //console.log("adding...");
         this.setState({isaddMiner: true});
         var miner = {name:"NewMiner", ipaddress: "192.168.1.1", minerid: "", port: "4028"};
         this.openMiner(miner);
@@ -338,7 +338,7 @@ export default class MinersTable extends Component {
                 selectedpool = this.findcurrentpool(selectedMiner.minerpool.allpools.POOLS);
                 //can't do this otherwise it messes up the radio button and won't select
                 if (selectedpool) {
-                    console.log(this.state.selectedPool)
+                    //console.log(this.state.selectedPool)
                     // if (selectedpool.POOL) {
                     //     console.log(selectedpool.POOL)
                     // }

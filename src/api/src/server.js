@@ -91,7 +91,7 @@ function on_connect(err, conn) {
 //set up the full cycle alerts feed to send alerts to the browser
 var sse = new SSE(server);
 sse.on("connection", function (sseConnection) {
-	console.log("new sse connection");
+	//console.log("new sse connection");
 	
 	const qAlert = "alert";
 	let alertChannel = null;
@@ -99,7 +99,7 @@ sse.on("connection", function (sseConnection) {
 	function alertMessage(msg) {
 		if (msg) {
 			//msg.content.toString()
-			console.log(" [x] '%s'", "received alert message");
+			//console.log(" [x] '%s'", "received alert message");
 			sseConnection.send({
 				event: "full-cycle-alert",
 				data: msg.content.toString()
@@ -111,15 +111,15 @@ sse.on("connection", function (sseConnection) {
 		if (err !== null) { return bail(err, busConnect); }
 		alertChannel = ch;
 		ch.on("error", function (err) {
-			console.error(err);
-			console.log("channel Closed");
+			//console.error(err);
+			//console.log("channel Closed");
 		});
 		ch.assertQueue("", {exclusive: true}, function(err, ok) {
 			var q = ok.queue;
 			ch.bindQueue(q, qAlert, "");
 			ch.consume(q, alertMessage, {noAck: true}, function(err, ok) {
 				if (err !== null) return bail(err, busConnect);
-				console.log(" [*] Waiting for alert. To exit press CTRL+C.");
+				//console.log(" [*] Waiting for alert. To exit press CTRL+C.");
 			});
 		});
 	}
@@ -130,7 +130,7 @@ sse.on("connection", function (sseConnection) {
 	function minerMessage(msg) {
 		if (msg) {
 			//msg.content.toString()
-			console.log(" [x] '%s'", "received miner message");
+			//console.log(" [x] '%s'", "received miner message");
 			sseConnection.send({
 				event: "full-cycle-miner",
 				data: msg.content.toString()
@@ -143,14 +143,14 @@ sse.on("connection", function (sseConnection) {
 		miner_channel = ch;
 		ch.on("error", function (err) {
 			console.error(err);
-			console.log("miner channel Closed");
+			//console.log("miner channel Closed");
 		});
 		ch.assertQueue("", {exclusive: true}, function(err, ok) {
 			var q = ok.queue;
 			ch.bindQueue(q, qMiner, "");
 			ch.consume(q, minerMessage, {noAck: true}, function(err, ok) {
 				if (err !== null) return bail(err, busConnect);
-				console.log(" [*] Waiting for miner stats. To exit press CTRL+C.");
+					//console.log(" [*] Waiting for miner stats. To exit press CTRL+C.");
 			});
 		});
 	}
@@ -160,7 +160,7 @@ sse.on("connection", function (sseConnection) {
 	function sensorMessage(msg) {
 		if (msg) {
 			//msg.content.toString()
-			console.log(" [x] '%s'", "received sensor message");
+			//console.log(" [x] '%s'", "received sensor message");
 			sseConnection.send({
 				event: "full-cycle-sensor",
 				data: msg.content.toString()
@@ -173,14 +173,14 @@ sse.on("connection", function (sseConnection) {
 		sensor_channel = ch;
 		ch.on("error", function (err) {
 			console.error(err)
-			console.log("sensor channel Closed");
+			//console.log("sensor channel Closed");
 		});
 		ch.assertQueue("", {exclusive: true}, function(err, ok) {
 			var q = ok.queue;
 			ch.bindQueue(q, qSensor, "");
 			ch.consume(q, sensorMessage, {noAck: true}, function(err, ok) {
 				if (err !== null) return bail(err, busConnect);
-				console.log(" [*] Waiting for sensor. To exit press CTRL+C.");
+					//console.log(" [*] Waiting for sensor. To exit press CTRL+C.");
 			});
 		});
 	}
@@ -193,7 +193,7 @@ sse.on("connection", function (sseConnection) {
 	}
 	
   sseConnection.on("close", function () {
-    console.log("lost sse connection");
+    //console.log("lost sse connection");
 		if (alertChannel) alertChannel.close();
 		if (miner_channel) miner_channel.close();
 		if (sensor_channel) sensor_channel.close();

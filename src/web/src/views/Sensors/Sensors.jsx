@@ -46,7 +46,7 @@ class Sensors extends React.Component {
   componentWillUnmount() {
     if (this.eventListener){
       this.eventListener.close();
-      console.log("Sensors: unsubscribed");
+      //console.log("Sensors: unsubscribed");
     }
   }
 
@@ -71,11 +71,11 @@ class Sensors extends React.Component {
     es.addEventListener("full-cycle-sensor", (e) => {
       var d = new Date();
       let txt = d.toLocaleString() + ": EventSource: " + e.data;
-      console.log(txt);
+      //console.log(txt);
       that.addSensor(e.data);
     }, false);
 
-    console.log("Sensors: subscribed");
+    //console.log("Sensors: subscribed");
 
   }
 
