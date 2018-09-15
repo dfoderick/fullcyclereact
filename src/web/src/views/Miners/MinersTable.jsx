@@ -80,14 +80,23 @@ export default class MinersTable extends Component {
         });
     };
 
-    handleOpenReset = (rowId) => () => {
+    handleMinerReset = (rowId) => {
+        this.setStateOpenReset(rowId);
+    };
+
+    setStateOpenReset(rowId) {
         this.setState({
-            activeRowId: rowId
-        });
-        this.setState({
+            activeRowId: rowId,
+            minerRaw: true,
+            minerDetails: false,
             openReset: true,
-            openMiner: false
+            openMiner: false,
+            openSwitch: false
         });
+    }
+
+    handleOpenReset = (rowId) => () => {
+        this.setStateOpenReset(rowId);
     };
     
     handleCloseReset = () => {
@@ -121,15 +130,24 @@ export default class MinersTable extends Component {
         if (response.status !== 200) throw Error(body.message);
         return body;
     };
-    
-    handleOpenSwitch = (rowId) => () => {
+
+    setStateOpenSwitch(rowId) {
         this.setState({
-            activeRowId: rowId
-        });
-        this.setState({
+            activeRowId: rowId,
+            minerRaw: true,
+            minerDetails: false,
             openSwitch: true,
-            openMiner: false
+            openMiner: false,
+            openReset: false
         });
+    };
+
+    handleMinerSwitch = (rowId) => {
+        this.setStateOpenSwitch(rowId);
+    };
+
+    handleOpenSwitch = (rowId) => () => {
+        this.setStateOpenSwitch(rowId);
     };
     
     handleCloseSwitch = () => {
@@ -164,7 +182,7 @@ export default class MinersTable extends Component {
         return body;
     };
     
-    secondsToString(sseconds){
+    secondsToString(sseconds) {
         if (!sseconds) return "no stats";
         var seconds = parseInt(sseconds, 10);
         var numdays = Math.floor(seconds / 86400);
@@ -276,12 +294,13 @@ export default class MinersTable extends Component {
         return stats.currenthash + "@" + stats.frequency
     }
 
-//     <Button onClick={() => {this.handleOpenSwitch(selectedMiner.name);}} color="primary">
-//     Switch
-//   </Button>
-//   <Button onClick={() => {this.handleOpenReset(selectedMiner.name);}} color="primary">
-//     Reset
-//   </Button>
+    // <TableCell style={tableColumnStyle}>
+    // <Button label="Switch" onClick={this.handleOpenSwitch(miner.name)}>Switch</Button>
+    // </TableCell>
+    // <TableCell style={tableColumnStyle}>
+    //     <Button label="Reset" onClick={this.handleOpenReset(miner.name)} >Reset</Button>
+    // </TableCell>
+
     renderMiner(miner) {
         var localDate = new Date(miner.lastmonitor);
         return (
@@ -310,12 +329,6 @@ export default class MinersTable extends Component {
              <TableCell style={tableColumnStyle}>
              {miner.status === "online" ? this.fansfrom(miner.minerstats) : miner.status}
              </TableCell>
-             <TableCell style={tableColumnStyle}>
-                <Button label="Switch" onClick={this.handleOpenSwitch(miner.name)}>Switch</Button>
-             </TableCell>
-             <TableCell style={tableColumnStyle}>
-                <Button label="Reset" onClick={this.handleOpenReset(miner.name)} >Reset</Button>
-             </TableCell>
         </TableRow>
         );
       }
@@ -327,8 +340,7 @@ export default class MinersTable extends Component {
         let selectedMiner = null;
         let selectedpool = null;
         //renderedMiners are a list of miners rendered as table rows
-        if (arrMiners)
-        {
+        if (arrMiners) {
             renderedMiners = arrMiners.map((m) => this.renderMiner(m));
             //console.log(arrMiners.length.toString() + " miners")
             //console.log(renderedMiners.length.toString() + " miners rendered")
@@ -345,7 +357,7 @@ export default class MinersTable extends Component {
                     //this.state.selectedPool = selectedpool.POOL.toString();
                 }
                 renderedPools = this.renderPools(selectedMiner);
-         }
+            }
          }
          
          if (this.state.isaddMiner)
@@ -374,8 +386,6 @@ export default class MinersTable extends Component {
                 <TableCell>Last Monitored</TableCell>
                 <TableCell>Pool</TableCell>
                 <TableCell>Fans</TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -432,15 +442,21 @@ export default class MinersTable extends Component {
                 </DialogContent>
                     <DialogActions>
                     <Button onClick={() => {this.handleMinerDetails();}} color="primary">
-                      Edit
+                        Edit
                     </Button>
                     <Button onClick={() => {this.handleMinerRaw();}} color="primary">
-                      Raw
+                        Raw
+                    </Button>
+                    <Button onClick={() => {this.handleMinerSwitch(selectedMiner.name);}} color="primary">
+                        Switch
+                    </Button>
+                    <Button onClick={() => {this.handleMinerReset(selectedMiner.name);}} color="primary">
+                        Reset
                     </Button>
                     <Button onClick={() => {this.handleCloseMiner();}} color="primary" autoFocus>
-                      Close
+                        Close
                     </Button>
-                  </DialogActions>
+                    </DialogActions>
                 </Dialog>
             ): null}
     
