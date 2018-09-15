@@ -15,23 +15,25 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false });
 function bail(err, conn) {
     console.error("bailing...");
     console.error(err);
-    if (conn) conn.close(function() {
+    if (conn) {
+		conn.close(function() {
           // if (doexit)
           // 	process.exit(1); 
-      });
+	  });
+	}
   }
   
 function publish (q, msg){
 	console.log(q + " => " + msg);
 
 	amqp.connect(services.messagebus.connection, function(err, conn) {
-	  conn.createChannel(function(err, ch) {
-		if (err != null) { bail(err); }
-		ch.assertQueue(q, {durable: false});
-		ch.sendToQueue(q, new buffer.Buffer(msg));
-		console.log(" [x] Sent %s", msg);
-	  });
-	  //conn.close();
+		conn.createChannel(function(err, ch) {
+			if (err != null) { bail(err); }
+			ch.assertQueue(q, {durable: false});
+			ch.sendToQueue(q, new buffer.Buffer(msg));
+			console.log(" [x] Sent %s", msg);
+		});
+		//conn.close();
 	});
 }
   
@@ -63,7 +65,7 @@ router.get("/hello",
 	// passport.authenticate("basic", { session: false }),
 	(req, res) => {
 		console.log("called hello");
-  		res.send({ express: "Welcome to Full Cycle Mining" });
+		res.send({ express: "Welcome to Full Cycle Mining" });
 	});
 
 router.get("/getcamera", 

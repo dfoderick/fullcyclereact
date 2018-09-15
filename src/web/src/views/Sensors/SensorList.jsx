@@ -48,7 +48,7 @@ export default class SensorList extends Component {
             description={parseFloat(sens.value).toFixed(2).toString()}
             statIcon={Info}
             statText={sens.sensortime}
-            onClick={() => {this.handleOpenDialog(sens)}}
+            onClick={() => {this.handleOpenDialog(sens);}}
           />
           </ItemGrid>
         );

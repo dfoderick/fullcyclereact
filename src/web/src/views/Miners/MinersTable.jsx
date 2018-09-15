@@ -296,7 +296,7 @@ export default class MinersTable extends Component {
              {miner.status === "online" ? this.hashfrom(miner.minerstats) : miner.status}
              </TableCell>
              <TableCell style={tableColumnStyle}>
-             {miner.status === "online" ? this.temperaturefrom(miner.minerstats) : miner.status}
+             {miner.status === "online" ? this.temperaturefrom(miner.minerstats) : miner.status}&deg;
              </TableCell>
              <TableCell style={tableColumnStyle}>
              {miner.status === "online" ? this.secondsToString(miner.minerstats.elapsed) : miner.status}

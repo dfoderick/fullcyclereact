@@ -64,16 +64,16 @@ function onWebError(error) {
   
 	// handle specific listen errors with friendly messages
 	switch (error.code) {
-	  case "EACCES":
-		console.error(error.code + ":" + bind + " requires elevated privileges");
-		process.exit(1);
-		break;
-	  case "EADDRINUSE":
-		console.error(error.code + ":" + bind + " is already in use. Close the other app and try again");
-		process.exit(1);
-		break;
-	  default:
-		throw error;
+		case "EACCES":
+			console.error(error.code + ":" + bind + " requires elevated privileges");
+			process.exit(1);
+			break;
+		case "EADDRINUSE":
+			console.error(error.code + ":" + bind + " is already in use. Close the other app and try again");
+			process.exit(1);
+			break;
+		default:
+			throw error;
 	}
   }
   server.on("error", onWebError);
@@ -90,17 +90,17 @@ function on_connect(err, conn) {
 
 //set up the full cycle alerts feed to send alerts to the browser
 var sse = new SSE(server);
-sse.on("connection", function (sse_connection) {
+sse.on("connection", function (sseConnection) {
 	console.log("new sse connection");
 	
 	const qAlert = "alert";
-	let alert_channel = null;
+	let alertChannel = null;
 
 	function alertMessage(msg) {
 		if (msg) {
 			//msg.content.toString()
 			console.log(" [x] '%s'", "received alert message");
-			sse_connection.send({
+			sseConnection.send({
 				event: "full-cycle-alert",
 				data: msg.content.toString()
 			});
@@ -108,8 +108,8 @@ sse.on("connection", function (sse_connection) {
 	}
 
 	function on_channel_open_alert(err, ch) {
-		if (err !== null) return bail(err, busConnect);
-		alert_channel = ch;
+		if (err !== null) { return bail(err, busConnect); }
+		alertChannel = ch;
 		ch.on("error", function (err) {
 			console.error(err);
 			console.log("channel Closed");
@@ -131,7 +131,7 @@ sse.on("connection", function (sse_connection) {
 		if (msg) {
 			//msg.content.toString()
 			console.log(" [x] '%s'", "received miner message");
-			sse_connection.send({
+			sseConnection.send({
 				event: "full-cycle-miner",
 				data: msg.content.toString()
 			});
@@ -142,7 +142,7 @@ sse.on("connection", function (sse_connection) {
 		if (err !== null) return bail(err, busConnect);
 		miner_channel = ch;
 		ch.on("error", function (err) {
-			console.error(err)
+			console.error(err);
 			console.log("miner channel Closed");
 		});
 		ch.assertQueue("", {exclusive: true}, function(err, ok) {
@@ -161,7 +161,7 @@ sse.on("connection", function (sse_connection) {
 		if (msg) {
 			//msg.content.toString()
 			console.log(" [x] '%s'", "received sensor message");
-			sse_connection.send({
+			sseConnection.send({
 				event: "full-cycle-sensor",
 				data: msg.content.toString()
 			});
@@ -192,9 +192,9 @@ sse.on("connection", function (sse_connection) {
 		busConnect.createChannel(on_channel_open_sensor);
 	}
 	
-  sse_connection.on("close", function () {
+  sseConnection.on("close", function () {
     console.log("lost sse connection");
-		if (alert_channel) alert_channel.close();
+		if (alertChannel) alertChannel.close();
 		if (miner_channel) miner_channel.close();
 		if (sensor_channel) sensor_channel.close();
 	});

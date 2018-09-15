@@ -25,7 +25,7 @@ class Sensors extends React.Component {
         if (res.knownsensors != null){
             Object.keys(res.knownsensors).forEach(function(key) {
               arrSensors.push(JSON.parse(res.knownsensors[key], function (key, value) {
-                    return (value == null) ? "" : value
+                    return (value == null) ? "" : value;
                 }));
             });
         };

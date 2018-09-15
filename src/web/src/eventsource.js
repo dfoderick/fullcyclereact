@@ -1,9 +1,9 @@
-var original = require('original')
-var parse = require('url').parse
-var events = require('events');
-var https = require('https')
-var http = require('http')
-var util = require('util')
+var original = require("original");
+var parse = require("url").parse
+var events = require("events");
+var https = require("https");
+var http = require("http");
+var util = require("util");
 
 var httpsOptions = [
   'pfx', 'key', 'passphrase', 'cert', 'ca', 'ciphers',
@@ -18,7 +18,7 @@ var httpsOptions = [
  * @api public
  **/
 function EventSource (url, eventSourceInitDict) {
-  var readyState = EventSource.CONNECTING
+  var readyState = EventSource.CONNECTING;
   Object.defineProperty(this, 'readyState', {
     get: function () {
       return readyState
@@ -31,8 +31,8 @@ function EventSource (url, eventSourceInitDict) {
     }
   })
 
-  var self = this
-  self.reconnectInterval = 60000
+  var self = this;
+  self.reconnectInterval = 60000;
 
   function onConnectionClosed () {
     if (readyState === EventSource.CLOSED) return
@@ -47,24 +47,24 @@ function EventSource (url, eventSourceInitDict) {
     }
     setTimeout(function () {
       if (readyState !== EventSource.CONNECTING) {
-        return
+        return;
       }
-      connect()
+      connect();
     }, self.reconnectInterval)
   }
 
-  var req
-  var lastEventId = ''
-  if (eventSourceInitDict && eventSourceInitDict.headers && eventSourceInitDict.headers['Last-Event-ID']) {
-    lastEventId = eventSourceInitDict.headers['Last-Event-ID']
-    delete eventSourceInitDict.headers['Last-Event-ID']
+  var req;
+  var lastEventId = "";
+  if (eventSourceInitDict && eventSourceInitDict.headers && eventSourceInitDict.headers["Last-Event-ID"]) {
+    lastEventId = eventSourceInitDict.headers["Last-Event-ID"]
+    delete eventSourceInitDict.headers["Last-Event-ID"]
   }
 
-  var discardTrailingNewline = false
-  var data = ''
-  var eventName = ''
+  var discardTrailingNewline = false;
+  var data = '';
+  var eventName = '';
 
-  var reconnectUrl = null
+  var reconnectUrl = null;
 
   function connect () {
     var options = parse(url)
@@ -91,12 +91,12 @@ function EventSource (url, eventSourceInitDict) {
       var proxy = parse(eventSourceInitDict.proxy)
       isSecure = proxy.protocol === 'https:'
 
-      options.protocol = isSecure ? 'https:' : 'http:'
-      options.path = url
-      options.headers.Host = options.host
-      options.hostname = proxy.hostname
-      options.host = proxy.host
-      options.port = proxy.port
+      options.protocol = isSecure ? 'https:' : 'http:';
+      options.path = url;
+      options.headers.Host = options.host;
+      options.hostname = proxy.hostname;
+      options.host = proxy.host;
+      options.port = proxy.port;
     }
 
     // If https options are specified, merge them into the request options
