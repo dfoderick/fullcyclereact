@@ -2,7 +2,7 @@ import React from "react";
 import { Grid } from "material-ui";
 import { RegularCard, ItemGrid } from "components";
 
-import MinersTable from './MinersTable';
+import MinersTable from "./MinersTable";
 
 class Miners extends React.Component {
     constructor() {
@@ -28,13 +28,13 @@ class Miners extends React.Component {
                         return (value == null) ? "" : value
                     }));
                 });
-            };
+            }
             this.setState({ knownminers: arrMiners });
         })
         .catch(err => console.log(err));
 
         if (this.supportsSSE() && !this.eventListener) {
-            this.eventListener = new EventSource('/sse');
+            this.eventListener = new EventSource("/sse");
             this.subscribe(this.eventListener);
         }
     }

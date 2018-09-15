@@ -40,7 +40,7 @@ export default class CameraButton extends Component {
                         description="Camera"
                         statIcon={Info}
                         statText="Camera"
-                        onClick={() => {this.handleOpenDialog()}}
+                        onClick={() => {this.handleOpenDialog();}}
                     />
                     </ItemGrid>
         

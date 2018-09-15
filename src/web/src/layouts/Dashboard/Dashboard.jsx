@@ -65,7 +65,7 @@ class App extends React.Component {
   }
   
   componentWillUnmount() {
-    if (this.eventListener) this.eventListener.close();
+    if (this.eventListener) { this.eventListener.close(); }
   }
 
   addAlert(alert) {
@@ -128,7 +128,7 @@ class App extends React.Component {
          />;
       })}
     </Switch>
-  )};
+  );};
   
   render() {
     const { classes, ...rest } = this.props;
