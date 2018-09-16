@@ -24,6 +24,8 @@ export default class MinersTable extends Component {
         minerid: "",
         minername: "name",
         minerport: "port",
+        miner_in_service_date: null,
+        miner_location: "",
         minerRaw: false,
         openSwitch: false,
         openReset: false,
@@ -50,6 +52,8 @@ export default class MinersTable extends Component {
         this.setState({minername: miner.name});
         this.setState({minerport: miner.port});
         this.setState({minerid: miner.minerid});
+        this.setState({miner_location: miner.location});
+        this.setState({miner_in_service_date: miner.in_service_date});
     };
     
     handleCloseMiner = () => {
@@ -230,6 +234,8 @@ export default class MinersTable extends Component {
             m.name = this.state.minername;
             m.ipaddress = this.state.minerip;
             m.port = this.state.minerport;
+            m.location = this.state.miner_location;
+            m.in_service_date = this.state.miner_in_service_date;
         }
             
         this.callApiSaveMiner(m)
@@ -248,7 +254,9 @@ export default class MinersTable extends Component {
             values: [
                 {name: miner.name},
                 {ipaddress: miner.ipaddress},
-                {port: miner.port}
+                {port: miner.port},
+                {location: miner.location},
+                {in_service_date: miner.in_service_date}
             ]
         };
 
@@ -283,7 +291,6 @@ export default class MinersTable extends Component {
     }
 
     fansfrom(stats){
-        let fancount = 0;
         let fans = [];
         if (stats.fan1) { fans.push(stats.fan1); }
         if (stats.fan2) { fans.push(stats.fan2); }
@@ -305,6 +312,12 @@ export default class MinersTable extends Component {
         var localDate = new Date(miner.lastmonitor);
         return (
         <TableRow key={miner.name}>
+             <TableCell style={tableColumnStyle}>
+             {miner.in_service_date}
+             </TableCell>
+             <TableCell style={tableColumnStyle}>
+             {miner.location}
+             </TableCell>
              <TableCell style={tableColumnStyle}>
              <Button label="Details" onClick={this.handleOpenMiner(miner)}>{miner.name}</Button>
              </TableCell>
@@ -378,6 +391,8 @@ export default class MinersTable extends Component {
             <Table>
             <TableHead>
               <TableRow>
+                <TableCell>Install</TableCell>
+                <TableCell>Location</TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell>Type</TableCell>
                 <TableCell numeric>Hash Rate</TableCell>
@@ -428,6 +443,20 @@ export default class MinersTable extends Component {
                         label="Port"
                         value={this.state.minerport}
                         onChange={this.handleChange("minerport")}
+                        margin="normal"
+                        />
+                        <TextField
+                        id="miner-inservicedate"
+                        label="Install Date"
+                        value={this.state.miner_in_service_date}
+                        onChange={this.handleChange("miner_in_service_date")}
+                        margin="normal"
+                        />
+                        <TextField
+                        id="miner-location"
+                        label="Location"
+                        value={this.state.miner_location}
+                        onChange={this.handleChange("miner_location")}
                         margin="normal"
                         />
                     </FormControl>

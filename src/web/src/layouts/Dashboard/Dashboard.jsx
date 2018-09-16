@@ -90,8 +90,8 @@ class App extends React.Component {
     }, false);
 
     es.addEventListener("open", (e) => {
-      var d = new Date();
-      let txt = d.toLocaleString() + ": EventSource opened";
+      //var d = new Date();
+      //let txt = d.toLocaleString() + ": EventSource opened";
       //console.log(txt);
     }, false);
 
@@ -108,7 +108,7 @@ class App extends React.Component {
           default:
           txt += "EventSource failed. unknown readyState " + e.readyState;
       }
-     //console.log(txt);
+      console.log(txt);
 
     }, false);
 

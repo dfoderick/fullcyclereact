@@ -69,8 +69,8 @@ class Sensors extends React.Component {
     if (!es) return;
 
     es.addEventListener("full-cycle-sensor", (e) => {
-      var d = new Date();
-      let txt = d.toLocaleString() + ": EventSource: " + e.data;
+      //var d = new Date();
+      //let txt = d.toLocaleString() + ": EventSource: " + e.data;
       //console.log(txt);
       that.addSensor(e.data);
     }, false);
