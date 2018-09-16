@@ -60,7 +60,8 @@ function onWebError(error) {
 	  throw error;
 	}
   
-	var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
+	//var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
+	var bind = services.web.port;
   
 	// handle specific listen errors with friendly messages
 	switch (error.code) {

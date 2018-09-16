@@ -5,6 +5,8 @@ import Dialog, {DialogTitle, DialogContent, DialogActions} from "material-ui/Dia
 import Radio, { RadioGroup } from "material-ui/Radio";
 import { FormControl, FormControlLabel } from "material-ui/Form";
 import TextField from "material-ui/TextField";
+//import DatePicker from "material-ui/DatePicker";
+//<DatePicker hintText="Landscape Dialog" mode="landscape" />
 
 const tableColumnStyle = {
     paddingRight: "5px",
@@ -72,6 +74,12 @@ export default class MinersTable extends Component {
     handleChange = name => event => {
         this.setState({
           [name]: event.target.value,
+        });
+    };
+
+    handleChange_date = name => event => {
+        this.setState({
+          [name]: Date.parse(event.target.value),
         });
     };
 
@@ -235,7 +243,7 @@ export default class MinersTable extends Component {
             m.ipaddress = this.state.minerip;
             m.port = this.state.minerport;
             m.location = this.state.miner_location;
-            m.in_service_date = this.state.miner_in_service_date;
+            m.in_service_date = Date.parse(this.state.miner_in_service_date);
         }
             
         this.callApiSaveMiner(m)
@@ -313,7 +321,7 @@ export default class MinersTable extends Component {
         return (
         <TableRow key={miner.name}>
              <TableCell style={tableColumnStyle}>
-             {miner.in_service_date}
+             {String(miner.in_service_date)}
              </TableCell>
              <TableCell style={tableColumnStyle}>
              {miner.location}
@@ -418,7 +426,7 @@ export default class MinersTable extends Component {
                   open={this.state.openMiner}
                 >
                 <DialogContent>
-                <DialogTitle >{selectedMiner.name} Details</DialogTitle>
+                <DialogTitle >{selectedMiner.name}({selectedMiner.minerid}) Details</DialogTitle>
                 { this.state.minerDetails ? (
                   <FormControl component="fieldset" >
                     <Button onClick={() => {this.handleSaveMiner(selectedMiner)}} color="primary" autoFocus>
