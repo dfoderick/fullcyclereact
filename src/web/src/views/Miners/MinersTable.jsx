@@ -260,6 +260,8 @@ export default class MinersTable extends Component {
             id: miner.minerid,
             entity: "miner",
             values: [
+                {minerid: miner.minerid},
+                {networkid: miner.networkid},
                 {name: miner.name},
                 {ipaddress: miner.ipaddress},
                 {port: miner.port},
@@ -456,14 +458,14 @@ export default class MinersTable extends Component {
                         <TextField
                         id="miner-inservicedate"
                         label="Install Date"
-                        value={this.state.miner_in_service_date}
+                        value={this.state.miner_in_service_date || ''}
                         onChange={this.handleChange("miner_in_service_date")}
                         margin="normal"
                         />
                         <TextField
                         id="miner-location"
                         label="Location"
-                        value={this.state.miner_location}
+                        value={this.state.miner_location || ''}
                         onChange={this.handleChange("miner_location")}
                         margin="normal"
                         />
