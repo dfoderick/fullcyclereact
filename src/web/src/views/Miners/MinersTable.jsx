@@ -243,7 +243,8 @@ export default class MinersTable extends Component {
             m.ipaddress = this.state.minerip;
             m.port = this.state.minerport;
             m.location = this.state.miner_location;
-            m.in_service_date = Date.parse(this.state.miner_in_service_date);
+            let dt = new Date(this.state.miner_in_service_date);
+            m.in_service_date = dt.toISOString();
         }
             
         this.callApiSaveMiner(m)
@@ -318,12 +319,19 @@ export default class MinersTable extends Component {
     //     <Button label="Reset" onClick={this.handleOpenReset(miner.name)} >Reset</Button>
     // </TableCell>
 
+    date_formatted(dt) {
+        if (!dt) {
+            return "";
+        }
+        return new Intl.DateTimeFormat().format(new Date(dt));
+    }
+
     renderMiner(miner) {
         var localDate = new Date(miner.lastmonitor);
         return (
         <TableRow key={miner.name}>
              <TableCell style={tableColumnStyle}>
-             {String(miner.in_service_date)}
+             {this.date_formatted(miner.in_service_date)}
              </TableCell>
              <TableCell style={tableColumnStyle}>
              {miner.location}
