@@ -244,7 +244,9 @@ export default class MinersTable extends Component {
             m.port = this.state.minerport;
             m.location = this.state.miner_location;
             let dt = new Date(this.state.miner_in_service_date);
-            m.in_service_date = dt.toISOString();
+            if (!isNaN(dt)) {
+                m.in_service_date = dt.toISOString();
+            }
         }
             
         this.callApiSaveMiner(m)
