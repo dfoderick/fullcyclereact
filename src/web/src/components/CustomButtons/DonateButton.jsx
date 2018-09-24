@@ -10,7 +10,7 @@ class DonateButton extends Component {
             to="145"
             amount={amt}
             currency="USD"
-            label="Donate"
+            label="Slide to Donate"
             />
         )
     }
