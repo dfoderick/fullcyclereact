@@ -3,8 +3,7 @@
 [![Build Status](https://scrutinizer-ci.com/g/dfoderick/fullcyclereact/badges/build.png?b=master)](https://scrutinizer-ci.com/g/dfoderick/fullcyclereact/build-status/master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/04e7d62fa77c4aae80cdf092c245c9eb)](https://app.codacy.com/app/dfoderick/fullcyclereact?utm_source=github.com&utm_medium=referral&utm_content=dfoderick/fullcyclereact&utm_campaign=Badge_Grade_Dashboard)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/dfoderick/fullcyclereact/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/dfoderick/fullcyclereact/?branch=master)  
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=UC7ZPW6WG4NML)
-
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BMHSEUYDP9XWW)
 
 This project is the front end (UI) React web site for the Full Cycle Bitcoin Mining Controller.
 Installation of the back end is required and can be found at https://github.com/dfoderick/fullcycle
