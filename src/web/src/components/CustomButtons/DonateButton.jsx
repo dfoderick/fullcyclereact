@@ -4,14 +4,15 @@ import MoneyButton from '@moneybutton/react-money-button'
 
 class DonateButton extends Component {
     render() {
-      return (
-        <MoneyButton
-        to="145"
-        amount="10"
-        currency="USD"
-        label="Donate"
-        />
-      )
+        let amt = process.env.REACT_APP_DONATE_AMOUNT;
+        return (
+            <MoneyButton
+            to="145"
+            amount={amt}
+            currency="USD"
+            label="Donate"
+            />
+        )
     }
 }
 
