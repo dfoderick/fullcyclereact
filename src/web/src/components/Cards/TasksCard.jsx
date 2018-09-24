@@ -21,7 +21,7 @@ class TasksCard extends React.Component {
   state = {
     value: 0
   };
-  handleChange = (event, value) => {
+  handleChange = (_event, value) => {
     this.setState({ value });
   };
   render() {

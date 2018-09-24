@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { List, ListItem, withStyles } from "material-ui";
+import { DonateButton } from "components";
 
 import footerStyle from "assets/jss/material-dashboard-react/footerStyle";
 
@@ -20,6 +21,9 @@ function Footer({ ...props }) {
               <a href="https://github.com/dfoderick/fullcycle/issues" className={classes.block}>
                 Issues
               </a>
+            </ListItem>
+            <ListItem className={classes.inlineBlock}>
+              <DonateButton />
             </ListItem>
           </List>
         </div>

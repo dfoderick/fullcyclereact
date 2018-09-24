@@ -14,6 +14,7 @@ import TasksCard from './Cards/TasksCard';
 
 import Button from './CustomButtons/Button';
 import IconButton from './CustomButtons/IconButton';
+import DonateButton from './CustomButtons/DonateButton';
 
 // ##############################
 // // // CustomInput
@@ -90,6 +91,7 @@ export {
   // CustomButtons
   Button,
   IconButton,
+  DonateButton,
   // CustomInput
   CustomInput,
   // Footer

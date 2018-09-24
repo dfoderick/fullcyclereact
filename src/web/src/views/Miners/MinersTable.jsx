@@ -321,7 +321,7 @@ export default class MinersTable extends Component {
     //     <Button label="Reset" onClick={this.handleOpenReset(miner.name)} >Reset</Button>
     // </TableCell>
 
-    date_formatted(dt) {
+    dateFormatted(dt) {
         if (!dt) {
             return "";
         }
@@ -333,7 +333,7 @@ export default class MinersTable extends Component {
         return (
         <TableRow key={miner.name}>
              <TableCell style={tableColumnStyle}>
-             {this.date_formatted(miner.in_service_date)}
+             {this.dateFormatted(miner.in_service_date)}
              </TableCell>
              <TableCell style={tableColumnStyle}>
              {miner.location}

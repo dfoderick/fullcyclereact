@@ -8,6 +8,7 @@
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.46",
     "@material-ui/icons": "^1.0.0-beta.42",
+    "@moneybutton/react-money-button": "^0.1.1",
     "chartist": "0.10.1",
     "classnames": "^2.2.5",
     "history": "^4.7.2",

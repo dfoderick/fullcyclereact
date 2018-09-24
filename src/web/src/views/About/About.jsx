@@ -1,6 +1,7 @@
 import React from "react";
 import { Grid } from "material-ui";
 import { RegularCard, ItemGrid } from "components";
+import { DonateButton } from "components";
 
 class About extends React.Component {
     render() {
@@ -24,6 +25,9 @@ class About extends React.Component {
                     </div>
                     <div>
                         Author David Foderick dfoderick@gmail.com
+                    </div>
+                    <div>
+                        <DonateButton />
                     </div>
                     </div>
                 }
